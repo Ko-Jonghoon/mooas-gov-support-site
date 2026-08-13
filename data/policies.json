@@ -1,0 +1,1118 @@
+{
+  "generatedAt": null,
+  "note": "자동 수집 전 초기 시드 데이터(수동 작성, 예시 수치 포함)",
+  "policies": [
+    {
+      "id": "p1",
+      "name": "예비창업패키지",
+      "agency": "창업진흥원(K-Startup)",
+      "url": "https://www.k-startup.go.kr",
+      "category": "fund",
+      "summary": "예비창업자의 사업 아이디어 검증부터 초기 사업화까지 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "사업화자금 최대 1억원(평균 5천만원 내외, 예시)"
+        },
+        {
+          "label": "지원내용",
+          "value": "창업교육 40시간 + 1:1 전담 멘토링"
+        },
+        {
+          "label": "지원기간",
+          "value": "협약기간 8~10개월"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "pre"
+        ],
+        "industries": "all",
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p2",
+      "name": "초기창업패키지",
+      "agency": "창업진흥원(K-Startup)",
+      "url": "https://www.k-startup.go.kr",
+      "category": "fund",
+      "summary": "업력 3년 이내 초기창업기업의 사업화 자금과 특화 프로그램을 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "최대 1억원(자기부담 10~30%, 예시)"
+        },
+        {
+          "label": "특화프로그램",
+          "value": "IR·투자유치 컨설팅, 시제품 제작 지원"
+        },
+        {
+          "label": "지원기간",
+          "value": "협약기간 최대 10개월"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sme",
+          "sole"
+        ],
+        "maxYears": 3,
+        "industries": "all",
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p3",
+      "name": "청년창업사관학교",
+      "agency": "중소벤처기업진흥공단",
+      "url": "https://www.k-startup.go.kr",
+      "category": "fund",
+      "summary": "만 39세 이하 청년 창업자에게 사업비와 창업 공간을 함께 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "최대 1억원(사업화 자금, 예시)"
+        },
+        {
+          "label": "창업공간",
+          "value": "입주 사무공간 무상제공(최대 1년)"
+        },
+        {
+          "label": "사후지원",
+          "value": "졸업 후 정책자금 연계 우대"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "pre",
+          "sme"
+        ],
+        "maxYears": 3,
+        "founderTypes": [
+          "youth"
+        ],
+        "industries": "all",
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p4",
+      "name": "재도전 성공패키지",
+      "agency": "창업진흥원",
+      "url": "https://www.k-startup.go.kr",
+      "category": "consulting",
+      "summary": "폐업 경험이 있는 재도전 창업자의 사업화 자금과 회생 컨설팅을 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "최대 6천만원(사업화자금, 예시)"
+        },
+        {
+          "label": "신용회복",
+          "value": "재창업자 특례보증 연계(신용보증기금)"
+        },
+        {
+          "label": "컨설팅",
+          "value": "실패요인 분석 및 사업모델 재설계 컨설팅"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "pre",
+          "sole",
+          "sme"
+        ],
+        "maxYears": 3,
+        "industries": "all",
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p5",
+      "name": "중소기업 정책자금(창업기업자금)",
+      "agency": "중소벤처기업진흥공단",
+      "url": "https://www.kosmes.or.kr",
+      "category": "fund",
+      "summary": "업력 7년 이내 중소기업에 시설·운전자금을 장기 저리로 융자합니다.",
+      "benefits": [
+        {
+          "label": "대출한도",
+          "value": "최대 60억원(운전자금은 5억원 한도, 예시)"
+        },
+        {
+          "label": "대출금리",
+          "value": "정책자금 기준금리 -0.3%p 내외(변동, 예시)"
+        },
+        {
+          "label": "상환조건",
+          "value": "시설 8년(거치 3년)·운전 5년(거치 2년)"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sme"
+        ],
+        "maxYears": 7,
+        "industries": "all",
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p6",
+      "name": "소상공인 정책자금",
+      "agency": "소상공인시장진흥공단",
+      "url": "https://www.semas.or.kr",
+      "category": "fund",
+      "summary": "소상공인의 경영안정과 시설 개선을 위한 저금리 융자를 지원합니다.",
+      "benefits": [
+        {
+          "label": "대출한도",
+          "value": "최대 7천만원(일반경영안정자금, 예시)"
+        },
+        {
+          "label": "대출금리",
+          "value": "연 2%대 고정금리 수준(기준금리 연동, 예시)"
+        },
+        {
+          "label": "우대혜택",
+          "value": "저신용 소상공인 특별경영안정자금 별도 한도 적용"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sole"
+        ],
+        "industries": "all",
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p7",
+      "name": "창업성장기술개발사업",
+      "agency": "중소기업기술정보진흥원(TIPA)",
+      "url": "https://www.smtech.go.kr",
+      "category": "rnd",
+      "summary": "업력 7년 이내 중소기업의 기술개발(R&D) 자금을 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "디딤돌 과제 최대 1.2억원(예시)"
+        },
+        {
+          "label": "지원비율",
+          "value": "총사업비의 80% 이내 정부출연"
+        },
+        {
+          "label": "사업기간",
+          "value": "최대 10개월(디딤돌 기준)"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sme",
+          "sole"
+        ],
+        "maxYears": 7,
+        "industries": [
+          "mfg",
+          "it",
+          "bio",
+          "content"
+        ],
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p8",
+      "name": "산업기술혁신사업",
+      "agency": "한국산업기술평가관리원(KEIT)",
+      "url": "https://www.keit.re.kr",
+      "category": "rnd",
+      "summary": "산업기술 분야 R&D 국책과제로, 자체 연구소 보유 기업을 우대합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "과제당 연 3~10억원 내외(예시)"
+        },
+        {
+          "label": "지원비율",
+          "value": "총사업비의 50~75% 정부출연"
+        },
+        {
+          "label": "우대조건",
+          "value": "기업부설연구소 보유 시 가점 부여"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sme",
+          "mid"
+        ],
+        "rndRequired": true,
+        "industries": [
+          "mfg",
+          "bio"
+        ],
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p9",
+      "name": "이노비즈 인증기업 연계지원",
+      "agency": "중소벤처기업부",
+      "url": "https://www.innobiz.net",
+      "category": "consulting",
+      "summary": "이노비즈(기술혁신형 중소기업) 인증기업에 금융·수출 우대를 연계합니다.",
+      "benefits": [
+        {
+          "label": "금리우대",
+          "value": "신한은행·기업은행 등 협약은행 대출금리 <b>0.3~0.5%p 우대</b>(예시)"
+        },
+        {
+          "label": "보증우대",
+          "value": "신용보증기금 보증료 0.1%p 차감"
+        },
+        {
+          "label": "가점혜택",
+          "value": "정부 R&D·수출지원사업 선정평가 가점 2~3점"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sme"
+        ],
+        "certs": [
+          "innobiz"
+        ],
+        "industries": "all",
+        "regions": "all",
+        "taxClean": false
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p10",
+      "name": "벤처기업 확인 세제지원",
+      "agency": "벤처기업확인기관",
+      "url": "https://www.smes.go.kr",
+      "category": "consulting",
+      "summary": "벤처기업 확인을 받은 기업에 세제 감면과 정책자금 우대를 제공합니다.",
+      "benefits": [
+        {
+          "label": "세제혜택",
+          "value": "법인세·소득세 5년간 <b>50% 감면</b>(창업 3년 이내 벤처 확인 시)"
+        },
+        {
+          "label": "금융우대",
+          "value": "코스닥 상장심사 우대 및 특례보증 한도 확대"
+        },
+        {
+          "label": "인력혜택",
+          "value": "스톡옵션 비과세 특례 적용"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sme",
+          "sole"
+        ],
+        "certs": [
+          "venture"
+        ],
+        "industries": "all",
+        "regions": "all",
+        "taxClean": false
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p11",
+      "name": "여성기업 종합지원",
+      "agency": "여성기업종합지원센터",
+      "url": "https://www.wbiz.or.kr",
+      "category": "fund",
+      "summary": "여성 대표 기업에 자금·판로·마케팅을 아우르는 통합 지원을 제공합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "여성기업 육성자금 최대 5억원 융자(예시)"
+        },
+        {
+          "label": "판로지원",
+          "value": "공공구매 우선구매 대상, 경쟁입찰 최대 5% 가점"
+        },
+        {
+          "label": "마케팅",
+          "value": "백화점·온라인몰 입점 및 박람회 부스비 지원"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sole",
+          "sme"
+        ],
+        "founderTypes": [
+          "woman"
+        ],
+        "industries": "all",
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p12",
+      "name": "장애인기업 창업 및 경영안정자금",
+      "agency": "장애인기업종합지원센터",
+      "url": "https://www.debc.or.kr",
+      "category": "fund",
+      "summary": "장애인 대표 기업의 창업과 경영안정을 위한 융자를 지원합니다.",
+      "benefits": [
+        {
+          "label": "대출한도",
+          "value": "최대 2억원(창업자금), 최대 1억원(경영안정자금, 예시)"
+        },
+        {
+          "label": "대출금리",
+          "value": "연 2.0% 고정금리 수준(예시)"
+        },
+        {
+          "label": "부대지원",
+          "value": "보조공학기기·근로지원인 연계 지원"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "pre",
+          "sole",
+          "sme"
+        ],
+        "founderTypes": [
+          "disabled"
+        ],
+        "industries": "all",
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p13",
+      "name": "사회적기업 일자리창출사업",
+      "agency": "한국사회적기업진흥원",
+      "url": "https://www.socialenterprise.or.kr",
+      "category": "hr",
+      "summary": "인증 사회적기업의 신규 고용 인건비와 일자리 창출 비용을 지원합니다.",
+      "benefits": [
+        {
+          "label": "인건비지원",
+          "value": "1인당 월 최대 200만원 한도(최대 3년, 체감식, 예시)"
+        },
+        {
+          "label": "사업개발비",
+          "value": "연 최대 2천만원 한도 지원"
+        },
+        {
+          "label": "지원조건",
+          "value": "고용보험 가입 사업장 대상"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sole",
+          "sme"
+        ],
+        "certs": [
+          "social"
+        ],
+        "insuranceRequired": true,
+        "industries": "all",
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p14",
+      "name": "내일채움공제",
+      "agency": "중소벤처기업진흥공단",
+      "url": "https://www.sbcplan.or.kr",
+      "category": "hr",
+      "summary": "핵심인력의 장기 재직을 위해 기업과 인력이 공동 적립하는 성과보상 공제입니다.",
+      "benefits": [
+        {
+          "label": "적립구조",
+          "value": "5년간 기업 20% + 핵심인력 80%(예시), 만기 시 핵심인력 수령"
+        },
+        {
+          "label": "세제혜택",
+          "value": "기업 납입금 전액 손금(필요경비) 인정"
+        },
+        {
+          "label": "지원조건",
+          "value": "고용보험 가입 사업장, 핵심인력 1인 이상"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sme",
+          "sole"
+        ],
+        "insuranceRequired": true,
+        "industries": "all",
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p15",
+      "name": "청년일자리도약장려금",
+      "agency": "고용노동부",
+      "url": "https://www.work24.go.kr",
+      "category": "hr",
+      "summary": "청년을 정규직으로 신규 채용한 중소기업에 인건비 일부를 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "1인당 최대 <b>1,200만원</b>(2년간 분할 지급, 예시)"
+        },
+        {
+          "label": "지원대상",
+          "value": "만 15~34세 청년 정규직 채용 시"
+        },
+        {
+          "label": "지원조건",
+          "value": "고용보험 가입 사업장, 5인 이상 우대"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sole",
+          "sme"
+        ],
+        "insuranceRequired": true,
+        "industries": "all",
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p16",
+      "name": "고용창출장려금",
+      "agency": "고용노동부",
+      "url": "https://www.work24.go.kr",
+      "category": "hr",
+      "summary": "신규 고용 인원에 대한 인건비 일부를 일정 기간 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "1인당 월 30~80만원 내외(사업 유형별 상이, 예시)"
+        },
+        {
+          "label": "지원기간",
+          "value": "최대 1~2년"
+        },
+        {
+          "label": "지원조건",
+          "value": "고용보험 가입 사업장, 이직률 요건 충족"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sole",
+          "sme",
+          "mid"
+        ],
+        "insuranceRequired": true,
+        "industries": "all",
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p17",
+      "name": "수출바우처사업",
+      "agency": "중소벤처기업부·KOTRA",
+      "url": "https://www.exportvoucher.com",
+      "category": "export",
+      "summary": "해외마케팅·통번역·해외인증 등 수출 지원 서비스를 바우처로 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원한도",
+          "value": "기업당 연 3천만~1억원 바우처(자기부담 20~30%, 예시)"
+        },
+        {
+          "label": "이용서비스",
+          "value": "통번역, 해외인증, 온라인 마케팅 등 500여개 서비스 중 선택"
+        },
+        {
+          "label": "지원기간",
+          "value": "협약기간 1년"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sme"
+        ],
+        "industries": "all",
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p18",
+      "name": "글로벌강소기업 육성",
+      "agency": "중소벤처기업부",
+      "url": "https://www.mss.go.kr",
+      "category": "export",
+      "summary": "수출 실적이 있는 유망 중소기업에 R&D·마케팅·해외진출 패키지를 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "최대 3년간 연 2억원 내외 패키지 지원(예시)"
+        },
+        {
+          "label": "지원내용",
+          "value": "해외 마케팅, 기술개발, 인력채용 바우처 통합 지원"
+        },
+        {
+          "label": "우대혜택",
+          "value": "정책자금 한도 우대 및 수출입은행 금융 연계"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sme"
+        ],
+        "exportRequired": true,
+        "industries": "all",
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p19",
+      "name": "스마트공장 구축지원사업",
+      "agency": "스마트제조혁신추진단",
+      "url": "https://www.smart-factory.kr",
+      "category": "smart",
+      "summary": "제조 데이터 수집과 설비 자동화를 위한 스마트공장 구축비를 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "기초단계 최대 5천만원, 고도화 최대 1.5억원(자부담 50%, 예시)"
+        },
+        {
+          "label": "지원내용",
+          "value": "MES·IoT센서 등 스마트화 솔루션 구축비"
+        },
+        {
+          "label": "사후관리",
+          "value": "구축 후 2년간 사후관리 컨설팅 제공"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sole",
+          "sme"
+        ],
+        "industries": [
+          "mfg"
+        ],
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p20",
+      "name": "뿌리기업 경쟁력 강화 지원",
+      "agency": "산업통상자원부",
+      "url": "https://www.motie.go.kr",
+      "category": "facility",
+      "summary": "주조·금형·용접 등 뿌리산업 확인기업의 공정개선과 설비를 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "공정개선 설비비 최대 3억원(자부담 30%, 예시)"
+        },
+        {
+          "label": "지원내용",
+          "value": "노후설비 교체, 작업환경 개선 비용"
+        },
+        {
+          "label": "우대혜택",
+          "value": "뿌리기업 전용 정책자금 금리 <b>0.5%p 우대</b>"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sme"
+        ],
+        "certs": [
+          "root"
+        ],
+        "industries": [
+          "mfg"
+        ],
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p21",
+      "name": "지역특화산업육성사업",
+      "agency": "지역 테크노파크",
+      "url": "https://www.technopark.kr",
+      "category": "consulting",
+      "summary": "지역 주력산업과 연계한 시제품 제작, 마케팅, 경영 컨설팅을 지원합니다(지자체별 상이).",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "시제품 제작비 최대 3천만원 내외(지역·과제별 상이, 예시)"
+        },
+        {
+          "label": "지원내용",
+          "value": "디자인 개발, 시험인증, 국내외 전시회 참가비"
+        },
+        {
+          "label": "신청방법",
+          "value": "소재지 관할 테크노파크로 신청"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sole",
+          "sme"
+        ],
+        "industries": "all",
+        "regions": "all",
+        "taxClean": false
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p22",
+      "name": "콘텐츠산업 정책금융 지원",
+      "agency": "한국콘텐츠진흥원",
+      "url": "https://www.kocca.kr",
+      "category": "fund",
+      "summary": "게임·영상·웹툰 등 콘텐츠 제작·유통 기업에 자금 융자와 투자를 연계합니다.",
+      "benefits": [
+        {
+          "label": "융자한도",
+          "value": "프로젝트당 최대 10억원(문화산업완성보증 연계, 예시)"
+        },
+        {
+          "label": "투자연계",
+          "value": "콘텐츠 전문 투자조합(모태펀드) 투자 심사 연계"
+        },
+        {
+          "label": "부대지원",
+          "value": "해외 유통·마케팅 바우처 별도 신청 가능"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sole",
+          "sme"
+        ],
+        "industries": [
+          "content"
+        ],
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p23",
+      "name": "농식품 벤처창업 지원",
+      "agency": "농업기술실용화재단",
+      "url": "https://www.fact.or.kr",
+      "category": "fund",
+      "summary": "농식품 분야 벤처·창업기업의 사업화 자금과 R&D를 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "사업화자금 최대 2억원(예시)"
+        },
+        {
+          "label": "지원내용",
+          "value": "농식품 R&D 기술개발비 최대 70% 지원"
+        },
+        {
+          "label": "부대지원",
+          "value": "농식품 벤처펀드 투자 연계 상담"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "pre",
+          "sole",
+          "sme"
+        ],
+        "industries": [
+          "agri"
+        ],
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p24",
+      "name": "ESG경영 확산 지원사업",
+      "agency": "대중소기업농어업협력재단",
+      "url": "https://www.win-win.or.kr",
+      "category": "esg",
+      "summary": "중소기업의 ESG 자가진단과 협력사 ESG 대응력 강화를 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원내용",
+          "value": "ESG 자가진단 + 전문가 현장 컨설팅 최대 5회(무상, 예시)"
+        },
+        {
+          "label": "지원금액",
+          "value": "개선과제 실행비 최대 2천만원 매칭 지원"
+        },
+        {
+          "label": "부대혜택",
+          "value": "ESG 우수기업 정책자금 심사 가점 부여"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sme",
+          "mid"
+        ],
+        "industries": "all",
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p25",
+      "name": "탄소중립 설비투자 지원",
+      "agency": "한국환경공단",
+      "url": "https://www.keco.or.kr",
+      "category": "esg",
+      "summary": "온실가스 감축 설비 교체·투자 비용의 일부를 보조·융자 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "설비투자비 최대 <b>50% 보조</b>(한도 3억원, 예시)"
+        },
+        {
+          "label": "금융연계",
+          "value": "환경정책자금 융자 연 1%대 저리 연계"
+        },
+        {
+          "label": "부대혜택",
+          "value": "온실가스 감축 실적 검증 비용 별도 지원"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sme",
+          "mid"
+        ],
+        "industries": [
+          "mfg"
+        ],
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p26",
+      "name": "시니어 창업지원 패키지",
+      "agency": "창업진흥원",
+      "url": "https://www.k-startup.go.kr",
+      "category": "consulting",
+      "summary": "만 50세 이상 시니어 창업자에게 교육·멘토링과 사업화자금을 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "사업화자금 최대 5천만원(예시)"
+        },
+        {
+          "label": "교육프로그램",
+          "value": "창업교육 60시간 + 동년배 멘토 매칭"
+        },
+        {
+          "label": "부대지원",
+          "value": "시니어 특화 판로(시니어몰 등) 입점 지원"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "pre",
+          "sole"
+        ],
+        "founderTypes": [
+          "senior"
+        ],
+        "industries": "all",
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p27",
+      "name": "서울시 중소기업 육성자금",
+      "agency": "서울신용보증재단·서울시",
+      "url": "https://www.seoulshinbo.co.kr",
+      "category": "fund",
+      "summary": "서울 소재 중소기업에 장기 저리 육성자금을 융자 지원합니다.",
+      "benefits": [
+        {
+          "label": "대출한도",
+          "value": "최대 10억원(운전자금 5억원, 예시)"
+        },
+        {
+          "label": "대출금리",
+          "value": "보증부 대출 연 3%대(변동, 예시)"
+        },
+        {
+          "label": "우대혜택",
+          "value": "여성·청년·사회적기업 대표 <b>0.2%p 추가 우대</b>"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sole",
+          "sme"
+        ],
+        "industries": "all",
+        "regions": [
+          "seoul"
+        ],
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p28",
+      "name": "경기도 중소기업 육성자금",
+      "agency": "경기신용보증재단·경기도",
+      "url": "https://www.gsnet.co.kr",
+      "category": "fund",
+      "summary": "경기도 소재 중소기업에 육성자금 융자와 이차보전을 지원합니다.",
+      "benefits": [
+        {
+          "label": "대출한도",
+          "value": "최대 10억원(예시)"
+        },
+        {
+          "label": "이차보전",
+          "value": "대출금리 중 최대 <b>2%p</b>를 경기도가 보전"
+        },
+        {
+          "label": "신청방법",
+          "value": "경기신용보증재단 사전보증 후 협약은행 대출 실행"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sole",
+          "sme"
+        ],
+        "industries": "all",
+        "regions": [
+          "gyeonggi"
+        ],
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p29",
+      "name": "AI 바우처 지원사업",
+      "agency": "정보통신산업진흥원(NIPA)",
+      "url": "https://www.nipa.kr",
+      "category": "ai",
+      "summary": "중소기업이 AI 솔루션을 도입하도록 바우처 형태로 비용을 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "기업당 최대 4,500만원(자기부담 10~30%, 예시)"
+        },
+        {
+          "label": "이용범위",
+          "value": "AI 챗봇, 수요예측, 품질검사 등 AI 솔루션 공급기업 중 선택"
+        },
+        {
+          "label": "지원기간",
+          "value": "협약기간 6개월 이내"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sole",
+          "sme"
+        ],
+        "industries": "all",
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p30",
+      "name": "제조데이터 활용 AI 자율제조 지원사업",
+      "agency": "스마트제조혁신추진단",
+      "url": "https://www.smart-factory.kr",
+      "category": "ai",
+      "summary": "제조 현장 데이터를 활용해 AI 기반 자율제조 체계 구축을 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "구축비 최대 2억원(자부담 50%, 예시)"
+        },
+        {
+          "label": "지원내용",
+          "value": "데이터 수집체계 구축 + AI 예지보전·품질검사 모델 개발"
+        },
+        {
+          "label": "사후지원",
+          "value": "구축 후 1년간 모델 고도화 컨설팅"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sme"
+        ],
+        "industries": [
+          "mfg"
+        ],
+        "regions": "all",
+        "taxClean": true
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p31",
+      "name": "노란우산공제",
+      "agency": "소상공인시장진흥공단",
+      "url": "https://www.9988sos.or.kr",
+      "category": "etc",
+      "summary": "폐업·노령 등에 대비해 소기업·소상공인이 스스로 준비하는 공제 제도입니다.",
+      "benefits": [
+        {
+          "label": "세제혜택",
+          "value": "연 최대 600만원 소득공제(매출 규모별 한도 상이, 예시)"
+        },
+        {
+          "label": "공제금",
+          "value": "폐업·사망·퇴임 시 공제금 + 복리이자 지급"
+        },
+        {
+          "label": "부대혜택",
+          "value": "압류 금지 재산으로 법적 보호, 대출 우대"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sole",
+          "sme"
+        ],
+        "industries": "all",
+        "regions": "all",
+        "taxClean": false
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    },
+    {
+      "id": "p32",
+      "name": "중소기업 컨설팅 바우처",
+      "agency": "중소벤처기업진흥공단",
+      "url": "https://www.kosmes.or.kr",
+      "category": "etc",
+      "summary": "경영 전반의 애로사항을 진단하고 분야별 전문가 컨설팅을 바우처로 지원합니다.",
+      "benefits": [
+        {
+          "label": "지원금액",
+          "value": "컨설팅 비용 최대 <b>70% 지원</b>(자기부담 30%, 예시)"
+        },
+        {
+          "label": "이용분야",
+          "value": "재무, 마케팅, 인사노무, 생산관리 등 전문가 컨설팅"
+        },
+        {
+          "label": "지원기간",
+          "value": "과제당 3~6개월"
+        }
+      ],
+      "elig": {
+        "sizes": [
+          "sole",
+          "sme",
+          "mid"
+        ],
+        "industries": "all",
+        "regions": "all",
+        "taxClean": false
+      },
+      "source": "manual-seed",
+      "reviewed": true
+    }
+  ]
+}

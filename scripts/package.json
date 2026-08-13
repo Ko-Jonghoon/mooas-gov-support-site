@@ -1,0 +1,13 @@
+{
+  "name": "mooas-gov-support-fetch",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "기업마당 Open API에서 지원사업 공고를 가져와 Claude로 구조화 태깅한 뒤 data/policies.json을 갱신하는 스크립트",
+  "scripts": {
+    "fetch": "node fetch-and-tag.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest"
+  }
+}
