@@ -22,16 +22,11 @@ jobs:
         with:
           node-version: "20"
 
-      - name: 의존성 설치
-        working-directory: scripts
-        run: npm install
-
-      - name: 기업마당 공고 수집 + Claude 자동 태깅
+      - name: 기업마당 공고 수집 + 규칙 기반 자동 태깅
         working-directory: scripts
         env:
           BIZINFO_API_KEY: ${{ secrets.BIZINFO_API_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: npm run fetch
+        run: node fetch-and-tag.mjs
 
       - name: 변경사항으로 PR 생성 (검수 대기)
         uses: peter-evans/create-pull-request@v6
@@ -39,10 +34,10 @@ jobs:
           commit-message: "chore: 지원사업 데이터 자동 갱신 (자동수집, 검수 필요)"
           title: "[자동수집] 지원사업 데이터 갱신 - 검수 후 병합해주세요"
           body: |
-            기업마당 Open API + Claude 자동 태깅으로 `data/policies.json`을 갱신했습니다.
+            기업마당 Open API + 키워드 규칙 기반 자동 태깅으로 `data/policies.json`을 갱신했습니다.
 
             - `source: "auto"`, `reviewed: false`로 표시된 항목은 실제 사이트에서 "자동수집 · 검수대기" 배지가 붙어 노출됩니다.
-            - 병합 전에 자격요건(elig)과 혜택 내용(benefits)이 실제 공고와 맞는지 확인해 주세요.
+            - 규칙 기반 태깅은 LLM보다 정확도가 낮을 수 있으니, 병합 전에 자격요건(elig)과 혜택 내용(benefits)이 실제 공고와 맞는지 **반드시 확인**해 주세요.
             - 문제가 있으면 이 PR에서 직접 JSON을 수정하거나, 병합 후 별도 커밋으로 `reviewed: true`로 바꿔주세요.
           branch: auto/policies-update
           delete-branch: true

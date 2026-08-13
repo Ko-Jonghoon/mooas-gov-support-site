@@ -1,4 +1,3 @@
-import Anthropic from "@anthropic-ai/sdk";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -7,9 +6,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_PATH = path.join(__dirname, "..", "data", "policies.json");
 
 const BIZINFO_API_KEY = process.env.BIZINFO_API_KEY;
-// 비용을 낮추고 싶다면 워크플로/로컬 환경변수로 ANTHROPIC_MODEL=claude-haiku-4-5 등을
-// 직접 지정하세요. 기본값은 품질을 우선한 claude-opus-5 입니다.
-const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || "claude-opus-5";
 
 if (!BIZINFO_API_KEY) {
   console.error(
@@ -17,8 +13,6 @@ if (!BIZINFO_API_KEY) {
   );
   process.exit(1);
 }
-
-const client = new Anthropic(); // ANTHROPIC_API_KEY 환경변수를 자동으로 사용합니다
 
 // ---------------------------------------------------------------------------
 // 1) 기업마당(bizinfo.go.kr) Open API에서 최신 지원사업 공고 원본 목록 가져오기
@@ -46,103 +40,169 @@ async function fetchRawAnnouncements() {
   return data.jsonArray || data.items || [];
 }
 
-const INDUSTRY_CODES = ["mfg", "it", "service", "retail", "construction", "agri", "bio", "content", "etc"];
-const REGION_CODES = [
-  "seoul", "busan", "daegu", "incheon", "gwangju", "daejeon", "ulsan", "sejong",
-  "gyeonggi", "gangwon", "chungbuk", "chungnam", "jeonbuk", "jeonnam", "gyeongbuk", "gyeongnam", "jeju",
+// ---------------------------------------------------------------------------
+// 2) 규칙(키워드) 기반 태깅
+//
+// LLM 없이, 공고 원문에 특정 키워드가 있는지로 우리 매칭 스키마의 조건을 채웁니다.
+// 정확도는 LLM 태깅보다 낮을 수 있으니, 모든 자동 수집 항목은 reviewed:false로
+// 표시되어 사람이 검수하기 전까지 사이트에 "자동수집 · 검수대기" 배지가 붙습니다.
+//
+// 실제 기업마당 응답의 필드명을 확인한 뒤, 아래 candidateFields를 필요에 맞게 조정하세요.
+// ---------------------------------------------------------------------------
+
+function pickField(raw, candidateFields) {
+  for (const key of candidateFields) {
+    if (raw[key]) return String(raw[key]);
+  }
+  return "";
+}
+
+function buildTextBlob(raw) {
+  const title = pickField(raw, ["pblancNm", "title", "bsnsTitl"]);
+  const desc = pickField(raw, ["bsnsSumryCn", "content", "cn", "description"]);
+  const target = pickField(raw, ["trgetNm", "target", "reqstTrgetNm"]);
+  const tags = pickField(raw, ["hashtags", "hashTag"]);
+  return [title, desc, target, tags].join(" \n ");
+}
+
+function includesAny(text, keywords) {
+  return keywords.some((kw) => text.includes(kw));
+}
+
+const CATEGORY_RULES = [
+  { category: "ai", keywords: ["인공지능", "AI ", "AI바우처", "AI솔루션"] },
+  { category: "rnd", keywords: ["R&D", "기술개발", "연구개발", "기술혁신"] },
+  { category: "smart", keywords: ["스마트공장", "디지털전환", "자동화 설비", "제조데이터"] },
+  { category: "esg", keywords: ["ESG", "탄소중립", "온실가스", "환경경영"] },
+  { category: "export", keywords: ["수출", "해외진출", "해외마케팅", "바이어"] },
+  { category: "hr", keywords: ["고용", "채용", "인건비", "일자리", "내일채움공제"] },
+  { category: "facility", keywords: ["설비", "장비 구입", "시설 투자", "노후설비"] },
+  { category: "market", keywords: ["판로", "마케팅", "홍보", "전시회", "박람회"] },
+  { category: "consulting", keywords: ["컨설팅", "멘토링", "자문", "진단"] },
+  { category: "fund", keywords: ["융자", "정책자금", "보조금", "사업화자금", "육성자금"] },
 ];
 
-const ELIGIBILITY_SCHEMA = {
-  type: "object",
-  properties: {
-    name: { type: "string", description: "지원사업명" },
-    category: {
-      type: "string",
-      enum: ["fund", "rnd", "ai", "hr", "export", "market", "facility", "consulting", "esg", "smart", "etc"],
-    },
-    summary: { type: "string", description: "지원사업을 한 문장으로 요약" },
-    benefits: {
-      type: "array",
-      description: "지원금액/지원내용/지원기간 등 구체적 혜택 2~4개",
-      items: {
-        type: "object",
-        properties: {
-          label: { type: "string", description: "예: 지원금액, 우대혜택, 지원기간" },
-          value: { type: "string" },
-        },
-        required: ["label", "value"],
-        additionalProperties: false,
-      },
-    },
+const FOUNDER_TYPE_RULES = [
+  { code: "youth", keywords: ["청년창업", "청년 대표", "청년기업", "만 39세"] },
+  { code: "woman", keywords: ["여성기업", "여성 대표", "여성창업"] },
+  { code: "disabled", keywords: ["장애인기업", "장애인 대표"] },
+  { code: "senior", keywords: ["시니어창업", "중장년창업", "만 50세"] },
+];
+
+const CERT_RULES = [
+  { code: "venture", keywords: ["벤처기업"] },
+  { code: "innobiz", keywords: ["이노비즈"] },
+  { code: "mainbiz", keywords: ["메인비즈"] },
+  { code: "social", keywords: ["사회적기업"] },
+  { code: "root", keywords: ["뿌리기업", "뿌리산업"] },
+];
+
+const SIZE_RULES = [
+  { code: "pre", keywords: ["예비창업자", "예비 창업"] },
+  { code: "sole", keywords: ["소상공인"] },
+  { code: "sme", keywords: ["중소기업"] },
+  { code: "mid", keywords: ["중견기업"] },
+];
+
+const INDUSTRY_RULES = [
+  { code: "mfg", keywords: ["제조업"] },
+  { code: "it", keywords: ["정보통신", "소프트웨어", "IT"] },
+  { code: "bio", keywords: ["바이오", "헬스케어", "제약"] },
+  { code: "content", keywords: ["콘텐츠", "게임", "영상", "웹툰"] },
+  { code: "agri", keywords: ["농식품", "농업", "축산", "수산"] },
+  { code: "construction", keywords: ["건설업"] },
+  { code: "retail", keywords: ["도소매업", "유통업"] },
+  { code: "service", keywords: ["서비스업"] },
+];
+
+const REGION_RULES = [
+  { code: "seoul", keywords: ["서울"] },
+  { code: "busan", keywords: ["부산"] },
+  { code: "daegu", keywords: ["대구"] },
+  { code: "incheon", keywords: ["인천"] },
+  { code: "gwangju", keywords: ["광주"] },
+  { code: "daejeon", keywords: ["대전"] },
+  { code: "ulsan", keywords: ["울산"] },
+  { code: "sejong", keywords: ["세종"] },
+  { code: "gyeonggi", keywords: ["경기도", "경기 "] },
+  { code: "gangwon", keywords: ["강원"] },
+  { code: "chungbuk", keywords: ["충청북도", "충북"] },
+  { code: "chungnam", keywords: ["충청남도", "충남"] },
+  { code: "jeonbuk", keywords: ["전라북도", "전북"] },
+  { code: "jeonnam", keywords: ["전라남도", "전남"] },
+  { code: "gyeongbuk", keywords: ["경상북도", "경북"] },
+  { code: "gyeongnam", keywords: ["경상남도", "경남"] },
+  { code: "jeju", keywords: ["제주"] },
+];
+
+function matchCategory(text) {
+  for (const rule of CATEGORY_RULES) {
+    if (includesAny(text, rule.keywords)) return rule.category;
+  }
+  return "etc";
+}
+
+function matchMany(text, rules) {
+  const hits = rules.filter((r) => includesAny(text, r.keywords)).map((r) => r.code);
+  return hits.length ? hits : null;
+}
+
+function matchAllOr(text, rules) {
+  const hits = rules.filter((r) => includesAny(text, r.keywords)).map((r) => r.code);
+  return hits.length ? hits : "all";
+}
+
+function matchMaxYears(text) {
+  const m = text.match(/(?:업력|창업)\s*(\d{1,2})\s*년\s*이내/);
+  return m ? Number(m[1]) : null;
+}
+
+function tagAnnouncementByRules(raw) {
+  const text = buildTextBlob(raw);
+  const category = matchCategory(text);
+  const sizes = matchMany(text, SIZE_RULES) || ["sole", "sme"]; // 명시 안 되면 가장 흔한 대상으로 넓게 잡음
+  const founderTypes = matchMany(text, FOUNDER_TYPE_RULES);
+  const certs = matchMany(text, CERT_RULES);
+  const industries = matchAllOr(text, INDUSTRY_RULES);
+  const regions = matchAllOr(text, REGION_RULES);
+  const maxYears = matchMaxYears(text);
+  const exportRequired = includesAny(text, ["수출실적 보유", "수출 실적이 있는"]);
+  const rndRequired = includesAny(text, ["부설연구소 보유", "연구전담부서 보유"]);
+  const insuranceRequired = includesAny(text, ["고용보험 가입 사업장"]);
+  const taxClean = !["consulting", "etc"].includes(category);
+
+  const name = pickField(raw, ["pblancNm", "title", "bsnsTitl"]) || "이름 미확인 공고";
+  const descRaw = pickField(raw, ["bsnsSumryCn", "content", "cn", "description"]);
+  const period = pickField(raw, ["reqstBeginEndDe", "period", "aplyPd"]);
+  const target = pickField(raw, ["trgetNm", "target", "reqstTrgetNm"]);
+
+  const summarySource = descRaw || name;
+  const summary = summarySource.slice(0, 90) + (summarySource.length > 90 ? "…" : "");
+
+  const benefits = [];
+  if (descRaw) benefits.push({ label: "지원내용", value: descRaw.slice(0, 200) + (descRaw.length > 200 ? "…(원문 확인 필요)" : "") });
+  if (target) benefits.push({ label: "지원대상", value: target.slice(0, 150) });
+  if (period) benefits.push({ label: "신청기간", value: period });
+  if (!benefits.length) benefits.push({ label: "안내", value: "공고 원문에서 자동 추출된 상세 내용이 없습니다. 공식 사이트에서 확인하세요." });
+
+  return {
+    name,
+    category,
+    summary,
+    benefits,
     elig: {
-      type: "object",
-      properties: {
-        sizes: {
-          type: "array",
-          items: { type: "string", enum: ["pre", "sole", "sme", "mid"] },
-          description: "예비창업자/소상공인/중소기업/중견기업 중 대상",
-        },
-        industries: {
-          anyOf: [
-            { type: "string", enum: ["all"] },
-            { type: "array", items: { type: "string", enum: INDUSTRY_CODES } },
-          ],
-        },
-        regions: {
-          anyOf: [
-            { type: "string", enum: ["all"] },
-            { type: "array", items: { type: "string", enum: REGION_CODES } },
-          ],
-        },
-        maxYears: { type: ["number", "null"], description: "업력 몇 년 이내 대상인지, 없으면 null" },
-        founderTypes: {
-          type: ["array", "null"],
-          items: { type: "string", enum: ["youth", "woman", "disabled", "senior"] },
-        },
-        certs: {
-          type: ["array", "null"],
-          items: { type: "string", enum: ["venture", "innobiz", "mainbiz", "social", "root"] },
-        },
-        exportRequired: { type: "boolean" },
-        rndRequired: { type: "boolean" },
-        insuranceRequired: { type: "boolean" },
-        taxClean: { type: "boolean", description: "국세/지방세 체납 없어야 신청 가능한 사업인지" },
-      },
-      required: [
-        "sizes", "industries", "regions", "maxYears", "founderTypes", "certs",
-        "exportRequired", "rndRequired", "insuranceRequired", "taxClean",
-      ],
-      additionalProperties: false,
+      sizes,
+      industries,
+      regions,
+      maxYears,
+      founderTypes,
+      certs,
+      exportRequired,
+      rndRequired,
+      insuranceRequired,
+      taxClean,
     },
-  },
-  required: ["name", "category", "summary", "benefits", "elig"],
-  additionalProperties: false,
-};
-
-async function tagAnnouncement(raw) {
-  const prompt = `다음은 한국 정부/공공기관 지원사업 공고 원문(JSON)입니다. 이 공고를 우리 회사의 지원사업 매칭 시스템 스키마에 맞게 구조화하세요.
-
-지침:
-- category는 사업 성격에 가장 가까운 것 하나만 선택하세요.
-- benefits는 공고 원문에 실제로 나온 지원금액/지원내용/지원기간 등을 2~4개의 라벨-값 쌍으로 정리하세요. 원문에 없는 수치나 조건을 지어내지 마세요.
-- elig(자격요건)은 원문에서 명시적으로 확인되는 조건만 반영하고, 확인되지 않으면 industries/regions는 "all", 나머지 필드는 null 또는 false로 두어 보수적으로 처리하세요(과도한 제외를 피하기 위함).
-- 확신이 없는 항목은 반드시 넓게(제한 없음 쪽으로) 잡으세요 — 나중에 사람이 검수합니다.
-
-공고 원문:
-"""
-${JSON.stringify(raw).slice(0, 6000)}
-"""`;
-
-  const response = await client.messages.create({
-    model: ANTHROPIC_MODEL,
-    max_tokens: 2048,
-    messages: [{ role: "user", content: prompt }],
-    output_config: { format: { type: "json_schema", schema: ELIGIBILITY_SCHEMA } },
-  });
-
-  const textBlock = response.content.find((b) => b.type === "text");
-  if (!textBlock) throw new Error("모델 응답에서 text 블록을 찾을 수 없습니다");
-  return JSON.parse(textBlock.text);
+  };
 }
 
 function loadExisting() {
@@ -164,13 +224,13 @@ async function main() {
   const autoPolicies = [];
   for (const raw of rawList) {
     try {
-      const tagged = await tagAnnouncement(raw);
-      const agency = raw.agency || raw.jrsdInsttNm || "확인 필요";
+      const tagged = tagAnnouncementByRules(raw);
+      const agency = pickField(raw, ["jrsdInsttNm", "agency", "instNm"]) || "확인 필요";
       autoPolicies.push({
         id: makeId(tagged.name, agency),
         name: tagged.name,
         agency,
-        url: raw.url || raw.pblancUrl || "https://www.bizinfo.go.kr",
+        url: pickField(raw, ["pblancUrl", "url", "pageUrl"]) || "https://www.bizinfo.go.kr",
         category: tagged.category,
         summary: tagged.summary,
         benefits: tagged.benefits,
@@ -187,7 +247,7 @@ async function main() {
 
   const out = {
     generatedAt: new Date().toISOString(),
-    note: "기업마당 Open API 자동 수집 + LLM(Claude) 자동 태깅 결과. source:auto 항목은 사람이 검수(reviewed:true로 변경)하기 전까지 화면에 '자동수집 · 검수대기' 표시가 붙습니다.",
+    note: "기업마당 Open API 자동 수집 + 키워드 규칙 기반 자동 태깅 결과. source:auto 항목은 사람이 검수(reviewed:true로 변경)하기 전까지 화면에 '자동수집 · 검수대기' 표시가 붙습니다. 규칙 기반 태깅은 LLM보다 정확도가 낮을 수 있으니 반드시 검수 후 병합하세요.",
     policies: merged,
   };
 
