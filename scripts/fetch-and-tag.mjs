@@ -165,9 +165,16 @@ function matchAllOr(text, rules) {
   return hits.length ? hits : "all";
 }
 
+// "창업기업"은 중소기업창업 지원법상 기본적으로 "창업 후 7년 이내인 기업"을 뜻합니다.
+// 공고 원문에 구체적인 연차(예: "업력 3년 이내")가 없어도 "창업기업/창업자"라는 표현만
+// 있으면 실질적으로 오래된 기업은 제외 대상이므로, 못 찾으면 7년을 기본값으로 둡니다.
+const STARTUP_ONLY_KEYWORDS = ["창업기업", "창업 기업", "창업자 ", "초기창업", "창업초기", "창업벤처"];
+
 function matchMaxYears(text) {
-  const m = text.match(/(?:업력|창업)\s*(\d{1,2})\s*년\s*이내/);
-  return m ? Number(m[1]) : null;
+  const explicit = text.match(/(?:업력|창업|설립)\s*(?:후|일로부터)?\s*(\d{1,2})\s*년\s*(?:미만|이내)/);
+  if (explicit) return Number(explicit[1]);
+  if (includesAny(text, STARTUP_ONLY_KEYWORDS)) return 7;
+  return null;
 }
 
 function tagAnnouncementByRules(raw) {

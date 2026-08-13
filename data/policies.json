@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-13T07:18:08.596Z",
+  "generatedAt": "2026-08-13T07:42:44.107Z",
   "note": "기업마당 Open API 자동 수집 + 키워드 규칙 기반 자동 태깅 결과. source:auto 항목은 사람이 검수(reviewed:true로 변경)하기 전까지 화면에 '자동수집 · 검수대기' 표시가 붙습니다. 규칙 기반 태깅은 LLM보다 정확도가 낮을 수 있으니 반드시 검수 후 병합하세요.",
   "policies": [
     {
@@ -1884,7 +1884,7 @@
         "regions": [
           "chungnam"
         ],
-        "maxYears": null,
+        "maxYears": 7,
         "founderTypes": null,
         "certs": null,
         "exportRequired": false,
@@ -2187,7 +2187,7 @@
         "regions": [
           "chungbuk"
         ],
-        "maxYears": null,
+        "maxYears": 7,
         "founderTypes": [
           "disabled"
         ],
@@ -2529,7 +2529,7 @@
         "regions": [
           "seoul"
         ],
-        "maxYears": null,
+        "maxYears": 7,
         "founderTypes": [
           "youth"
         ],
@@ -2715,7 +2715,7 @@
           "gyeongnam",
           "jeju"
         ],
-        "maxYears": null,
+        "maxYears": 7,
         "founderTypes": null,
         "certs": [
           "venture"
@@ -3028,7 +3028,7 @@
           "gyeongnam",
           "jeju"
         ],
-        "maxYears": null,
+        "maxYears": 7,
         "founderTypes": null,
         "certs": [
           "venture"
@@ -3472,7 +3472,7 @@
           "gyeongnam",
           "jeju"
         ],
-        "maxYears": null,
+        "maxYears": 7,
         "founderTypes": null,
         "certs": [
           "venture"
@@ -4195,7 +4195,7 @@
           "gyeongnam",
           "jeju"
         ],
-        "maxYears": null,
+        "maxYears": 7,
         "founderTypes": null,
         "certs": [
           "venture"
@@ -4929,7 +4929,7 @@
           "gyeongnam",
           "jeju"
         ],
-        "maxYears": null,
+        "maxYears": 7,
         "founderTypes": null,
         "certs": null,
         "exportRequired": false,
@@ -5125,7 +5125,7 @@
           "gyeongnam",
           "jeju"
         ],
-        "maxYears": null,
+        "maxYears": 7,
         "founderTypes": null,
         "certs": [
           "venture"
@@ -5575,7 +5575,7 @@
           "gyeongnam",
           "jeju"
         ],
-        "maxYears": null,
+        "maxYears": 7,
         "founderTypes": null,
         "certs": [
           "venture"
