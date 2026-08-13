@@ -50,9 +50,22 @@ async function fetchRawAnnouncements() {
 // 실제 기업마당 응답의 필드명을 확인한 뒤, 아래 candidateFields를 필요에 맞게 조정하세요.
 // ---------------------------------------------------------------------------
 
+function stripHtml(text) {
+  return text
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function pickField(raw, candidateFields) {
   for (const key of candidateFields) {
-    if (raw[key]) return String(raw[key]);
+    if (raw[key]) return stripHtml(String(raw[key]));
   }
   return "";
 }

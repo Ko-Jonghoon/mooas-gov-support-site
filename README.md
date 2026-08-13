@@ -1,7 +1,7 @@
 # 무아스 정부지원사업 매칭 사이트
 
 회사 조건을 입력하면 정부·지자체·공공기관 지원사업을 자동으로 매칭해 추천하는 정적 웹사이트입니다.
-Claude Artifact 프로토타입에서 시작해, **API로 자동 업데이트되는 실제 사이트**로 확장한 버전입니다.
+Claude Artifact 프로토타입에서 시작해, **API 데이터로 갱신 가능한 실제 사이트**로 확장한 버전입니다.
 
 ## 구성
 
@@ -10,8 +10,7 @@ index.html                 # 화면 (Claude Artifact와 동일한 UI, JSON을 fe
 data/policies.json          # 지원사업 데이터 (32건 수동 시드 + 자동 수집분)
 scripts/fetch-and-tag.mjs   # 기업마당 Open API → 키워드 규칙 기반 자동 태깅 → policies.json 갱신
 .github/workflows/
-  update-policies.yml       # 매일 자동 수집 + PR 생성 (사람 검수용)
-  deploy-pages.yml          # main 브랜치 push 시 GitHub Pages 배포
+  deploy-pages.yml          # main 브랜치 push 시 GitHub Pages 배포 (자동)
 ```
 
 `scripts/fetch-and-tag.mjs`는 Node.js 내장 기능(fetch, fs)만 사용해서 별도 npm 설치가 필요 없습니다.
@@ -26,9 +25,32 @@ npx serve .
 `index.html`을 더블클릭해서 `file://`로 직접 열면 `fetch('./data/policies.json')`이
 브라우저 보안 정책 때문에 막힙니다. 반드시 로컬 서버(`npx serve .`, `python -m http.server` 등)로 열어야 합니다.
 
-## 자동 업데이트를 켜기까지 남은 단계
+## 데이터 갱신은 왜 수동인가요?
 
-### 1. 기업마당(bizinfo.go.kr) Open API 키 신청
+원래는 GitHub Actions(해외 클라우드 서버)에서 매일 자동으로 기업마당 API를 호출하도록 만들었지만,
+**기업마당이 해외/클라우드 IP 대역의 접속을 막고 있어서** GitHub Actions에서는 연결 자체가 타임아웃 납니다.
+반면 한국 인터넷(회원님 PC)에서는 정상적으로 호출됩니다.
+
+그래서 데이터 수집은 **회원님 PC에서 직접 실행**하고, 그 결과만 GitHub에 올리는 방식으로 운영합니다.
+사이트 배포(`deploy-pages.yml`)는 여전히 자동입니다 — `main`에 push하면 몇 분 안에 실제 사이트에 반영됩니다.
+
+## 데이터 갱신하는 방법 (필요할 때, 예: 주 1회)
+
+1. **기업마당 인증키 발급**받기 — 아직 없다면 아래 "기업마당 API 키 신청" 참고
+2. PowerShell 열고:
+   ```powershell
+   cd "C:\Users\user\Desktop\mooas-gov-support-site\scripts"
+   $env:BIZINFO_API_KEY="발급받은 인증키 값"
+   node fetch-and-tag.mjs
+   ```
+3. `기업마당에서 N건의 공고를 가져왔습니다` / `data/policies.json 갱신 완료: ...` 메시지 확인
+4. **GitHub Desktop**을 열어 `data/policies.json` 변경 내용 확인
+   - `source: "auto"`, `reviewed: false`로 표시된 새 항목들이 실제 공고와 맞는지 몇 개 훑어보기
+   - 이상한 항목은 그 자리에서 파일을 직접 열어 수정해도 됩니다 (VS Code, 메모장 등으로 `data/policies.json` 편집)
+5. GitHub Desktop에서 **Commit → Push**
+6. 몇 분 뒤 실제 사이트(GitHub Pages 주소)에 새 데이터가 반영됩니다
+
+## 기업마당(bizinfo.go.kr) Open API 키 신청
 
 **회원가입 불필요, 신청 즉시 발급됩니다.**
 
@@ -38,27 +60,14 @@ npx serve .
 4. 기관명·신청자명·이메일·전화번호·시스템명·시스템 IP(또는 URL) 입력 후 제출
 5. **그 자리에서 인증키가 즉시 발급**되고 입력한 이메일로도 전송됩니다
 
-발급받은 키가 `crtfcKey` 값이며, 그대로 `BIZINFO_API_KEY` GitHub Secret에 넣으면 됩니다.
-
 확인된 API 스펙(`scripts/fetch-and-tag.mjs`에 이미 반영):
 - `GET https://www.bizinfo.go.kr/uss/rss/bizinfoApi.do`
 - 필수: `crtfcKey` / 선택: `dataType`(json/rss), `searchCnt`, `searchLclasId`(분야 01~09), `hashtags`, `pageUnit`, `pageIndex`
-- 다만 JSON 응답의 정확한 배열 경로(예: `jsonArray`)와 필드명(공고명/기관명/URL 등)은 실제 키로 한 번 호출해보고
-  `fetchRawAnnouncements()`와 `pickField()`에 넘기는 후보 필드명 목록을 필요시 조정하세요.
+- JSON 응답의 정확한 필드명(공고명/기관명/URL 등)이 우리가 짐작한 것과 다르면
+  `fetchRawAnnouncements()`와 `pickField()`에 넘기는 후보 필드명 목록을 조정하세요.
 
 (선택) [K-Startup Open API](https://www.k-startup.go.kr)도 같은 방식으로 별도 신청해 데이터 소스를 늘릴 수 있습니다.
-
-### 2. GitHub 저장소 만들기 + Secrets 등록
-
-1. 이 폴더(`mooas-gov-support-site`)를 새 GitHub 저장소로 push
-2. 저장소 **Settings → Secrets and variables → Actions → New repository secret**
-   - `BIZINFO_API_KEY` — 1번에서 발급받은 키
-3. **Settings → Pages**에서 Source를 "GitHub Actions"로 설정
-
-### 3. 동작 확인
-
-- `.github/workflows/update-policies.yml`을 Actions 탭에서 수동 실행(workflow_dispatch)해보면 `data/policies.json`을 갱신한 PR이 자동으로 열립니다.
-- PR 내용을 검토(자격요건·혜택 내용이 실제 공고와 맞는지 확인)한 뒤 병합하면, `deploy-pages.yml`이 자동으로 사이트를 재배포합니다.
+단, 마찬가지로 GitHub Actions에서 막힐 가능성이 있으니 로컬에서 먼저 테스트해보세요.
 
 ## 태깅 방식: 키워드 규칙 기반 (LLM 미사용)
 
@@ -66,14 +75,13 @@ npx serve .
 예: "청년창업" → 청년대표, "제조업" → 업종 mfg, "업력 5년 이내" → maxYears: 5.
 규칙은 `scripts/fetch-and-tag.mjs`의 `CATEGORY_RULES`, `FOUNDER_TYPE_RULES` 등의 배열에 있으며, 키워드를 추가/수정하면 바로 반영됩니다.
 
-**LLM 태깅보다 정확도가 낮을 수 있습니다** — 키워드가 없으면 놓치고, 문맥 이해 없이 단순 매칭이라 오탐도 있을 수 있습니다.
-그래서 모든 자동 수집 항목은 `reviewed: false`로 표시되어 사이트에 "자동수집 · 검수대기" 배지가 붙고,
-GitHub Actions도 바로 반영하지 않고 **PR을 생성**해 사람이 검토 후 병합하도록 만들어져 있습니다.
+**정확도가 완벽하지 않을 수 있습니다** — 키워드가 없으면 놓치고, 문맥 이해 없이 단순 매칭이라 오탐도 있을 수 있습니다.
+그래서 모든 자동 수집 항목은 `reviewed: false`로 표시되어 사이트에 "자동수집 · 검수대기" 배지가 붙습니다.
+위 "데이터 갱신하는 방법" 4단계에서 눈으로 한 번 훑어보고 push하는 것을 권장합니다.
 
 ## 앞으로 더 고려할 것
 
 - 규칙에 없는 키워드가 많이 보이면 `CATEGORY_RULES` 등에 키워드 추가
 - 중복 공고 감지 정교화 (현재는 이름+기관 기준으로 자동 수집분만 매번 새로 만듦)
 - 마감된 공고 자동 제거
-- K-Startup 등 추가 데이터 소스 통합
-- 나중에 정확도를 높이고 싶어지면 Claude API 기반 태깅으로 다시 전환 가능 (이전 버전 로직 참고)
+- 완전 자동화가 꼭 필요해지면: 한국 리전 서버(자체 PC를 self-hosted runner로 등록하거나, 국내 클라우드 소형 인스턴스)에서 스케줄 실행하는 방식으로 전환 가능
