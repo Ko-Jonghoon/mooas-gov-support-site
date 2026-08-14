@@ -245,9 +245,34 @@ const SOURCES = [
       // 실제 "신청 접수기간"이 아니라 예산 회계연도 전체 기간(1/1~12/31)만 있습니다.
       // 표본 확인 결과 실제 접수기간(RCEPT_BEGIN_DE/RCEPT_END_DE)이 있는 건 전체의 약 2%뿐이라,
       // 그 2%만 남기고 나머지는 버립니다 - 그래야 사이트가 20만 건짜리 파일을 매번 안 불러옵니다.
+      //
+      // 그것만으로는 부족합니다: 이 데이터는 "산업/기업 지원"뿐 아니라 문화활동·안전·교육·
+      // 환경·복지·보건의료 등 정부 예산 전체를 다 담고 있어서(예: 무용/음악/연극 지원사업,
+      // 학생 승마체험 등이 그대로 섞여 나옴 - 2026-08-14 실사용 중 발견), CMMN_ATRB_NM
+      // (정부 표준 기능별 분류)이 "13.1차 산업지원/14.산업·에너지지원/16.교통물류진흥/
+      // 17.방송통신진흥/18.과학기술진흥"인 것만 남기고, 그중에서도 "고등학생/아동/청소년" 같은
+      // 개인·학생 대상 태그가 붙은 건(예: 같은 "13.1차 산업지원" 예산으로 집행되는 학생 승마체험
+      // 프로그램)은 회사가 신청하는 사업이 아니므로 제외합니다.
+      const BUSINESS_ATRB_CODES = ["13", "14", "16", "17", "18"];
+      const INDIVIDUAL_TAG_RE = /학생|아동|청소년|유아|노인|어린이|대학생/;
+      function isBusinessRelevant(item) {
+        let atrbs;
+        try {
+          atrbs = JSON.parse(pickField(item, ["CMMN_ATRB_NM"]) || "[]");
+        } catch (e) {
+          return false;
+        }
+        const hasBusinessCategory = atrbs.some((v) => {
+          const m = String(v).match(/^(\d+)\./);
+          return m && BUSINESS_ATRB_CODES.includes(m[1]);
+        });
+        const hasIndividualTag = atrbs.some((v) => INDIVIDUAL_TAG_RE.test(String(v)));
+        return hasBusinessCategory && !hasIndividualTag;
+      }
+
       const bsnsyear = String(new Date().getFullYear());
       const numOfRows = 1000;
-      const hasReceptionPeriod = (item) => item.RCEPT_BEGIN_DE && item.RCEPT_END_DE;
+      const passesFilter = (item) => item.RCEPT_BEGIN_DE && item.RCEPT_END_DE && isBusinessRelevant(item);
 
       const firstUrl = withServiceKey(endpoint, process.env.MPB_API_KEY, {
         pageNo: "1", numOfRows: String(numOfRows), resultType: "json", bsnsyear,
@@ -259,7 +284,7 @@ const SOURCES = [
       }
       const totalCount = first.response?.body?.totalCount || 0;
       const totalPages = Math.ceil(totalCount / numOfRows);
-      const items = (first.response?.body?.items?.item || []).filter(hasReceptionPeriod);
+      const items = (first.response?.body?.items?.item || []).filter(passesFilter);
       let failedPages = 0;
 
       for (let page = 2; page <= totalPages; page++) {
@@ -269,7 +294,7 @@ const SOURCES = [
         try {
           const data = await fetchJsonWithRetry(url);
           const pageItems = data.response?.body?.items?.item || [];
-          items.push(...pageItems.filter(hasReceptionPeriod));
+          items.push(...pageItems.filter(passesFilter));
         } catch (err) {
           // 20만 건을 200번 가까이 나눠 받다 보면 한두 페이지 정도는 일시적으로 실패할 수
           // 있습니다. 그렇다고 지금까지 모은 걸 전부 버리지 않고, 그 페이지만 건너뜁니다.
@@ -290,7 +315,8 @@ const SOURCES = [
 
       console.log(
         `[기획재정부] 전체 ${totalCount}건(${totalPages}페이지, 실패 ${failedPages}페이지) 중 ` +
-        `실제 신청 접수기간이 있는 ${items.length}건, 제목+기관 중복 제거 후 ${deduped.length}건만 사용합니다.`
+        `접수기간이 있고 기업 지원 성격의 카테고리인 ${items.length}건, ` +
+        `제목+기관 중복 제거 후 ${deduped.length}건만 사용합니다.`
       );
       return deduped;
     },
