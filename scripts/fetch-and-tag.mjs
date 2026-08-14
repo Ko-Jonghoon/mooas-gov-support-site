@@ -423,6 +423,14 @@ const INDUSTRY_RULES = [
   { code: "service", keywords: ["서비스업"] },
 ];
 
+// 기획재정부(mpb) 데이터는 문장이 짧아서(예: "과수무병묘목(보급종)생산공급지원") INDUSTRY_RULES
+// 키워드가 본문에 안 나타나는 경우가 많음. 그런 경우 "all"로 잘못 넓혀지는 대신, 소관 부처명
+// 자체가 업종을 사실상 확정하는 경우(농림축산식품부→농림수산업 등)엔 그걸로 보정합니다.
+const AGENCY_INDUSTRY_HINTS = {
+  "농림축산식품부": ["agri"],
+  "해양수산부": ["agri"],
+};
+
 const REGION_RULES = [
   { code: "seoul", keywords: ["서울"] },
   { code: "busan", keywords: ["부산"] },
@@ -478,7 +486,10 @@ function tagAndBuildPolicy(normalized, source) {
   const sizes = matchMany(text, SIZE_RULES) || ["sole", "sme"]; // 명시 안 되면 가장 흔한 대상으로 넓게 잡음
   const founderTypes = matchMany(text, FOUNDER_TYPE_RULES);
   const certs = matchMany(text, CERT_RULES);
-  const industries = matchAllOr(text, INDUSTRY_RULES);
+  let industries = matchAllOr(text, INDUSTRY_RULES);
+  if (industries === "all" && AGENCY_INDUSTRY_HINTS[normalized.agency]) {
+    industries = AGENCY_INDUSTRY_HINTS[normalized.agency];
+  }
   const regions = matchAllOr(text, REGION_RULES);
   const maxYears = matchMaxYears(text);
   const exportRequired = includesAny(text, ["수출실적 보유", "수출 실적이 있는"]);

@@ -672,7 +672,8 @@
       </div>
 
       <div class="tab-panel" data-tab="dashboard">
-        <div class="table-wrap">
+        <div class="stat-strip" id="dashboardStatStrip"></div>
+        <div class="table-wrap" style="margin-top:18px;">
           <table class="results-table">
             <thead>
               <tr>
@@ -733,7 +734,8 @@
     graphSearch: document.getElementById("graph-search"),
     graphSearchResults: document.getElementById("graphSearchResults"),
     ganttChart: document.getElementById("ganttChart"),
-    dashboardBody: document.getElementById("dashboardBody")
+    dashboardBody: document.getElementById("dashboardBody"),
+    dashboardStatStrip: document.getElementById("dashboardStatStrip")
   };
 
   var activeCategory = null;
@@ -844,11 +846,6 @@
     }catch(e){ return null; }
   }
 
-  function overlap(a,b){
-    for (var i=0;i<a.length;i++){ if (b.indexOf(a[i]) !== -1) return true; }
-    return false;
-  }
-
   // returns null if excluded, else {score, reasons[]}
   function evaluate(policy, co){
     var e = policy.elig;
@@ -857,8 +854,11 @@
     if (e.regions !== "all" && e.regions.indexOf(co.region) === -1) return null;
     if (e.sizes && e.sizes.indexOf(co.size) === -1) return null;
     if (typeof e.maxYears === "number" && co.years > e.maxYears) return null;
-    if (e.founderTypes && !overlap(e.founderTypes, co.founderTypes)) return null;
-    if (e.certs && !overlap(e.certs, co.certs)) return null;
+    // 대표자특성(founderTypes)/보유인증(certs)은 공고 원문에서 "이 조건이어야만 신청 가능"인지
+    // "이 조건이면 우대·가점"인지 구분 없이 키워드로만 태깅되므로, 안 맞다고 제외하지 않고
+    // 맞을 때만 가점을 주는 방식으로 둡니다. 반면 수출실적/연구소·전담부서/고용보험/체납은
+    // 요건형 문구("~보유", "~가입 사업장")로만 태깅되어 공고 자체의 필수조건에 가까우므로
+    // 그대로 하드 필터로 유지합니다.
     if (e.exportRequired && !co.exportYn) return null;
     if (e.rndRequired && !co.rndYn) return null;
     if (e.insuranceRequired && !co.insuranceYn) return null;
@@ -877,14 +877,18 @@
       score += 10; reasons.push(REG_LABEL[co.region] + " 지역 특화 사업");
     }
     if (e.certs){
-      score += 14;
       var matchedCert = e.certs.filter(function(c){ return co.certs.indexOf(c) !== -1; });
-      reasons.push(CERT_LABEL[matchedCert[0]] + " 요건 충족");
+      if (matchedCert.length){
+        score += 14;
+        reasons.push(CERT_LABEL[matchedCert[0]] + " 우대 조건 충족");
+      }
     }
     if (e.founderTypes){
-      score += 14;
       var matchedFt = e.founderTypes.filter(function(f){ return co.founderTypes.indexOf(f) !== -1; });
-      reasons.push(FOUNDER_LABEL[matchedFt[0]] + " 우대 조건 충족");
+      if (matchedFt.length){
+        score += 14;
+        reasons.push(FOUNDER_LABEL[matchedFt[0]] + " 우대 조건 충족");
+      }
     }
     if (e.exportRequired){ score += 8; reasons.push("수출 실적 요건 충족"); }
     if (e.rndRequired){ score += 8; reasons.push("연구소·전담부서 요건 충족"); }
@@ -1138,6 +1142,16 @@
   }
 
   function renderDashboard(matches){
+    var total = matches.length;
+    var highCount = matches.filter(function(m){ return tierOf(m.score).cls === "high"; }).length;
+    var midCount = matches.filter(function(m){ return tierOf(m.score).cls === "mid"; }).length;
+    var refCount = matches.filter(function(m){ return tierOf(m.score).cls === "ref"; }).length;
+    els.dashboardStatStrip.innerHTML =
+      "<div class='stat-cell'><div class='s-label'>총 매칭</div><div class='s-value'>" + total + "<span class='unit'>건</span></div></div>" +
+      "<div class='stat-cell'><div class='s-label'>상 매칭</div><div class='s-value'>" + highCount + "<span class='unit'>건</span></div></div>" +
+      "<div class='stat-cell'><div class='s-label'>중 매칭</div><div class='s-value'>" + midCount + "<span class='unit'>건</span></div></div>" +
+      "<div class='stat-cell'><div class='s-label'>참고 매칭</div><div class='s-value'>" + refCount + "<span class='unit'>건</span></div></div>";
+
     els.dashboardBody.innerHTML = "";
     var view = matches.slice().sort(function(a,b){
       return b.score - a.score || a.policy.name.localeCompare(b.policy.name,"ko");
