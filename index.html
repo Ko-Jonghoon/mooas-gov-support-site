@@ -310,6 +310,8 @@
   .results-table tbody tr:hover{background:var(--surface-alt);}
   .results-table td.name-cell{white-space:normal;min-width:220px;font-weight:700;}
   .results-table td.score-cell{font-family:var(--font-mono);font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;}
+  .results-table td.star-cell{text-align:center;}
+  .results-table td.star-cell input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;}
   .results-table td.link-cell a{color:var(--accent);font-weight:700;text-decoration:none;}
   .results-table td.link-cell a:hover{text-decoration:underline;}
 
@@ -622,6 +624,7 @@
           <div class="results-count"><b id="count-num">0</b>건의 지원사업이 조건에 맞습니다</div>
           <div class="controls">
             <label class="hide-closed-toggle"><input type="checkbox" id="f-hide-closed"> 마감 제외</label>
+            <label class="hide-closed-toggle"><input type="checkbox" id="f-starred-only"> 찜한 것만</label>
             <input type="text" class="search" id="f-search" placeholder="사업명·기관명 검색">
             <select id="f-sort">
               <option value="score">매칭도순</option>
@@ -659,14 +662,15 @@
 
       <div class="tab-panel" data-tab="graph" hidden>
         <div class="graph-head">
-          <input type="text" class="search" id="graph-search" placeholder="과거(마감) 사업 검색해서 그래프에 추가">
+          <label class="hide-closed-toggle"><input type="checkbox" id="graph-starred-only"> 찜한 것만</label>
+          <input type="text" class="search" id="graph-search" placeholder="마감·접수예정 사업 검색해서 그래프에 추가">
           <div class="graph-search-results" id="graphSearchResults"></div>
         </div>
         <div class="gantt-legend">
           <span><span class="dot" style="background:var(--accent);"></span>신청 가능(잔여기간)</span>
           <span><span class="dot" style="background:var(--tier-ref-bg);border:1px solid var(--border);"></span>이미 지난 기간</span>
           <span><span class="dot" style="background:var(--accent-soft);"></span>접수 예정</span>
-          <span><span class="dot" style="background:var(--ink-faint);opacity:.55;"></span>검색으로 추가한 과거 사례</span>
+          <span><span class="dot" style="background:var(--ink-faint);opacity:.55;"></span>마감된 과거 사례(검색 추가·찜한 항목)</span>
         </div>
         <div id="ganttChart"></div>
       </div>
@@ -677,8 +681,10 @@
           <table class="results-table">
             <thead>
               <tr>
+                <th>찜</th>
                 <th>사업명</th>
                 <th>주관부처</th>
+                <th>상태</th>
                 <th>매칭율</th>
               </tr>
             </thead>
@@ -709,6 +715,7 @@
   var CERT_LABEL = {venture:"벤처기업확인",innobiz:"이노비즈",mainbiz:"메인비즈",social:"사회적기업",root:"뿌리기업확인"};
 
   var STORAGE_KEY = "mooas-gov-support-profile-v2";
+  var STARRED_KEY = "mooas-gov-support-starred-v1";
 
   var POLICIES = [];
 
@@ -727,6 +734,8 @@
     statStrip: document.getElementById("statStrip"),
     btnReset: document.getElementById("btn-reset"),
     hideClosed: document.getElementById("f-hide-closed"),
+    starredOnlyList: document.getElementById("f-starred-only"),
+    starredOnlyGraph: document.getElementById("graph-starred-only"),
     viewToggle: document.getElementById("viewToggle"),
     tableWrap: document.getElementById("tableWrap"),
     tableBody: document.getElementById("tableBody"),
@@ -742,6 +751,34 @@
   var viewMode = "card";
   var activeTab = "dashboard";
   var graphExtraIds = {};
+  var starredOnly = false;
+
+  function loadStarredIds(){
+    try{
+      var raw = localStorage.getItem(STARRED_KEY);
+      var arr = raw ? JSON.parse(raw) : [];
+      var out = {};
+      arr.forEach(function(id){ out[id] = true; });
+      return out;
+    }catch(e){ return {}; }
+  }
+  function saveStarredIds(){
+    try{ localStorage.setItem(STARRED_KEY, JSON.stringify(Object.keys(starredIds))); }catch(e){}
+  }
+  var starredIds = loadStarredIds();
+
+  function toggleStarred(id){
+    if (starredIds[id]) delete starredIds[id];
+    else starredIds[id] = true;
+    saveStarredIds();
+  }
+
+  function setStarredOnly(value){
+    starredOnly = value;
+    els.starredOnlyList.checked = value;
+    els.starredOnlyGraph.checked = value;
+    render();
+  }
 
   function parsePeriod(text){
     if (!text) return null;
@@ -937,6 +974,9 @@
     }
     if (els.hideClosed.checked){
       view = view.filter(function(m){ return computeStatus(m.policy).code !== "closed"; });
+    }
+    if (starredOnly){
+      view = view.filter(function(m){ return !!starredIds[m.policy.id]; });
     }
 
     var sortBy = els.sort.value;
@@ -1160,6 +1200,19 @@
       var p = m.policy;
       var tr = document.createElement("tr");
 
+      var starTd = document.createElement("td");
+      starTd.className = "star-cell";
+      var starCb = document.createElement("input");
+      starCb.type = "checkbox";
+      starCb.checked = !!starredIds[p.id];
+      starCb.title = "찜하기";
+      starCb.addEventListener("change", function(){
+        toggleStarred(p.id);
+        if (starredOnly) render();
+      });
+      starTd.appendChild(starCb);
+      tr.appendChild(starTd);
+
       var nameTd = document.createElement("td");
       nameTd.className = "name-cell";
       nameTd.textContent = p.name;
@@ -1174,6 +1227,14 @@
       a.textContent = p.agency + " ↗";
       agencyTd.appendChild(a);
       tr.appendChild(agencyTd);
+
+      var dashStatus = computeStatus(p);
+      var statusTd = document.createElement("td");
+      var statusPill = document.createElement("span");
+      statusPill.className = "status-pill " + dashStatus.code;
+      statusPill.textContent = dashStatus.label;
+      statusTd.appendChild(statusPill);
+      tr.appendChild(statusTd);
 
       var scoreTd = document.createElement("td");
       scoreTd.className = "score-cell";
@@ -1212,14 +1273,15 @@
     var list = document.createElement("div");
     list.className = "graph-search-list";
     var hits = POLICIES.filter(function(p){
-      return computeStatus(p).code === "closed" &&
+      var code = computeStatus(p).code;
+      return (code === "closed" || code === "upcoming") &&
         (p.name.toLowerCase().indexOf(q) !== -1 || p.agency.toLowerCase().indexOf(q) !== -1);
     }).slice(0, 20);
 
     if (!hits.length){
       var empty = document.createElement("div");
       empty.className = "empty";
-      empty.textContent = "마감된 사업 중 일치하는 결과가 없습니다.";
+      empty.textContent = "마감·접수예정 사업 중 일치하는 결과가 없습니다.";
       list.appendChild(empty);
     } else {
       hits.forEach(function(p){
@@ -1243,22 +1305,33 @@
     var shownIds = {};
     var rows = [];
 
-    matches.forEach(function(m){
-      var period = getPolicyPeriod(m.policy);
-      if (!period || !periodOverlapsYear(period, bounds)) return;
-      if (computeStatus(m.policy).code === "closed") return; // 마감 건은 검색으로만 추가
-      shownIds[m.policy.id] = true;
-      rows.push({ policy: m.policy, period: period, extra: false });
-    });
+    if (starredOnly){
+      // 찜한 것만 보기: 회사 조건 매칭이나 마감 여부와 무관하게, 찜한 사업만 전부 보여줍니다
+      // (마감된 것도 포함 - 놓치지 않고 다음 회차 시기를 참고하려는 용도).
+      POLICIES.forEach(function(p){
+        if (!starredIds[p.id]) return;
+        var period = getPolicyPeriod(p);
+        if (!period || !periodOverlapsYear(period, bounds)) return;
+        rows.push({ policy: p, period: period, source: "starred" });
+      });
+    } else {
+      matches.forEach(function(m){
+        var period = getPolicyPeriod(m.policy);
+        if (!period || !periodOverlapsYear(period, bounds)) return;
+        if (computeStatus(m.policy).code === "closed") return; // 마감 건은 검색으로만 추가
+        shownIds[m.policy.id] = true;
+        rows.push({ policy: m.policy, period: period, source: "match" });
+      });
 
-    Object.keys(graphExtraIds).forEach(function(id){
-      if (shownIds[id]) return;
-      var p = POLICIES.find(function(pp){ return pp.id === id; });
-      if (!p) return;
-      var period = getPolicyPeriod(p);
-      if (!period || !periodOverlapsYear(period, bounds)) return;
-      rows.push({ policy: p, period: period, extra: true });
-    });
+      Object.keys(graphExtraIds).forEach(function(id){
+        if (shownIds[id]) return;
+        var p = POLICIES.find(function(pp){ return pp.id === id; });
+        if (!p) return;
+        var period = getPolicyPeriod(p);
+        if (!period || !periodOverlapsYear(period, bounds)) return;
+        rows.push({ policy: p, period: period, source: "graphExtra" });
+      });
+    }
 
     rows.sort(function(a,b){ return new Date(a.period.start) - new Date(b.period.start); });
 
@@ -1267,7 +1340,9 @@
     if (!rows.length){
       var empty = document.createElement("div");
       empty.className = "gantt-empty";
-      empty.textContent = "표시할 신청기간 정보가 있는 매칭 사업이 없습니다. 위 검색창에서 과거 사업을 추가해 보세요.";
+      empty.textContent = starredOnly
+        ? "찜한 사업 중 표시할 신청기간 정보가 있는 사업이 없습니다. 대시보드에서 사업을 찜해 보세요."
+        : "표시할 신청기간 정보가 있는 매칭 사업이 없습니다. 위 검색창에서 과거 사업을 추가해 보세요.";
       els.ganttChart.appendChild(empty);
       return;
     }
@@ -1320,14 +1395,15 @@
       titleSpan.style.textOverflow = "ellipsis";
       titleSpan.textContent = row.policy.name;
       label.appendChild(titleSpan);
-      if (row.extra){
+      if (row.source === "graphExtra" || row.source === "starred"){
         var rm = document.createElement("button");
         rm.type = "button";
         rm.className = "remove-btn";
         rm.textContent = "×";
-        rm.title = "그래프에서 제거";
+        rm.title = row.source === "starred" ? "찜 해제" : "그래프에서 제거";
         rm.addEventListener("click", function(){
-          delete graphExtraIds[row.policy.id];
+          if (row.source === "starred") toggleStarred(row.policy.id);
+          else delete graphExtraIds[row.policy.id];
           render();
         });
         label.appendChild(rm);
@@ -1349,7 +1425,7 @@
       bar.style.width = widthPct + "%";
       bar.title = row.policy.name + " (" + row.period.start + " ~ " + row.period.end + ")";
 
-      if (row.extra){
+      if (row.source === "graphExtra" || (row.source === "starred" && todayTs > e)){
         bar.classList.add("past-case");
       } else if (todayTs < s){
         bar.classList.add("upcoming");
@@ -1418,6 +1494,8 @@
   els.search.addEventListener("input", render);
   els.sort.addEventListener("change", render);
   els.hideClosed.addEventListener("change", render);
+  els.starredOnlyList.addEventListener("change", function(){ setStarredOnly(els.starredOnlyList.checked); });
+  els.starredOnlyGraph.addEventListener("change", function(){ setStarredOnly(els.starredOnlyGraph.checked); });
   els.viewToggle.querySelectorAll("button").forEach(function(btn){
     btn.addEventListener("click", function(){ setViewMode(btn.dataset.view); });
   });
