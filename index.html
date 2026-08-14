@@ -239,11 +239,11 @@
   .basic-info-bar .persist-note{flex:1 1 100%;margin-top:14px;}
 
   /* tabs */
-  .tabs{display:flex;gap:6px;border-bottom:1px solid var(--border);margin-bottom:18px;}
+  .tabs{display:flex;gap:8px;border-bottom:2px solid var(--border);margin-bottom:22px;}
   .tabs button{
     font-family:var(--font-body);border:none;background:transparent;color:var(--ink-faint);
-    padding:10px 4px;margin-right:14px;font-size:.92rem;font-weight:700;cursor:pointer;
-    border-bottom:2px solid transparent;
+    padding:14px 6px;margin-right:22px;font-size:1.15rem;font-weight:700;cursor:pointer;
+    border-bottom:3px solid transparent;
   }
   .tabs button.active{color:var(--ink);border-bottom-color:var(--accent);}
 
@@ -616,6 +616,8 @@
         <button type="button" data-tab="dashboard" class="active">대시보드</button>
         <button type="button" data-tab="graph">그래프</button>
         <button type="button" data-tab="list">목록</button>
+        <button type="button" data-tab="progress">진행중</button>
+        <button type="button" data-tab="done">완료</button>
       </div>
 
       <div class="tab-panel" data-tab="list" hidden>
@@ -686,10 +688,53 @@
                 <th>주관부처</th>
                 <th>상태</th>
                 <th>매칭율</th>
+                <th>진행 관리</th>
               </tr>
             </thead>
             <tbody id="dashboardBody"></tbody>
           </table>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-tab="progress" hidden>
+        <p class="bar-hint" style="margin-bottom:12px;">대시보드에서 "진행 관리"로 표시한 사업입니다. 완료되면 완료로 옮기거나, 다시 대시보드로 되돌릴 수 있습니다.</p>
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>사업명</th>
+                <th>주관부처</th>
+                <th>상태</th>
+                <th>진행 관리</th>
+              </tr>
+            </thead>
+            <tbody id="progressBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="progressEmpty" hidden>
+          <h3>진행중으로 표시한 사업이 없습니다</h3>
+          <p>대시보드 목록에서 "진행 관리" 열의 상태를 바꿔 여기로 옮겨보세요.</p>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-tab="done" hidden>
+        <p class="bar-hint" style="margin-bottom:12px;">완료로 표시한 사업입니다.</p>
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>사업명</th>
+                <th>주관부처</th>
+                <th>상태</th>
+                <th>진행 관리</th>
+              </tr>
+            </thead>
+            <tbody id="doneBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="doneEmpty" hidden>
+          <h3>완료로 표시한 사업이 없습니다</h3>
+          <p>진행중 목록에서 완료 처리하면 여기로 옮겨집니다.</p>
         </div>
       </div>
   </main>
@@ -716,6 +761,7 @@
 
   var STORAGE_KEY = "mooas-gov-support-profile-v2";
   var STARRED_KEY = "mooas-gov-support-starred-v1";
+  var APPSTATUS_KEY = "mooas-gov-support-appstatus-v1";
 
   var POLICIES = [];
 
@@ -744,7 +790,11 @@
     graphSearchResults: document.getElementById("graphSearchResults"),
     ganttChart: document.getElementById("ganttChart"),
     dashboardBody: document.getElementById("dashboardBody"),
-    dashboardStatStrip: document.getElementById("dashboardStatStrip")
+    dashboardStatStrip: document.getElementById("dashboardStatStrip"),
+    progressBody: document.getElementById("progressBody"),
+    progressEmpty: document.getElementById("progressEmpty"),
+    doneBody: document.getElementById("doneBody"),
+    doneEmpty: document.getElementById("doneEmpty")
   };
 
   var activeCategory = null;
@@ -777,6 +827,27 @@
     starredOnly = value;
     els.starredOnlyList.checked = value;
     els.starredOnlyGraph.checked = value;
+    render();
+  }
+
+  // 진행 상태 관리: 신청기간(접수중/마감) 같은 공고 자체 상태와는 별개로, "우리 회사가 이미
+  // 신청했거나(진행중) 끝낸(완료) 사업"을 사용자가 직접 표시해두는 개인 트래킹 용도입니다.
+  // 표시하면 대시보드/그래프/목록에서는 빠지고 진행중/완료 탭에서만 보입니다.
+  function loadAppStatus(){
+    try{
+      var raw = localStorage.getItem(APPSTATUS_KEY);
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){ return {}; }
+  }
+  function saveAppStatus(){
+    try{ localStorage.setItem(APPSTATUS_KEY, JSON.stringify(appStatus)); }catch(e){}
+  }
+  var appStatus = loadAppStatus();
+
+  function setAppStatus(id, status){
+    if (status){ appStatus[id] = status; }
+    else { delete appStatus[id]; }
+    saveAppStatus();
     render();
   }
 
@@ -950,11 +1021,13 @@
     var co = readCompany();
     saveCompany(co);
 
-    var matches = [];
+    var allMatches = [];
     POLICIES.forEach(function(p){
       var r = evaluate(p, co);
-      if (r) matches.push({policy:p, score:r.score, reasons:r.reasons});
+      if (r) allMatches.push({policy:p, score:r.score, reasons:r.reasons});
     });
+    // 진행중/완료로 표시해둔 사업은 대시보드·그래프·목록에서는 빼고 해당 탭에서만 보여줍니다.
+    var matches = allMatches.filter(function(m){ return !appStatus[m.policy.id]; });
 
     renderStatStrip(matches, co);
 
@@ -997,6 +1070,8 @@
     renderTable(view);
     renderDashboard(matches);
     renderGantt(matches);
+    renderProgress("in_progress", els.progressBody, els.progressEmpty);
+    renderProgress("done", els.doneBody, els.doneEmpty);
   }
 
   function renderStatStrip(matches, co){
@@ -1241,7 +1316,68 @@
       scoreTd.textContent = m.score + "%";
       tr.appendChild(scoreTd);
 
+      var progressTd = document.createElement("td");
+      var progressSelect = document.createElement("select");
+      progressSelect.innerHTML =
+        "<option value=''>진행 관리</option>" +
+        "<option value='in_progress'>진행중으로 이동</option>" +
+        "<option value='done'>완료로 이동</option>";
+      progressSelect.addEventListener("change", function(){
+        if (progressSelect.value) setAppStatus(p.id, progressSelect.value);
+      });
+      progressTd.appendChild(progressSelect);
+      tr.appendChild(progressTd);
+
       els.dashboardBody.appendChild(tr);
+    });
+  }
+
+  function renderProgress(status, tbodyEl, emptyEl){
+    var rows = POLICIES.filter(function(p){ return appStatus[p.id] === status; });
+    tbodyEl.innerHTML = "";
+    emptyEl.hidden = rows.length > 0;
+
+    rows.forEach(function(p){
+      var tr = document.createElement("tr");
+
+      var nameTd = document.createElement("td");
+      nameTd.className = "name-cell";
+      nameTd.textContent = p.name;
+      tr.appendChild(nameTd);
+
+      var agencyTd = document.createElement("td");
+      agencyTd.className = "dash-agency";
+      var a = document.createElement("a");
+      a.href = p.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = p.agency + " ↗";
+      agencyTd.appendChild(a);
+      tr.appendChild(agencyTd);
+
+      var pStatus = computeStatus(p);
+      var statusTd = document.createElement("td");
+      var statusPill = document.createElement("span");
+      statusPill.className = "status-pill " + pStatus.code;
+      statusPill.textContent = pStatus.label;
+      statusTd.appendChild(statusPill);
+      tr.appendChild(statusTd);
+
+      var progressTd = document.createElement("td");
+      var progressSelect = document.createElement("select");
+      var opts = "<option value=''>진행 관리</option>";
+      if (status !== "in_progress") opts += "<option value='in_progress'>진행중으로 이동</option>";
+      if (status !== "done") opts += "<option value='done'>완료로 이동</option>";
+      opts += "<option value='none'>대시보드로 되돌리기</option>";
+      progressSelect.innerHTML = opts;
+      progressSelect.addEventListener("change", function(){
+        if (!progressSelect.value) return;
+        setAppStatus(p.id, progressSelect.value === "none" ? null : progressSelect.value);
+      });
+      progressTd.appendChild(progressSelect);
+      tr.appendChild(progressTd);
+
+      tbodyEl.appendChild(tr);
     });
   }
 

@@ -1,0 +1,50 @@
+name: 지원사업 데이터 갱신
+
+# 매일 자동으로 실행되어 최신 공고를 수집하고, 변경이 있으면 자동으로 커밋·푸시합니다
+# (사이트에도 그대로 반영) - 평소엔 아무것도 안 눌러도 됩니다.
+# 필요하면 GitHub 저장소의 "Actions" 탭에서 이 워크플로를 선택하고
+# "Run workflow" 버튼으로 원할 때 수동으로도 돌릴 수 있습니다.
+on:
+  schedule:
+    - cron: "0 21 * * *" # 매일 06:00(KST) = 전날 21:00(UTC). 주기를 바꾸려면 이 줄만 수정하면 됩니다.
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Node.js 설치
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: 최신 공고 수집 (기획재정부는 20분 정도 걸릴 수 있습니다)
+        env:
+          BIZINFO_API_KEY: ${{ secrets.BIZINFO_API_KEY }}
+          SME24_ANNOUNCE_API_KEY: ${{ secrets.SME24_ANNOUNCE_API_KEY }}
+          SME24_ANNOUNCE_ENDPOINT: ${{ secrets.SME24_ANNOUNCE_ENDPOINT }}
+          SME24_EVENT_API_KEY: ${{ secrets.SME24_EVENT_API_KEY }}
+          SME24_EVENT_ENDPOINT: ${{ secrets.SME24_EVENT_ENDPOINT }}
+          KSTARTUP_API_KEY: ${{ secrets.KSTARTUP_API_KEY }}
+          KSTARTUP_ENDPOINT: ${{ secrets.KSTARTUP_ENDPOINT }}
+          MPB_API_KEY: ${{ secrets.MPB_API_KEY }}
+          MPB_ENDPOINT: ${{ secrets.MPB_ENDPOINT }}
+        run: node scripts/fetch-and-tag.mjs
+
+      - name: 변경사항 커밋 및 푸시
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/policies.json
+          if git diff --cached --quiet; then
+            echo "변경된 내용이 없어 커밋을 건너뜁니다."
+          else
+            git commit -m "chore: 자동 데이터 갱신 $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
