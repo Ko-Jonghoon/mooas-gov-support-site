@@ -5,11 +5,30 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_PATH = path.join(__dirname, "..", "data", "policies.json");
 
+// scripts/.env.local (git에 올라가지 않는 파일)에 BIZINFO_API_KEY=값 형태로 한 번만
+// 저장해두면, 이후로는 run-fetch.bat 더블클릭만으로 실행할 수 있습니다.
+function loadLocalEnv() {
+  const envPath = path.join(__dirname, ".env.local");
+  if (!fs.existsSync(envPath)) return;
+  const lines = fs.readFileSync(envPath, "utf8").split(/\r?\n/);
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const idx = trimmed.indexOf("=");
+    if (idx === -1) continue;
+    const key = trimmed.slice(0, idx).trim();
+    const value = trimmed.slice(idx + 1).trim();
+    if (!(key in process.env)) process.env[key] = value;
+  }
+}
+loadLocalEnv();
+
 const BIZINFO_API_KEY = process.env.BIZINFO_API_KEY;
 
 if (!BIZINFO_API_KEY) {
   console.error(
-    "BIZINFO_API_KEY 환경변수가 필요합니다. 기업마당(bizinfo.go.kr) Open API 활용신청 후 발급받은 키를 설정하세요."
+    "BIZINFO_API_KEY가 없습니다. scripts/.env.local 파일을 만들고 BIZINFO_API_KEY=발급받은키 형태로 한 줄 넣어주세요.\n" +
+    "(scripts/.env.local.example 파일을 참고하세요)"
   );
   process.exit(1);
 }

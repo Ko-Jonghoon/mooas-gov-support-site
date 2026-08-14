@@ -56,6 +56,7 @@
   }
 
   *{box-sizing:border-box;}
+  [hidden]{display:none !important;}
   html,body{margin:0;padding:0;}
   body{
     background:var(--bg);
@@ -258,7 +259,53 @@
   .cat-filters button .n{font-family:var(--font-mono);color:var(--ink-faint);margin-left:5px;}
   .cat-filters button.active .n{color:var(--bg);opacity:.7;}
 
+  .view-toggle{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .view-toggle button{
+    font-family:var(--font-body);border:none;background:var(--surface);color:var(--ink-soft);
+    padding:7px 12px;font-size:.8rem;font-weight:600;cursor:pointer;
+  }
+  .view-toggle button + button{border-left:1px solid var(--border);}
+  .view-toggle button.active{background:var(--ink);color:var(--bg);}
+
+  .hide-closed-toggle{
+    display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--ink-soft);
+    cursor:pointer;user-select:none;
+  }
+  .hide-closed-toggle input{accent-color:var(--ink);}
+
+  .status-pill{
+    font-size:.68rem;font-weight:700;letter-spacing:.02em;border-radius:999px;padding:3px 9px;
+    white-space:nowrap;
+  }
+  .status-pill.open{background:var(--tier-high-bg);color:var(--tier-high);}
+  .status-pill.closing{background:var(--tier-mid-bg);color:var(--tier-mid);}
+  .status-pill.closed{background:var(--tier-ref-bg);color:var(--tier-ref);}
+  .status-pill.ongoing{background:var(--surface-alt);color:var(--ink-soft);}
+  .status-pill.upcoming{background:var(--accent-soft);color:var(--accent);}
+
   .results-list{display:flex;flex-direction:column;gap:14px;}
+
+  .table-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);}
+  .results-table{width:100%;border-collapse:collapse;font-size:.86rem;}
+  .results-table th, .results-table td{
+    padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;
+  }
+  .results-table th{
+    font-size:.7rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint);
+    background:var(--surface-alt);
+  }
+  .results-table tbody tr:last-child td{border-bottom:none;}
+  .results-table tbody tr:hover{background:var(--surface-alt);}
+  .results-table td.name-cell{white-space:normal;min-width:220px;font-weight:700;}
+  .results-table td.score-cell{font-family:var(--font-mono);font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;}
+  .results-table td.link-cell a{color:var(--accent);font-weight:700;text-decoration:none;}
+  .results-table td.link-cell a:hover{text-decoration:underline;}
+
+  @media (max-width:700px){
+    .view-toggle{display:none;}
+    #resultsList{display:flex !important;}
+    #tableWrap{display:none !important;}
+  }
 
   .card{
     background:var(--surface);border:1px solid var(--border);border-radius:14px;
@@ -508,16 +555,36 @@
       <div class="results-head" style="margin-top:18px;">
         <div class="results-count"><b id="count-num">0</b>건의 지원사업이 조건에 맞습니다</div>
         <div class="controls">
+          <label class="hide-closed-toggle"><input type="checkbox" id="f-hide-closed"> 마감 제외</label>
           <input type="text" class="search" id="f-search" placeholder="사업명·기관명 검색">
           <select id="f-sort">
             <option value="score">매칭도순</option>
             <option value="name">사업명순</option>
             <option value="agency">기관명순</option>
           </select>
+          <div class="view-toggle" id="viewToggle">
+            <button type="button" data-view="card" class="active">카드형</button>
+            <button type="button" data-view="table">표 형식</button>
+          </div>
         </div>
       </div>
       <div class="cat-filters" id="catFilters"></div>
       <div class="results-list" id="resultsList"></div>
+      <div class="table-wrap" id="tableWrap" hidden>
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>사업명</th>
+              <th>기관</th>
+              <th>분야</th>
+              <th>매칭도</th>
+              <th>상태</th>
+              <th>링크</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
       <div class="empty-state" id="emptyState" hidden>
         <h3>조건에 맞는 지원사업이 없습니다</h3>
         <p>기업 구분·업종·지역 조건을 조금 넓혀 보시거나, 체납·고용보험 조건을 다시 확인해 보세요.</p>
@@ -562,10 +629,46 @@
     emptyState: document.getElementById("emptyState"),
     catFilters: document.getElementById("catFilters"),
     statStrip: document.getElementById("statStrip"),
-    btnReset: document.getElementById("btn-reset")
+    btnReset: document.getElementById("btn-reset"),
+    hideClosed: document.getElementById("f-hide-closed"),
+    viewToggle: document.getElementById("viewToggle"),
+    tableWrap: document.getElementById("tableWrap"),
+    tableBody: document.getElementById("tableBody")
   };
 
   var activeCategory = null;
+  var viewMode = "card";
+
+  function parsePeriod(text){
+    if (!text) return null;
+    var matches = text.match(/(\d{4})[.\-](\d{1,2})[.\-](\d{1,2})/g);
+    if (!matches || matches.length < 2) return null;
+    function toIso(d){
+      var p = d.split(/[.\-]/);
+      return p[0] + "-" + String(p[1]).padStart(2,"0") + "-" + String(p[2]).padStart(2,"0");
+    }
+    return { start: toIso(matches[0]), end: toIso(matches[matches.length-1]) };
+  }
+
+  function getPolicyPeriod(policy){
+    if (!policy.benefits) return null;
+    var row = policy.benefits.find(function(b){ return b.label === "신청기간" || b.label === "지원기간"; });
+    return row ? parsePeriod(row.value) : null;
+  }
+
+  function computeStatus(policy){
+    var period = getPolicyPeriod(policy);
+    if (!period) return { code:"ongoing", label:"상시" };
+    var now = new Date();
+    var start = new Date(period.start + "T00:00:00");
+    var end = new Date(period.end + "T23:59:59");
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) return { code:"ongoing", label:"상시" };
+    if (now < start) return { code:"upcoming", label:"접수 예정" };
+    if (now > end) return { code:"closed", label:"마감" };
+    var daysLeft = Math.ceil((end - now) / 86400000);
+    if (daysLeft <= 3) return { code:"closing", label:"마감임박" };
+    return { code:"open", label:"접수중" };
+  }
 
   function getChecked(containerId){
     var out = [];
@@ -726,6 +829,9 @@
         return m.policy.name.toLowerCase().indexOf(q) !== -1 || m.policy.agency.toLowerCase().indexOf(q) !== -1;
       });
     }
+    if (els.hideClosed.checked){
+      view = view.filter(function(m){ return computeStatus(m.policy).code !== "closed"; });
+    }
 
     var sortBy = els.sort.value;
     view.sort(function(a,b){
@@ -736,12 +842,13 @@
     });
 
     els.countNum.textContent = matches.length;
-    els.resultsList.innerHTML = "";
     els.emptyState.hidden = view.length > 0;
 
+    els.resultsList.innerHTML = "";
     view.forEach(function(m){
       els.resultsList.appendChild(renderCard(m));
     });
+    renderTable(view);
   }
 
   function renderStatStrip(matches, co){
@@ -795,6 +902,11 @@
     catTag.className = "tag";
     catTag.textContent = CATS[p.category].label;
     tagsRow.appendChild(catTag);
+    var status = computeStatus(p);
+    var statusTag = document.createElement("span");
+    statusTag.className = "status-pill " + status.code;
+    statusTag.textContent = status.label;
+    tagsRow.appendChild(statusTag);
     if (p.reviewed === false){
       var reviewTag = document.createElement("span");
       reviewTag.className = "tag";
@@ -875,6 +987,61 @@
     return card;
   }
 
+  function renderTable(view){
+    els.tableBody.innerHTML = "";
+    view.forEach(function(m){
+      var p = m.policy;
+      var status = computeStatus(p);
+      var tr = document.createElement("tr");
+
+      var nameTd = document.createElement("td");
+      nameTd.className = "name-cell";
+      nameTd.textContent = p.name + (p.reviewed === false ? " (검수대기)" : "");
+      tr.appendChild(nameTd);
+
+      var agencyTd = document.createElement("td");
+      agencyTd.textContent = p.agency;
+      tr.appendChild(agencyTd);
+
+      var catTd = document.createElement("td");
+      catTd.textContent = CATS[p.category].label;
+      tr.appendChild(catTd);
+
+      var scoreTd = document.createElement("td");
+      scoreTd.className = "score-cell";
+      scoreTd.textContent = m.score + "%";
+      tr.appendChild(scoreTd);
+
+      var statusTd = document.createElement("td");
+      var statusPill = document.createElement("span");
+      statusPill.className = "status-pill " + status.code;
+      statusPill.textContent = status.label;
+      statusTd.appendChild(statusPill);
+      tr.appendChild(statusTd);
+
+      var linkTd = document.createElement("td");
+      linkTd.className = "link-cell";
+      var a = document.createElement("a");
+      a.href = p.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = "바로가기 ↗";
+      linkTd.appendChild(a);
+      tr.appendChild(linkTd);
+
+      els.tableBody.appendChild(tr);
+    });
+  }
+
+  function setViewMode(mode){
+    viewMode = mode;
+    els.resultsList.hidden = mode !== "card";
+    els.tableWrap.hidden = mode !== "table";
+    els.viewToggle.querySelectorAll("button").forEach(function(btn){
+      btn.classList.toggle("active", btn.dataset.view === mode);
+    });
+  }
+
   function defaultCompany(){
     return {
       industry: "mfg", region: "gyeonggi", size: "sme", founded: 2022,
@@ -891,6 +1058,10 @@
   });
   els.search.addEventListener("input", render);
   els.sort.addEventListener("change", render);
+  els.hideClosed.addEventListener("change", render);
+  els.viewToggle.querySelectorAll("button").forEach(function(btn){
+    btn.addEventListener("click", function(){ setViewMode(btn.dataset.view); });
+  });
   els.btnReset.addEventListener("click", function(){
     try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
     applyCompany(defaultCompany());
