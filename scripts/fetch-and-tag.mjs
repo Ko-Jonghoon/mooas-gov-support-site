@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import crypto from "crypto";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -44,15 +45,76 @@ loadLocalEnv();
 // 만들 때 쓰는 것이 맞고, 지금은 연결하지 않았습니다.
 // ---------------------------------------------------------------------------
 
-async function fetchJson(url) {
-  const res = await fetch(url);
+// 정부 공공API가 가끔 응답을 아예 안 주고 멈추는 경우가 있어서(실제로 겪음: 타임아웃 없이
+// 기다리다 17분 넘게 걸린 뒤 강제 종료됨), 요청마다 타임아웃을 걸어 무한정 멈추지 않게 합니다.
+async function fetchJson(url, timeoutMs = 20000) {
+  const res = await fetch(url, { signal: AbortSignal.timeout(timeoutMs) });
   const bodyText = await res.text();
   if (!res.ok) {
     // data.go.kr류 API는 400/401 응답 본문(XML/JSON)에 정확한 실패 사유가 들어있는 경우가
     // 많아서(예: 필수 파라미터 누락, 서비스키 미승인 등) 본문 앞부분을 그대로 보여줍니다.
-    throw new Error(`HTTP ${res.status} (${url.origin}${url.pathname}) - ${bodyText.slice(0, 300)}`);
+    throw new Error(`HTTP ${res.status} (${String(url).split("?")[0]}) - ${bodyText.slice(0, 300)}`);
   }
   return JSON.parse(bodyText);
+}
+
+async function fetchText(url, timeoutMs = 20000) {
+  const res = await fetch(url, { signal: AbortSignal.timeout(timeoutMs) });
+  const bodyText = await res.text();
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status} (${String(url).split("?")[0]}) - ${bodyText.slice(0, 300)}`);
+  }
+  return bodyText;
+}
+
+// 페이지네이션처럼 같은 요청을 수십~수백 번 반복할 때, 그중 한두 개가 일시적으로
+// 타임아웃/오류가 나도 전체를 포기하지 않도록 몇 번 재시도합니다.
+async function fetchJsonWithRetry(url, attempts = 2) {
+  let lastErr;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await fetchJson(url);
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw lastErr;
+}
+
+// K-Startup Open API는 JSON을 요청해도 항상 <item><col name="필드명">값</col>...</item>
+// 형태의 XML을 돌려줘서, 별도 XML 라이브러리 없이 이 특정 구조만 정규식으로 파싱합니다.
+function parseColXml(xmlText) {
+  const items = [];
+  const itemRe = /<item>([\s\S]*?)<\/item>/g;
+  let itemMatch;
+  while ((itemMatch = itemRe.exec(xmlText))) {
+    const obj = {};
+    const colRe = /<col name="([^"]+)">([\s\S]*?)<\/col>/g;
+    let colMatch;
+    while ((colMatch = colRe.exec(itemMatch[1]))) {
+      obj[colMatch[1]] = stripHtml(colMatch[2]);
+    }
+    items.push(obj);
+  }
+  return items;
+}
+
+function ymdToIso(yyyymmdd) {
+  if (!yyyymmdd || yyyymmdd.length !== 8) return "";
+  return yyyymmdd.slice(0, 4) + "-" + yyyymmdd.slice(4, 6) + "-" + yyyymmdd.slice(6, 8);
+}
+
+// data.go.kr류 API가 발급하는 서비스키는 이미 URL 인코딩된 상태("인코딩" 키, %2B/%3D%3D 등을
+// 포함)입니다. URLSearchParams.set()으로 넣으면 그걸 또 한 번 인코딩해버려서(이중 인코딩)
+// 서버가 키를 못 알아보고 "등록되지 않은 서비스키" 오류가 납니다. 그래서 serviceKey는
+// URLSearchParams를 거치지 않고 이미 인코딩된 값 그대로 쿼리스트링에 직접 붙입니다.
+function withServiceKey(endpoint, encodedServiceKey, extraParams) {
+  const url = new URL(endpoint);
+  if (extraParams) {
+    for (const [k, v] of Object.entries(extraParams)) url.searchParams.set(k, v);
+  }
+  const sep = url.search ? "&" : "?";
+  return url.toString() + sep + "serviceKey=" + encodedServiceKey;
 }
 
 const SOURCES = [
@@ -84,18 +146,16 @@ const SOURCES = [
   {
     key: "sme24-announce",
     label: "중소벤처24 공고정보",
-    envKey: "SME24_API_KEY",
+    envKey: "SME24_ANNOUNCE_API_KEY",
     async fetchRaw() {
-      // TODO: 공공데이터포털에서 발급받은 실제 엔드포인트/파라미터명으로 교체하세요.
-      // 엔드포인트를 scripts/.env.local의 SME24_ANNOUNCE_ENDPOINT로 넣어두면
-      // 여기서 바로 사용합니다(문서 확인 전 임시 기본값).
+      // 중소벤처24는 API(공고정보/행사정보 등)마다 서비스키가 따로 발급되므로
+      // SME24_API_KEY 하나를 공유하지 않고 API별 키를 씁니다.
       const endpoint = process.env.SME24_ANNOUNCE_ENDPOINT;
       if (!endpoint) {
         console.log("[중소벤처24 공고정보] SME24_ANNOUNCE_ENDPOINT가 없어 건너뜁니다. .env.local.example 참고.");
         return [];
       }
-      const url = new URL(endpoint);
-      url.searchParams.set("serviceKey", process.env.SME24_API_KEY);
+      const url = withServiceKey(endpoint, process.env.SME24_ANNOUNCE_API_KEY);
       const data = await fetchJson(url);
       // TODO: 실제 응답의 배열 경로로 조정하세요(예: data.response.body.items).
       return data.items || data.response?.body?.items || [];
@@ -117,15 +177,14 @@ const SOURCES = [
   {
     key: "sme24-event",
     label: "중소벤처24 행사정보",
-    envKey: "SME24_API_KEY",
+    envKey: "SME24_EVENT_API_KEY",
     async fetchRaw() {
       const endpoint = process.env.SME24_EVENT_ENDPOINT;
       if (!endpoint) {
         console.log("[중소벤처24 행사정보] SME24_EVENT_ENDPOINT가 없어 건너뜁니다. .env.local.example 참고.");
         return [];
       }
-      const url = new URL(endpoint);
-      url.searchParams.set("serviceKey", process.env.SME24_API_KEY);
+      const url = withServiceKey(endpoint, process.env.SME24_EVENT_API_KEY);
       const data = await fetchJson(url);
       // TODO: 실제 응답의 배열 경로로 조정하세요.
       return data.items || data.response?.body?.items || [];
@@ -153,22 +212,22 @@ const SOURCES = [
         console.log("[K-Startup] KSTARTUP_ENDPOINT가 없어 건너뜁니다. .env.local.example 참고.");
         return [];
       }
-      const url = new URL(endpoint);
-      url.searchParams.set("serviceKey", process.env.KSTARTUP_API_KEY);
-      const data = await fetchJson(url);
-      // TODO: 실제 응답의 배열 경로로 조정하세요.
-      return data.items || data.data || [];
+      // 이 API는 JSON을 요청해도 <item><col name="...">값</col></item> 형태의 XML을 돌려줍니다.
+      const url = withServiceKey(endpoint, process.env.KSTARTUP_API_KEY, { numOfRows: "100", pageNo: "1" });
+      const xmlText = await fetchText(url);
+      return parseColXml(xmlText);
     },
     mapRaw(raw) {
-      // TODO: 실제 필드명 확인 후 채워 넣으세요.
+      const start = ymdToIso(raw.pbanc_rcpt_bgng_dt);
+      const end = ymdToIso(raw.pbanc_rcpt_end_dt);
       return {
-        title: pickField(raw, ["biz_pbanc_nm", "title"]),
-        desc: pickField(raw, ["pbanc_ctnt", "content"]),
-        target: pickField(raw, ["aply_trgt_ctnt", "target"]),
-        tags: pickField(raw, ["hashtags"]),
-        period: pickField(raw, ["pbanc_rcpt_bgng_dt", "period"]),
-        agency: pickField(raw, ["pbanc_ntrp_nm", "agency"]) || "K-Startup",
-        url: pickField(raw, ["detl_pg_url", "url"]) || "https://www.k-startup.go.kr",
+        title: pickField(raw, ["intg_pbanc_biz_nm", "biz_pbanc_nm"]),
+        desc: pickField(raw, ["pbanc_ctnt", "aply_trgt_ctnt"]),
+        target: pickField(raw, ["aply_trgt", "aply_trgt_ctnt"]),
+        tags: "",
+        period: start && end ? `${start} ~ ${end}` : "",
+        agency: pickField(raw, ["pbanc_ntrp_nm"]) || "K-Startup",
+        url: pickField(raw, ["biz_aply_url", "detl_pg_url", "biz_gdnc_url"]) || "https://www.k-startup.go.kr",
       };
     },
   },
@@ -182,22 +241,70 @@ const SOURCES = [
         console.log("[기획재정부] MPB_ENDPOINT가 없어 건너뜁니다. .env.local.example 참고.");
         return [];
       }
-      const url = new URL(endpoint);
-      url.searchParams.set("serviceKey", process.env.MPB_API_KEY);
-      const data = await fetchJson(url);
-      // TODO: 실제 응답의 배열 경로로 조정하세요.
-      return data.items || [];
+      // 이 API는 국고보조사업 내역사업을 통째로 돌려주는데(연간 20만 건 이상), 대부분은
+      // 실제 "신청 접수기간"이 아니라 예산 회계연도 전체 기간(1/1~12/31)만 있습니다.
+      // 표본 확인 결과 실제 접수기간(RCEPT_BEGIN_DE/RCEPT_END_DE)이 있는 건 전체의 약 2%뿐이라,
+      // 그 2%만 남기고 나머지는 버립니다 - 그래야 사이트가 20만 건짜리 파일을 매번 안 불러옵니다.
+      const bsnsyear = String(new Date().getFullYear());
+      const numOfRows = 1000;
+      const hasReceptionPeriod = (item) => item.RCEPT_BEGIN_DE && item.RCEPT_END_DE;
+
+      const firstUrl = withServiceKey(endpoint, process.env.MPB_API_KEY, {
+        pageNo: "1", numOfRows: String(numOfRows), resultType: "json", bsnsyear,
+      });
+      const first = await fetchJsonWithRetry(firstUrl);
+      const header = first.response?.header;
+      if (!header || header.resultCode !== "00") {
+        throw new Error((header && header.resultMsg) || "알 수 없는 응답 형식");
+      }
+      const totalCount = first.response?.body?.totalCount || 0;
+      const totalPages = Math.ceil(totalCount / numOfRows);
+      const items = (first.response?.body?.items?.item || []).filter(hasReceptionPeriod);
+      let failedPages = 0;
+
+      for (let page = 2; page <= totalPages; page++) {
+        const url = withServiceKey(endpoint, process.env.MPB_API_KEY, {
+          pageNo: String(page), numOfRows: String(numOfRows), resultType: "json", bsnsyear,
+        });
+        try {
+          const data = await fetchJsonWithRetry(url);
+          const pageItems = data.response?.body?.items?.item || [];
+          items.push(...pageItems.filter(hasReceptionPeriod));
+        } catch (err) {
+          // 20만 건을 200번 가까이 나눠 받다 보면 한두 페이지 정도는 일시적으로 실패할 수
+          // 있습니다. 그렇다고 지금까지 모은 걸 전부 버리지 않고, 그 페이지만 건너뜁니다.
+          failedPages++;
+          console.error(`[기획재정부] ${page}/${totalPages}페이지 수집 실패, 건너뜁니다: ${err.message}`);
+        }
+      }
+
+      // 이 데이터는 같은 사업이 수행기관/지역별로 쪼개진 세부 항목이 통째로 들어있어서
+      // "제목+소관명"이 같은 항목이 수백 번씩 반복됩니다. 사용자에게는 사실상 같은 사업으로
+      // 보이므로 대표 1건만 남기고 합칩니다.
+      const seen = new Map();
+      for (const item of items) {
+        const key = pickField(item, ["DDTLBZ_NM", "DTLBZ_NM"]) + "||" + pickField(item, ["JRSD_NM"]);
+        if (!seen.has(key)) seen.set(key, item);
+      }
+      const deduped = [...seen.values()];
+
+      console.log(
+        `[기획재정부] 전체 ${totalCount}건(${totalPages}페이지, 실패 ${failedPages}페이지) 중 ` +
+        `실제 신청 접수기간이 있는 ${items.length}건, 제목+기관 중복 제거 후 ${deduped.length}건만 사용합니다.`
+      );
+      return deduped;
     },
     mapRaw(raw) {
-      // TODO: 실제 필드명 확인 후 채워 넣으세요.
+      const start = ymdToIso(pickField(raw, ["RCEPT_BEGIN_DE"]));
+      const end = ymdToIso(pickField(raw, ["RCEPT_END_DE"]));
       return {
-        title: pickField(raw, ["title"]),
-        desc: pickField(raw, ["content", "description"]),
-        target: pickField(raw, ["target"]),
-        tags: pickField(raw, ["hashtags"]),
-        period: pickField(raw, ["period"]),
-        agency: pickField(raw, ["agency"]) || "기획재정부",
-        url: pickField(raw, ["url"]) || "https://www.moef.go.kr",
+        title: pickField(raw, ["DDTLBZ_NM", "DTLBZ_NM"]),
+        desc: pickField(raw, ["DDTLBZ_BSNS_PURPS_DC", "DTLBZ_BSNS_PURPS_DC"]),
+        target: pickField(raw, ["SPORT_CND_CN", "SPORT_CN_DC"]),
+        tags: "",
+        period: start && end ? `${start} ~ ${end}` : "",
+        agency: pickField(raw, ["JRSD_NM"]) || "기획재정부",
+        url: pickField(raw, ["BSNS_POPUP_URL", "BSNS_GUIDANCE_URL"]) || "https://www.moef.go.kr",
       };
     },
   },
@@ -213,9 +320,14 @@ const SOURCES = [
 
 function stripHtml(text) {
   return text
+    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1")
     .replace(/<[^>]*>/g, " ")
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")
+    // 일부 공공 API는 개행문자(&#xD;/&#xA;)나 괄호(&#40;/&#41;)를 숫자 문자 참조로 보내는데,
+    // 서버 쪽에서 &amp;를 한 번 더 씌운 이중 이스케이프도 종종 있어 &amp; 치환 다음에 처리합니다.
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(parseInt(dec, 10)))
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
@@ -385,7 +497,11 @@ function tagAndBuildPolicy(normalized, source) {
 }
 
 function makeId(name, agency) {
-  return "auto-" + Buffer.from(`${name}|${agency}`).toString("base64url").slice(0, 16);
+  // base64로 인코딩한 원문을 그냥 앞에서 16자만 자르면 같은 접두어로 시작하는 제목들이
+  // (예: "[전남광주] ...") 전부 같은 id로 충돌합니다. 해시값을 자르는 것과는 다릅니다 -
+  // 해시는 균등 분포라 앞부분만 잘라도 안전하지만, 원문 인코딩은 앞부분에 정보가 쏠려있어
+  // 그렇지 않습니다. 그래서 원문 대신 해시값을 자릅니다.
+  return "auto-" + crypto.createHash("sha256").update(`${name}|${agency}`).digest("base64url").slice(0, 16);
 }
 
 async function collectFromSource(source) {

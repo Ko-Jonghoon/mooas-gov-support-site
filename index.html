@@ -109,7 +109,6 @@
     padding:11px 14px;
     font-size:.83rem;
     line-height:1.55;
-    max-width:80ch;
   }
   .disclaimer b{font-weight:700;}
   .disclaimer .mark{
@@ -136,28 +135,12 @@
     .stat-cell:nth-child(3){border-left:none;}
   }
 
-  .layout{
-    display:grid;
-    grid-template-columns:340px 1fr;
-    gap:24px;
-    align-items:start;
-    margin-top:20px;
-  }
-  @media (max-width:860px){
-    .layout{grid-template-columns:1fr;}
-  }
-
   .panel{
     background:var(--surface);
     border:1px solid var(--border);
     border-radius:14px;
     box-shadow:var(--shadow);
   }
-  .panel-form{
-    position:sticky;top:20px;
-    padding:20px 20px 20px;
-  }
-  @media (max-width:860px){ .panel-form{position:static;} }
 
   fieldset{border:0;margin:0 0 20px;padding:0;}
   fieldset:last-of-type{margin-bottom:0;}
@@ -241,9 +224,18 @@
   }
   .basic-info-bar .field{margin-bottom:0;flex:1 1 130px;min-width:110px;}
   .basic-info-bar .field:has(.segmented){flex:2 1 260px;min-width:240px;}
+  .basic-info-bar .field:has(.chipset){flex:3 1 320px;min-width:280px;}
+  .basic-info-bar .field:has(.toggle2){flex:1 1 170px;min-width:150px;}
   .basic-info-bar legend{
     flex:0 0 100%;margin:0 0 2px;
+    display:flex;align-items:baseline;gap:8px;
   }
+  .basic-info-bar .stage-tag{
+    font-size:.66rem;font-weight:700;letter-spacing:.03em;text-transform:none;
+    background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:2px 9px;
+  }
+  .basic-info-bar .bar-hint{flex:0 0 100%;margin:-2px 0 6px;font-size:.76rem;color:var(--ink-faint);}
+  .basic-info-bar .persist-note{flex:1 1 100%;margin-top:14px;}
 
   /* tabs */
   .tabs{display:flex;gap:6px;border-bottom:1px solid var(--border);margin-bottom:18px;}
@@ -476,7 +468,8 @@
   </div>
 
   <section class="panel basic-info-bar">
-    <legend>기본 정보</legend>
+    <legend>기본 정보 <span class="stage-tag">1차 필터</span></legend>
+    <p class="bar-hint">업종·소재지·기업구분 등 기본 조건으로 먼저 대상 사업을 추립니다.</p>
     <div class="field">
       <label for="f-industry">업종</label>
       <select id="f-industry">
@@ -536,100 +529,93 @@
     </div>
   </section>
 
-  <div class="layout">
-    <aside class="panel panel-form">
-      <fieldset>
-        <legend>세부 조건</legend>
-        <div class="field">
-          <label>대표자 특성 <span class="hint" style="display:inline">(해당 항목 모두 선택)</span></label>
-          <div class="chipset" id="f-founder">
-            <label><input type="checkbox" value="youth"><span>청년(만 39세 이하)</span></label>
-            <label><input type="checkbox" value="woman"><span>여성대표</span></label>
-            <label><input type="checkbox" value="disabled"><span>장애인대표</span></label>
-            <label><input type="checkbox" value="senior"><span>시니어(만 50세 이상)</span></label>
-          </div>
-        </div>
-        <div class="field">
-          <label>보유 인증</label>
-          <div class="chipset" id="f-cert">
-            <label><input type="checkbox" value="venture"><span>벤처기업확인</span></label>
-            <label><input type="checkbox" value="innobiz"><span>이노비즈</span></label>
-            <label><input type="checkbox" value="mainbiz"><span>메인비즈</span></label>
-            <label><input type="checkbox" value="social"><span>사회적기업</span></label>
-            <label><input type="checkbox" value="root"><span>뿌리기업확인</span></label>
-          </div>
-        </div>
-        <div class="row2">
-          <div class="field">
-            <label>수출 실적</label>
-            <div class="toggle2" id="f-export">
-              <label><input type="radio" name="export" value="yes"><span>있음</span></label>
-              <label><input type="radio" name="export" value="no"><span>없음</span></label>
-            </div>
-          </div>
-          <div class="field">
-            <label>연구소/전담부서</label>
-            <div class="toggle2" id="f-rnd">
-              <label><input type="radio" name="rnd" value="yes"><span>보유</span></label>
-              <label><input type="radio" name="rnd" value="no"><span>미보유</span></label>
-            </div>
-          </div>
-        </div>
-        <div class="row2">
-          <div class="field">
-            <label>고용보험 가입</label>
-            <div class="toggle2" id="f-insurance">
-              <label><input type="radio" name="insurance" value="yes"><span>가입</span></label>
-              <label><input type="radio" name="insurance" value="no"><span>미가입</span></label>
-            </div>
-          </div>
-          <div class="field">
-            <label>국세·지방세 체납</label>
-            <div class="toggle2" id="f-tax">
-              <label><input type="radio" name="tax" value="no"><span>없음</span></label>
-              <label><input type="radio" name="tax" value="yes"><span>있음</span></label>
-            </div>
-          </div>
-        </div>
-        <div class="field">
-          <label>특허·지식재산권 보유</label>
-          <div class="toggle2" id="f-patent">
-            <label><input type="radio" name="patent" value="yes"><span>보유</span></label>
-            <label><input type="radio" name="patent" value="no"><span>미보유</span></label>
-          </div>
-        </div>
-        <div class="field">
-          <label>관심 지원 분야 <span class="hint" style="display:inline">(선택 시 매칭 우선순위 반영)</span></label>
-          <div class="chipset" id="f-interest">
-            <label><input type="checkbox" value="fund"><span>사업화자금</span></label>
-            <label><input type="checkbox" value="rnd"><span>R&D 기술개발</span></label>
-            <label><input type="checkbox" value="ai"><span>AI</span></label>
-            <label><input type="checkbox" value="hr"><span>인력채용·교육</span></label>
-            <label><input type="checkbox" value="export"><span>수출·해외진출</span></label>
-            <label><input type="checkbox" value="market"><span>판로·마케팅</span></label>
-            <label><input type="checkbox" value="facility"><span>시설·장비</span></label>
-            <label><input type="checkbox" value="consulting"><span>컨설팅·멘토링</span></label>
-            <label><input type="checkbox" value="esg"><span>ESG·탄소중립</span></label>
-            <label><input type="checkbox" value="smart"><span>스마트공장·디지털전환</span></label>
-            <label><input type="checkbox" value="etc"><span>기타</span></label>
-          </div>
-        </div>
-      </fieldset>
-
-      <div class="persist-note">
-        <p>입력한 정보는 이 브라우저에 자동 저장되어 다음에 다시 열어도 유지됩니다.</p>
-        <button type="button" class="btn-reset" id="btn-reset">입력값 초기화</button>
+  <section class="panel basic-info-bar">
+    <legend>세부 조건 <span class="stage-tag">2차 필터</span></legend>
+    <p class="bar-hint">위 기본 정보로 1차로 추려진 사업 중, 아래 세부 조건으로 한 번 더 좁혀서 보여드립니다.</p>
+    <div class="field">
+      <label>대표자 특성 <span class="hint" style="display:inline">(해당 항목 모두 선택)</span></label>
+      <div class="chipset" id="f-founder">
+        <label><input type="checkbox" value="youth"><span>청년(만 39세 이하)</span></label>
+        <label><input type="checkbox" value="woman"><span>여성대표</span></label>
+        <label><input type="checkbox" value="disabled"><span>장애인대표</span></label>
+        <label><input type="checkbox" value="senior"><span>시니어(만 50세 이상)</span></label>
       </div>
-    </aside>
+    </div>
+    <div class="field">
+      <label>보유 인증</label>
+      <div class="chipset" id="f-cert">
+        <label><input type="checkbox" value="venture"><span>벤처기업확인</span></label>
+        <label><input type="checkbox" value="innobiz"><span>이노비즈</span></label>
+        <label><input type="checkbox" value="mainbiz"><span>메인비즈</span></label>
+        <label><input type="checkbox" value="social"><span>사회적기업</span></label>
+        <label><input type="checkbox" value="root"><span>뿌리기업확인</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label>수출 실적</label>
+      <div class="toggle2" id="f-export">
+        <label><input type="radio" name="export" value="yes"><span>있음</span></label>
+        <label><input type="radio" name="export" value="no"><span>없음</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label>연구소/전담부서</label>
+      <div class="toggle2" id="f-rnd">
+        <label><input type="radio" name="rnd" value="yes"><span>보유</span></label>
+        <label><input type="radio" name="rnd" value="no"><span>미보유</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label>고용보험 가입</label>
+      <div class="toggle2" id="f-insurance">
+        <label><input type="radio" name="insurance" value="yes"><span>가입</span></label>
+        <label><input type="radio" name="insurance" value="no"><span>미가입</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label>국세·지방세 체납</label>
+      <div class="toggle2" id="f-tax">
+        <label><input type="radio" name="tax" value="no"><span>없음</span></label>
+        <label><input type="radio" name="tax" value="yes"><span>있음</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label>특허·지식재산권 보유</label>
+      <div class="toggle2" id="f-patent">
+        <label><input type="radio" name="patent" value="yes"><span>보유</span></label>
+        <label><input type="radio" name="patent" value="no"><span>미보유</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label>관심 지원 분야 <span class="hint" style="display:inline">(선택 시 매칭 우선순위 반영)</span></label>
+      <div class="chipset" id="f-interest">
+        <label><input type="checkbox" value="fund"><span>사업화자금</span></label>
+        <label><input type="checkbox" value="rnd"><span>R&D 기술개발</span></label>
+        <label><input type="checkbox" value="ai"><span>AI</span></label>
+        <label><input type="checkbox" value="hr"><span>인력채용·교육</span></label>
+        <label><input type="checkbox" value="export"><span>수출·해외진출</span></label>
+        <label><input type="checkbox" value="market"><span>판로·마케팅</span></label>
+        <label><input type="checkbox" value="facility"><span>시설·장비</span></label>
+        <label><input type="checkbox" value="consulting"><span>컨설팅·멘토링</span></label>
+        <label><input type="checkbox" value="esg"><span>ESG·탄소중립</span></label>
+        <label><input type="checkbox" value="smart"><span>스마트공장·디지털전환</span></label>
+        <label><input type="checkbox" value="etc"><span>기타</span></label>
+      </div>
+    </div>
+    <div class="persist-note">
+      <p>입력한 정보는 이 브라우저에 자동 저장되어 다음에 다시 열어도 유지됩니다.</p>
+      <button type="button" class="btn-reset" id="btn-reset">입력값 초기화</button>
+    </div>
+  </section>
 
-    <main>
+  <main>
       <div class="tabs" id="mainTabs" role="tablist">
-        <button type="button" data-tab="list" class="active">목록</button>
+        <button type="button" data-tab="dashboard" class="active">대시보드</button>
         <button type="button" data-tab="graph">그래프</button>
-        <button type="button" data-tab="dashboard">대시보드</button>
+        <button type="button" data-tab="list">목록</button>
       </div>
 
-      <div class="tab-panel" data-tab="list">
+      <div class="tab-panel" data-tab="list" hidden>
         <div class="stat-strip" id="statStrip"></div>
         <div class="results-head" style="margin-top:18px;">
           <div class="results-count"><b id="count-num">0</b>건의 지원사업이 조건에 맞습니다</div>
@@ -684,7 +670,7 @@
         <div id="ganttChart"></div>
       </div>
 
-      <div class="tab-panel" data-tab="dashboard" hidden>
+      <div class="tab-panel" data-tab="dashboard">
         <div class="table-wrap">
           <table class="results-table">
             <thead>
@@ -698,8 +684,7 @@
           </table>
         </div>
       </div>
-    </main>
-  </div>
+  </main>
 
   <footer>
     본 도구는 정부·공공 지원사업 탐색을 돕기 위한 참고용 프로토타입입니다. 등록된 사업 목록·자격 요건·지원 규모는 실제 공고와 다를 수 있으니, 최종 지원 전 반드시 기업마당(bizinfo.go.kr), K-Startup(k-startup.go.kr), 각 소관 기관의 공식 공고문을 확인하세요.
@@ -752,7 +737,7 @@
 
   var activeCategory = null;
   var viewMode = "card";
-  var activeTab = "list";
+  var activeTab = "dashboard";
   var graphExtraIds = {};
 
   function parsePeriod(text){
@@ -1411,7 +1396,7 @@
     };
   }
 
-  document.querySelectorAll(".panel-form select, .panel-form input, .basic-info-bar select, .basic-info-bar input").forEach(function(el){
+  document.querySelectorAll(".basic-info-bar select, .basic-info-bar input").forEach(function(el){
     el.addEventListener("change", render);
     el.addEventListener("input", render);
   });
