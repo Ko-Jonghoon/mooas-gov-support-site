@@ -817,9 +817,9 @@
   }
   var starredIds = loadStarredIds();
 
-  function toggleStarred(id){
-    if (starredIds[id]) delete starredIds[id];
-    else starredIds[id] = true;
+  function toggleStarred(policy){
+    if (starredIds[policy.id]) delete starredIds[policy.id];
+    else starredIds[policy.id] = true;
     saveStarredIds();
   }
 
@@ -1282,7 +1282,7 @@
       starCb.checked = !!starredIds[p.id];
       starCb.title = "찜하기";
       starCb.addEventListener("change", function(){
-        toggleStarred(p.id);
+        toggleStarred(p);
         if (starredOnly) render();
       });
       starTd.appendChild(starCb);
@@ -1538,7 +1538,7 @@
         rm.textContent = "×";
         rm.title = row.source === "starred" ? "찜 해제" : "그래프에서 제거";
         rm.addEventListener("click", function(){
-          if (row.source === "starred") toggleStarred(row.policy.id);
+          if (row.source === "starred") toggleStarred(row.policy);
           else delete graphExtraIds[row.policy.id];
           render();
         });
