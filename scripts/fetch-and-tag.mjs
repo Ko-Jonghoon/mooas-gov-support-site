@@ -5,8 +5,9 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_PATH = path.join(__dirname, "..", "data", "policies.json");
 
-// scripts/.env.local (git에 올라가지 않는 파일)에 BIZINFO_API_KEY=값 형태로 한 번만
+// scripts/.env.local (git에 올라가지 않는 파일)에 필요한 키들을 한 번만
 // 저장해두면, 이후로는 run-fetch.bat 더블클릭만으로 실행할 수 있습니다.
+// 어떤 키를 넣어야 하는지는 scripts/.env.local.example 참고.
 function loadLocalEnv() {
   const envPath = path.join(__dirname, ".env.local");
   if (!fs.existsSync(envPath)) return;
@@ -23,50 +24,191 @@ function loadLocalEnv() {
 }
 loadLocalEnv();
 
-const BIZINFO_API_KEY = process.env.BIZINFO_API_KEY;
-
-if (!BIZINFO_API_KEY) {
-  console.error(
-    "BIZINFO_API_KEY가 없습니다. scripts/.env.local 파일을 만들고 BIZINFO_API_KEY=발급받은키 형태로 한 줄 넣어주세요.\n" +
-    "(scripts/.env.local.example 파일을 참고하세요)"
-  );
-  process.exit(1);
-}
-
 // ---------------------------------------------------------------------------
-// 1) 기업마당(bizinfo.go.kr) Open API에서 최신 지원사업 공고 원본 목록 가져오기
+// 여러 공공 API 소스를 동시에 수집하는 구조.
 //
-// 엔드포인트/파라미터는 bizinfo.go.kr/apiDetail.do?id=bizinfoApi 공식 안내 기준으로 확인됨:
-//   - GET https://www.bizinfo.go.kr/uss/rss/bizinfoApi.do
-//   - 필수: crtfcKey (신청 즉시 발급되는 인증키)
-//   - 선택: dataType(json/rss), searchCnt, searchLclasId(분야 01~09), hashtags, pageUnit, pageIndex
-// 다만 정확한 JSON 응답 필드명(배열 경로 등)은 실제 키로 호출해 응답을 한 번 찍어보고
-// 아래 "data.jsonArray || data.items" 부분을 필요시 조정하세요.
+// 소스를 추가하려면 SOURCES 배열에 { key, label, envKey, fetchRaw, mapRaw } 하나만
+// 추가하면 됩니다. envKey에 해당하는 환경변수(scripts/.env.local)가 없는 소스는
+// 자동으로 건너뛰므로, 키를 하나씩 발급받는 대로 점진적으로 채워 넣을 수 있습니다.
+//
+// mapRaw(raw)는 소스마다 다른 응답 필드명을 공통 형태
+//   { title, desc, target, tags, period, agency, url }
+// 로 통일해주는 역할만 합니다. 실제 필드명은 각 API를 실제 키로 한 번 호출해
+// 응답을 콘솔에 찍어본 뒤(예: console.log(JSON.stringify(data,null,2))) 아래
+// TODO 표시된 부분을 확인해서 채워 넣으세요.
+//
+// 참고: 중소벤처24의 "이노비즈확인서/벤처기업확인서/메인비즈확인서"는 공고
+// 목록이 아니라 "특정 사업자등록번호 하나의 인증 여부를 조회"하는 단건 조회
+// API라서 이 수집 파이프라인(공고 목록 수집)에는 맞지 않습니다. 이 API들은
+// 나중에 "사업자등록번호 입력 → 보유 인증 체크박스 자동 확인" 같은 별도 기능을
+// 만들 때 쓰는 것이 맞고, 지금은 연결하지 않았습니다.
 // ---------------------------------------------------------------------------
-async function fetchRawAnnouncements() {
-  const url = new URL("https://www.bizinfo.go.kr/uss/rss/bizinfoApi.do");
-  url.searchParams.set("crtfcKey", BIZINFO_API_KEY);
-  url.searchParams.set("dataType", "json");
-  url.searchParams.set("searchCnt", "100");
 
+async function fetchJson(url) {
   const res = await fetch(url);
+  const bodyText = await res.text();
   if (!res.ok) {
-    throw new Error(`기업마당 API 호출 실패: HTTP ${res.status}`);
+    // data.go.kr류 API는 400/401 응답 본문(XML/JSON)에 정확한 실패 사유가 들어있는 경우가
+    // 많아서(예: 필수 파라미터 누락, 서비스키 미승인 등) 본문 앞부분을 그대로 보여줍니다.
+    throw new Error(`HTTP ${res.status} (${url.origin}${url.pathname}) - ${bodyText.slice(0, 300)}`);
   }
-  const data = await res.json();
-  // TODO: 실제 응답 스키마에 맞춰 배열 경로를 조정하세요
-  // (예: data.jsonArray, data.response.body.items 등 - 명세서 확인 필요)
-  return data.jsonArray || data.items || [];
+  return JSON.parse(bodyText);
 }
 
+const SOURCES = [
+  {
+    key: "bizinfo",
+    label: "기업마당",
+    envKey: "BIZINFO_API_KEY",
+    async fetchRaw() {
+      const url = new URL("https://www.bizinfo.go.kr/uss/rss/bizinfoApi.do");
+      url.searchParams.set("crtfcKey", process.env.BIZINFO_API_KEY);
+      url.searchParams.set("dataType", "json");
+      url.searchParams.set("searchCnt", "100");
+      const data = await fetchJson(url);
+      // TODO: 실제 응답 스키마와 다르면 아래 배열 경로를 조정하세요.
+      return data.jsonArray || data.items || [];
+    },
+    mapRaw(raw) {
+      return {
+        title: pickField(raw, ["pblancNm", "title", "bsnsTitl"]),
+        desc: pickField(raw, ["bsnsSumryCn", "content", "cn", "description"]),
+        target: pickField(raw, ["trgetNm", "target", "reqstTrgetNm"]),
+        tags: pickField(raw, ["hashtags", "hashTag"]),
+        period: pickField(raw, ["reqstBeginEndDe", "period", "aplyPd"]),
+        agency: pickField(raw, ["jrsdInsttNm", "agency", "instNm"]) || "확인 필요",
+        url: pickField(raw, ["pblancUrl", "url", "pageUrl"]) || "https://www.bizinfo.go.kr",
+      };
+    },
+  },
+  {
+    key: "sme24-announce",
+    label: "중소벤처24 공고정보",
+    envKey: "SME24_API_KEY",
+    async fetchRaw() {
+      // TODO: 공공데이터포털에서 발급받은 실제 엔드포인트/파라미터명으로 교체하세요.
+      // 엔드포인트를 scripts/.env.local의 SME24_ANNOUNCE_ENDPOINT로 넣어두면
+      // 여기서 바로 사용합니다(문서 확인 전 임시 기본값).
+      const endpoint = process.env.SME24_ANNOUNCE_ENDPOINT;
+      if (!endpoint) {
+        console.log("[중소벤처24 공고정보] SME24_ANNOUNCE_ENDPOINT가 없어 건너뜁니다. .env.local.example 참고.");
+        return [];
+      }
+      const url = new URL(endpoint);
+      url.searchParams.set("serviceKey", process.env.SME24_API_KEY);
+      const data = await fetchJson(url);
+      // TODO: 실제 응답의 배열 경로로 조정하세요(예: data.response.body.items).
+      return data.items || data.response?.body?.items || [];
+    },
+    mapRaw(raw) {
+      // TODO: 실제 필드명 확인 후 후보 배열을 채워 넣으세요. 아래는 공공데이터포털에서
+      // 흔히 쓰이는 필드명을 추정해 넣은 임시값입니다.
+      return {
+        title: pickField(raw, ["title", "bsnsTitl", "pblancNm"]),
+        desc: pickField(raw, ["content", "description", "bsnsSumryCn"]),
+        target: pickField(raw, ["target", "trgetNm"]),
+        tags: pickField(raw, ["hashtags"]),
+        period: pickField(raw, ["period", "aplyPd", "reqstBeginEndDe"]),
+        agency: pickField(raw, ["agency", "instNm"]) || "중소벤처24",
+        url: pickField(raw, ["url", "pageUrl"]) || "https://www.smes.go.kr",
+      };
+    },
+  },
+  {
+    key: "sme24-event",
+    label: "중소벤처24 행사정보",
+    envKey: "SME24_API_KEY",
+    async fetchRaw() {
+      const endpoint = process.env.SME24_EVENT_ENDPOINT;
+      if (!endpoint) {
+        console.log("[중소벤처24 행사정보] SME24_EVENT_ENDPOINT가 없어 건너뜁니다. .env.local.example 참고.");
+        return [];
+      }
+      const url = new URL(endpoint);
+      url.searchParams.set("serviceKey", process.env.SME24_API_KEY);
+      const data = await fetchJson(url);
+      // TODO: 실제 응답의 배열 경로로 조정하세요.
+      return data.items || data.response?.body?.items || [];
+    },
+    mapRaw(raw) {
+      // TODO: 실제 필드명 확인 후 채워 넣으세요.
+      return {
+        title: pickField(raw, ["title", "eventNm"]),
+        desc: pickField(raw, ["content", "description"]),
+        target: pickField(raw, ["target"]),
+        tags: pickField(raw, ["hashtags"]),
+        period: pickField(raw, ["period", "eventPd"]),
+        agency: pickField(raw, ["agency", "instNm"]) || "중소벤처24",
+        url: pickField(raw, ["url"]) || "https://www.smes.go.kr",
+      };
+    },
+  },
+  {
+    key: "kstartup",
+    label: "K-Startup",
+    envKey: "KSTARTUP_API_KEY",
+    async fetchRaw() {
+      const endpoint = process.env.KSTARTUP_ENDPOINT;
+      if (!endpoint) {
+        console.log("[K-Startup] KSTARTUP_ENDPOINT가 없어 건너뜁니다. .env.local.example 참고.");
+        return [];
+      }
+      const url = new URL(endpoint);
+      url.searchParams.set("serviceKey", process.env.KSTARTUP_API_KEY);
+      const data = await fetchJson(url);
+      // TODO: 실제 응답의 배열 경로로 조정하세요.
+      return data.items || data.data || [];
+    },
+    mapRaw(raw) {
+      // TODO: 실제 필드명 확인 후 채워 넣으세요.
+      return {
+        title: pickField(raw, ["biz_pbanc_nm", "title"]),
+        desc: pickField(raw, ["pbanc_ctnt", "content"]),
+        target: pickField(raw, ["aply_trgt_ctnt", "target"]),
+        tags: pickField(raw, ["hashtags"]),
+        period: pickField(raw, ["pbanc_rcpt_bgng_dt", "period"]),
+        agency: pickField(raw, ["pbanc_ntrp_nm", "agency"]) || "K-Startup",
+        url: pickField(raw, ["detl_pg_url", "url"]) || "https://www.k-startup.go.kr",
+      };
+    },
+  },
+  {
+    key: "mpb",
+    label: "기획재정부",
+    envKey: "MPB_API_KEY",
+    async fetchRaw() {
+      const endpoint = process.env.MPB_ENDPOINT;
+      if (!endpoint) {
+        console.log("[기획재정부] MPB_ENDPOINT가 없어 건너뜁니다. .env.local.example 참고.");
+        return [];
+      }
+      const url = new URL(endpoint);
+      url.searchParams.set("serviceKey", process.env.MPB_API_KEY);
+      const data = await fetchJson(url);
+      // TODO: 실제 응답의 배열 경로로 조정하세요.
+      return data.items || [];
+    },
+    mapRaw(raw) {
+      // TODO: 실제 필드명 확인 후 채워 넣으세요.
+      return {
+        title: pickField(raw, ["title"]),
+        desc: pickField(raw, ["content", "description"]),
+        target: pickField(raw, ["target"]),
+        tags: pickField(raw, ["hashtags"]),
+        period: pickField(raw, ["period"]),
+        agency: pickField(raw, ["agency"]) || "기획재정부",
+        url: pickField(raw, ["url"]) || "https://www.moef.go.kr",
+      };
+    },
+  },
+];
+
 // ---------------------------------------------------------------------------
-// 2) 규칙(키워드) 기반 태깅
+// 규칙(키워드) 기반 태깅
 //
 // LLM 없이, 공고 원문에 특정 키워드가 있는지로 우리 매칭 스키마의 조건을 채웁니다.
 // 정확도는 LLM 태깅보다 낮을 수 있으니, 모든 자동 수집 항목은 reviewed:false로
 // 표시되어 사람이 검수하기 전까지 사이트에 "자동수집 · 검수대기" 배지가 붙습니다.
-//
-// 실제 기업마당 응답의 필드명을 확인한 뒤, 아래 candidateFields를 필요에 맞게 조정하세요.
 // ---------------------------------------------------------------------------
 
 function stripHtml(text) {
@@ -89,12 +231,8 @@ function pickField(raw, candidateFields) {
   return "";
 }
 
-function buildTextBlob(raw) {
-  const title = pickField(raw, ["pblancNm", "title", "bsnsTitl"]);
-  const desc = pickField(raw, ["bsnsSumryCn", "content", "cn", "description"]);
-  const target = pickField(raw, ["trgetNm", "target", "reqstTrgetNm"]);
-  const tags = pickField(raw, ["hashtags", "hashTag"]);
-  return [title, desc, target, tags].join(" \n ");
+function buildTextBlob(normalized) {
+  return [normalized.title, normalized.desc, normalized.target, normalized.tags].join(" \n ");
 }
 
 function includesAny(text, keywords) {
@@ -196,8 +334,8 @@ function matchMaxYears(text) {
   return null;
 }
 
-function tagAnnouncementByRules(raw) {
-  const text = buildTextBlob(raw);
+function tagAndBuildPolicy(normalized, source) {
+  const text = buildTextBlob(normalized);
   const category = matchCategory(text);
   const sizes = matchMany(text, SIZE_RULES) || ["sole", "sme"]; // 명시 안 되면 가장 흔한 대상으로 넓게 잡음
   const founderTypes = matchMany(text, FOUNDER_TYPE_RULES);
@@ -210,22 +348,21 @@ function tagAnnouncementByRules(raw) {
   const insuranceRequired = includesAny(text, ["고용보험 가입 사업장"]);
   const taxClean = !["consulting", "etc"].includes(category);
 
-  const name = pickField(raw, ["pblancNm", "title", "bsnsTitl"]) || "이름 미확인 공고";
-  const descRaw = pickField(raw, ["bsnsSumryCn", "content", "cn", "description"]);
-  const period = pickField(raw, ["reqstBeginEndDe", "period", "aplyPd"]);
-  const target = pickField(raw, ["trgetNm", "target", "reqstTrgetNm"]);
-
-  const summarySource = descRaw || name;
+  const name = normalized.title || "이름 미확인 공고";
+  const summarySource = normalized.desc || name;
   const summary = summarySource.slice(0, 90) + (summarySource.length > 90 ? "…" : "");
 
   const benefits = [];
-  if (descRaw) benefits.push({ label: "지원내용", value: descRaw.slice(0, 200) + (descRaw.length > 200 ? "…(원문 확인 필요)" : "") });
-  if (target) benefits.push({ label: "지원대상", value: target.slice(0, 150) });
-  if (period) benefits.push({ label: "신청기간", value: period });
+  if (normalized.desc) benefits.push({ label: "지원내용", value: normalized.desc.slice(0, 200) + (normalized.desc.length > 200 ? "…(원문 확인 필요)" : "") });
+  if (normalized.target) benefits.push({ label: "지원대상", value: normalized.target.slice(0, 150) });
+  if (normalized.period) benefits.push({ label: "신청기간", value: normalized.period });
   if (!benefits.length) benefits.push({ label: "안내", value: "공고 원문에서 자동 추출된 상세 내용이 없습니다. 공식 사이트에서 확인하세요." });
 
   return {
+    id: makeId(name, normalized.agency),
     name,
+    agency: normalized.agency,
+    url: normalized.url,
     category,
     summary,
     benefits,
@@ -241,57 +378,55 @@ function tagAnnouncementByRules(raw) {
       insuranceRequired,
       taxClean,
     },
+    source: "auto",
+    sourceApi: source.key,
+    reviewed: false,
   };
-}
-
-function loadExisting() {
-  const raw = fs.readFileSync(DATA_PATH, "utf8");
-  return JSON.parse(raw);
 }
 
 function makeId(name, agency) {
   return "auto-" + Buffer.from(`${name}|${agency}`).toString("base64url").slice(0, 16);
 }
 
-async function main() {
-  const existing = loadExisting();
-  const manualEntries = existing.policies.filter((p) => p.source === "manual-seed");
+async function collectFromSource(source) {
+  if (!process.env[source.envKey]) {
+    console.log(`[${source.label}] ${source.envKey}가 없어 건너뜁니다.`);
+    return [];
+  }
+  let rawList;
+  try {
+    rawList = await source.fetchRaw();
+  } catch (err) {
+    console.error(`[${source.label}] 수집 실패, 이 소스는 건너뜁니다:`, err.message);
+    return [];
+  }
+  console.log(`[${source.label}] ${rawList.length}건의 공고를 가져왔습니다.`);
 
-  const rawList = await fetchRawAnnouncements();
-  console.log(`기업마당에서 ${rawList.length}건의 공고를 가져왔습니다.`);
-
-  const autoPolicies = [];
+  const policies = [];
   for (const raw of rawList) {
     try {
-      const tagged = tagAnnouncementByRules(raw);
-      const agency = pickField(raw, ["jrsdInsttNm", "agency", "instNm"]) || "확인 필요";
-      autoPolicies.push({
-        id: makeId(tagged.name, agency),
-        name: tagged.name,
-        agency,
-        url: pickField(raw, ["pblancUrl", "url", "pageUrl"]) || "https://www.bizinfo.go.kr",
-        category: tagged.category,
-        summary: tagged.summary,
-        benefits: tagged.benefits,
-        elig: tagged.elig,
-        source: "auto",
-        reviewed: false,
-      });
+      policies.push(tagAndBuildPolicy(source.mapRaw(raw), source));
     } catch (err) {
-      console.error("태깅 실패, 이 공고는 건너뜁니다:", err.message);
+      console.error(`[${source.label}] 태깅 실패, 이 공고는 건너뜁니다:`, err.message);
     }
   }
+  return policies;
+}
 
-  const merged = [...manualEntries, ...autoPolicies];
+async function main() {
+  const autoPolicies = [];
+  for (const source of SOURCES) {
+    autoPolicies.push(...(await collectFromSource(source)));
+  }
 
   const out = {
     generatedAt: new Date().toISOString(),
-    note: "기업마당 Open API 자동 수집 + 키워드 규칙 기반 자동 태깅 결과. source:auto 항목은 사람이 검수(reviewed:true로 변경)하기 전까지 화면에 '자동수집 · 검수대기' 표시가 붙습니다. 규칙 기반 태깅은 LLM보다 정확도가 낮을 수 있으니 반드시 검수 후 병합하세요.",
-    policies: merged,
+    note: "기업마당 Open API 자동 수집 + 키워드 규칙 기반 자동 태깅 결과. 모든 항목은 사람이 검수(reviewed:true로 변경)하기 전까지 화면에 자동수집 · 검수대기 표시가 붙습니다. 규칙 기반 태깅은 LLM보다 정확도가 낮을 수 있으니 반드시 검수 후 반영하세요.",
+    policies: autoPolicies,
   };
 
   fs.writeFileSync(DATA_PATH, JSON.stringify(out, null, 2), "utf8");
-  console.log(`data/policies.json 갱신 완료: 수동 시드 ${manualEntries.length}건 + 자동 수집 ${autoPolicies.length}건`);
+  console.log(`data/policies.json 갱신 완료: 총 ${autoPolicies.length}건 자동 수집`);
 }
 
 main().catch((err) => {

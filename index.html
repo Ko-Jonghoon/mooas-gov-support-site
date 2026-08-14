@@ -99,7 +99,6 @@
     margin:0 0 16px;
     color:var(--ink-soft);
     font-size:.98rem;
-    max-width:64ch;
   }
   .disclaimer{
     display:flex;gap:10px;align-items:flex-start;
@@ -235,6 +234,26 @@
   }
   .btn-reset:hover{border-color:var(--ink-faint);color:var(--ink);}
 
+  /* horizontal basic-info bar */
+  .basic-info-bar{
+    display:flex;flex-wrap:wrap;gap:14px 18px;align-items:flex-end;
+    padding:18px 20px;margin-top:20px;
+  }
+  .basic-info-bar .field{margin-bottom:0;flex:1 1 130px;min-width:110px;}
+  .basic-info-bar .field:has(.segmented){flex:2 1 260px;min-width:240px;}
+  .basic-info-bar legend{
+    flex:0 0 100%;margin:0 0 2px;
+  }
+
+  /* tabs */
+  .tabs{display:flex;gap:6px;border-bottom:1px solid var(--border);margin-bottom:18px;}
+  .tabs button{
+    font-family:var(--font-body);border:none;background:transparent;color:var(--ink-faint);
+    padding:10px 4px;margin-right:14px;font-size:.92rem;font-weight:700;cursor:pointer;
+    border-bottom:2px solid transparent;
+  }
+  .tabs button.active{color:var(--ink);border-bottom-color:var(--accent);}
+
   /* results side */
   .results-head{
     display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
@@ -306,6 +325,61 @@
     #resultsList{display:flex !important;}
     #tableWrap{display:none !important;}
   }
+
+  .dash-agency a{color:var(--accent);font-weight:700;text-decoration:none;}
+  .dash-agency a:hover{text-decoration:underline;}
+
+  /* gantt chart */
+  .graph-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px;}
+  .graph-head .search{width:260px;}
+  .graph-search-results{
+    position:relative;width:100%;
+  }
+  .graph-search-list{
+    margin-top:6px;display:flex;flex-direction:column;gap:4px;
+    background:var(--surface);border:1px solid var(--border);border-radius:8px;
+    padding:6px;max-height:220px;overflow-y:auto;
+  }
+  .graph-search-list button{
+    font-family:var(--font-body);text-align:left;border:none;background:transparent;color:var(--ink);
+    padding:6px 8px;border-radius:6px;font-size:.82rem;cursor:pointer;
+  }
+  .graph-search-list button:hover{background:var(--surface-alt);}
+  .graph-search-list .empty{padding:6px 8px;font-size:.8rem;color:var(--ink-faint);}
+
+  .gantt-legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:12px;font-size:.76rem;color:var(--ink-soft);}
+  .gantt-legend .dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle;}
+
+  .gantt-wrap{
+    display:grid;grid-template-columns:180px minmax(0,1fr);
+    background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    box-shadow:var(--shadow);padding:6px 16px 10px;overflow-x:auto;
+  }
+  .gantt-row{display:contents;}
+  .gantt-label{
+    padding:8px 10px 8px 0;font-size:.8rem;font-weight:700;color:var(--ink);
+    display:flex;align-items:center;gap:6px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    border-bottom:1px solid var(--border);
+  }
+  .gantt-label .remove-btn{
+    flex:0 0 auto;border:none;background:var(--surface-alt);color:var(--ink-faint);
+    border-radius:50%;width:16px;height:16px;font-size:.7rem;line-height:1;cursor:pointer;
+  }
+  .gantt-track{position:relative;min-height:32px;border-bottom:1px solid var(--border);min-width:520px;}
+  .gantt-axis-track{position:relative;height:24px;border-bottom:1px solid var(--border);min-width:520px;}
+  .gantt-month-tick{position:absolute;top:0;bottom:0;border-left:1px solid var(--border);}
+  .gantt-month-label{
+    position:absolute;top:4px;font-size:.64rem;color:var(--ink-faint);font-family:var(--font-mono);
+    transform:translateX(3px);white-space:nowrap;
+  }
+  .gantt-today-tick{position:absolute;top:0;bottom:0;width:2px;background:var(--accent);z-index:2;}
+  .gantt-bar{position:absolute;top:7px;bottom:7px;border-radius:5px;min-width:3px;display:flex;overflow:hidden;}
+  .gantt-bar .elapsed{background:var(--tier-ref-bg);}
+  .gantt-bar .remaining{background:var(--accent);}
+  .gantt-bar.upcoming{background:var(--accent-soft);}
+  .gantt-bar.past-case{background:repeating-linear-gradient(135deg,var(--ink-faint) 0,var(--ink-faint) 4px,transparent 4px,transparent 8px);opacity:.55;}
+  .gantt-empty{padding:24px;text-align:center;color:var(--ink-faint);font-size:.86rem;}
 
   .card{
     background:var(--surface);border:1px solid var(--border);border-radius:14px;
@@ -393,79 +467,77 @@
     </div>
     <div class="rule"></div>
     <h1>무아스 정부지원사업 찾기</h1>
-    <p class="sub">회사 조건을 입력하면, 조건에 맞는 정부·지자체·공공기관 지원사업을 자동으로 매칭해 추천 순으로 보여드립니다.</p>
+    <p class="sub">회사 조건에 맞는 정부·지자체·공공기관 지원사업을 자동 매칭해 추천 순으로 보여드립니다.</p>
     <p id="updatedBadge" style="margin:0 0 14px;font-size:.74rem;color:var(--ink-faint);font-family:var(--font-mono);"></p>
     <div class="disclaimer">
       <span class="mark">!</span>
-      <span><b>데이터 안내.</b> "자동수집" 배지가 붙은 항목은 기업마당 공공API에서 가져온 실제 공고이며, 자동 태깅 결과이므로 자격 조건이 정확하지 않을 수 있습니다. 배지가 없는 항목은 제도 이해를 돕기 위해 작성한 예시 데이터로, 금액·조건이 실제 공고와 다를 수 있습니다. 신청 전 반드시 각 기관의 공식 공고문에서 최종 확인해 주세요.</span>
+      <span><b>데이터 안내.</b> 모든 항목은 기업마당 등 공공API에서 가져온 실제 공고이며, 키워드 규칙 기반 자동 태깅 결과이므로 자격 조건이 정확하지 않을 수 있습니다("자동수집 · 검수대기" 배지). 신청 전 반드시 각 기관의 공식 공고문에서 최종 확인해 주세요.</span>
     </div>
   </div>
 
+  <section class="panel basic-info-bar">
+    <legend>기본 정보</legend>
+    <div class="field">
+      <label for="f-industry">업종</label>
+      <select id="f-industry">
+        <option value="mfg">제조업</option>
+        <option value="it">IT·소프트웨어</option>
+        <option value="service">서비스업</option>
+        <option value="retail">도소매업</option>
+        <option value="construction">건설업</option>
+        <option value="agri">농림수산업</option>
+        <option value="bio">바이오·헬스케어</option>
+        <option value="content">문화콘텐츠</option>
+        <option value="etc">기타</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="f-region">사업장 소재지</label>
+      <select id="f-region">
+        <option value="seoul">서울</option>
+        <option value="busan">부산</option>
+        <option value="daegu">대구</option>
+        <option value="incheon">인천</option>
+        <option value="gwangju">광주</option>
+        <option value="daejeon">대전</option>
+        <option value="ulsan">울산</option>
+        <option value="sejong">세종</option>
+        <option value="gyeonggi">경기</option>
+        <option value="gangwon">강원</option>
+        <option value="chungbuk">충북</option>
+        <option value="chungnam">충남</option>
+        <option value="jeonbuk">전북</option>
+        <option value="jeonnam">전남</option>
+        <option value="gyeongbuk">경북</option>
+        <option value="gyeongnam">경남</option>
+        <option value="jeju">제주</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>기업 구분</label>
+      <div class="segmented" id="f-size">
+        <label><input type="radio" name="size" value="pre"><span>예비창업자</span></label>
+        <label><input type="radio" name="size" value="sole"><span>소상공인</span></label>
+        <label><input type="radio" name="size" value="sme"><span>중소기업</span></label>
+        <label><input type="radio" name="size" value="mid"><span>중견기업</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label for="f-founded">설립연도</label>
+      <input type="number" id="f-founded" min="1980" max="2026" step="1" placeholder="예: 2022">
+    </div>
+    <div class="field">
+      <label for="f-employees">직원 수</label>
+      <input type="number" id="f-employees" min="0" step="1" placeholder="예: 12">
+    </div>
+    <div class="field">
+      <label for="f-revenue">연매출 (억원)</label>
+      <input type="number" id="f-revenue" min="0" step="0.5" placeholder="예: 8">
+    </div>
+  </section>
+
   <div class="layout">
     <aside class="panel panel-form">
-      <fieldset>
-        <legend>기본 정보</legend>
-        <div class="field">
-          <label for="f-industry">업종</label>
-          <select id="f-industry">
-            <option value="mfg">제조업</option>
-            <option value="it">IT·소프트웨어</option>
-            <option value="service">서비스업</option>
-            <option value="retail">도소매업</option>
-            <option value="construction">건설업</option>
-            <option value="agri">농림수산업</option>
-            <option value="bio">바이오·헬스케어</option>
-            <option value="content">문화콘텐츠</option>
-            <option value="etc">기타</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="f-region">사업장 소재지</label>
-          <select id="f-region">
-            <option value="seoul">서울</option>
-            <option value="busan">부산</option>
-            <option value="daegu">대구</option>
-            <option value="incheon">인천</option>
-            <option value="gwangju">광주</option>
-            <option value="daejeon">대전</option>
-            <option value="ulsan">울산</option>
-            <option value="sejong">세종</option>
-            <option value="gyeonggi">경기</option>
-            <option value="gangwon">강원</option>
-            <option value="chungbuk">충북</option>
-            <option value="chungnam">충남</option>
-            <option value="jeonbuk">전북</option>
-            <option value="jeonnam">전남</option>
-            <option value="gyeongbuk">경북</option>
-            <option value="gyeongnam">경남</option>
-            <option value="jeju">제주</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>기업 구분</label>
-          <div class="segmented" id="f-size">
-            <label><input type="radio" name="size" value="pre"><span>예비창업자</span></label>
-            <label><input type="radio" name="size" value="sole"><span>소상공인</span></label>
-            <label><input type="radio" name="size" value="sme"><span>중소기업</span></label>
-            <label><input type="radio" name="size" value="mid"><span>중견기업</span></label>
-          </div>
-        </div>
-        <div class="row2">
-          <div class="field">
-            <label for="f-founded">설립연도</label>
-            <input type="number" id="f-founded" min="1980" max="2026" step="1" placeholder="예: 2022">
-          </div>
-          <div class="field">
-            <label for="f-employees">직원 수</label>
-            <input type="number" id="f-employees" min="0" step="1" placeholder="예: 12">
-          </div>
-        </div>
-        <div class="field">
-          <label for="f-revenue">연매출 (억원)</label>
-          <input type="number" id="f-revenue" min="0" step="0.5" placeholder="예: 8">
-        </div>
-      </fieldset>
-
       <fieldset>
         <legend>세부 조건</legend>
         <div class="field">
@@ -551,43 +623,80 @@
     </aside>
 
     <main>
-      <div class="stat-strip" id="statStrip"></div>
-      <div class="results-head" style="margin-top:18px;">
-        <div class="results-count"><b id="count-num">0</b>건의 지원사업이 조건에 맞습니다</div>
-        <div class="controls">
-          <label class="hide-closed-toggle"><input type="checkbox" id="f-hide-closed"> 마감 제외</label>
-          <input type="text" class="search" id="f-search" placeholder="사업명·기관명 검색">
-          <select id="f-sort">
-            <option value="score">매칭도순</option>
-            <option value="name">사업명순</option>
-            <option value="agency">기관명순</option>
-          </select>
-          <div class="view-toggle" id="viewToggle">
-            <button type="button" data-view="card" class="active">카드형</button>
-            <button type="button" data-view="table">표 형식</button>
+      <div class="tabs" id="mainTabs" role="tablist">
+        <button type="button" data-tab="list" class="active">목록</button>
+        <button type="button" data-tab="graph">그래프</button>
+        <button type="button" data-tab="dashboard">대시보드</button>
+      </div>
+
+      <div class="tab-panel" data-tab="list">
+        <div class="stat-strip" id="statStrip"></div>
+        <div class="results-head" style="margin-top:18px;">
+          <div class="results-count"><b id="count-num">0</b>건의 지원사업이 조건에 맞습니다</div>
+          <div class="controls">
+            <label class="hide-closed-toggle"><input type="checkbox" id="f-hide-closed"> 마감 제외</label>
+            <input type="text" class="search" id="f-search" placeholder="사업명·기관명 검색">
+            <select id="f-sort">
+              <option value="score">매칭도순</option>
+              <option value="name">사업명순</option>
+              <option value="agency">기관명순</option>
+            </select>
+            <div class="view-toggle" id="viewToggle">
+              <button type="button" data-view="card" class="active">카드형</button>
+              <button type="button" data-view="table">표 형식</button>
+            </div>
           </div>
         </div>
+        <div class="cat-filters" id="catFilters"></div>
+        <div class="results-list" id="resultsList"></div>
+        <div class="table-wrap" id="tableWrap" hidden>
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>사업명</th>
+                <th>기관</th>
+                <th>분야</th>
+                <th>매칭도</th>
+                <th>상태</th>
+                <th>링크</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="emptyState" hidden>
+          <h3>조건에 맞는 지원사업이 없습니다</h3>
+          <p>기업 구분·업종·지역 조건을 조금 넓혀 보시거나, 체납·고용보험 조건을 다시 확인해 보세요.</p>
+        </div>
       </div>
-      <div class="cat-filters" id="catFilters"></div>
-      <div class="results-list" id="resultsList"></div>
-      <div class="table-wrap" id="tableWrap" hidden>
-        <table class="results-table">
-          <thead>
-            <tr>
-              <th>사업명</th>
-              <th>기관</th>
-              <th>분야</th>
-              <th>매칭도</th>
-              <th>상태</th>
-              <th>링크</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
+
+      <div class="tab-panel" data-tab="graph" hidden>
+        <div class="graph-head">
+          <input type="text" class="search" id="graph-search" placeholder="과거(마감) 사업 검색해서 그래프에 추가">
+          <div class="graph-search-results" id="graphSearchResults"></div>
+        </div>
+        <div class="gantt-legend">
+          <span><span class="dot" style="background:var(--accent);"></span>신청 가능(잔여기간)</span>
+          <span><span class="dot" style="background:var(--tier-ref-bg);border:1px solid var(--border);"></span>이미 지난 기간</span>
+          <span><span class="dot" style="background:var(--accent-soft);"></span>접수 예정</span>
+          <span><span class="dot" style="background:var(--ink-faint);opacity:.55;"></span>검색으로 추가한 과거 사례</span>
+        </div>
+        <div id="ganttChart"></div>
       </div>
-      <div class="empty-state" id="emptyState" hidden>
-        <h3>조건에 맞는 지원사업이 없습니다</h3>
-        <p>기업 구분·업종·지역 조건을 조금 넓혀 보시거나, 체납·고용보험 조건을 다시 확인해 보세요.</p>
+
+      <div class="tab-panel" data-tab="dashboard" hidden>
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>사업명</th>
+                <th>주관부처</th>
+                <th>매칭율</th>
+              </tr>
+            </thead>
+            <tbody id="dashboardBody"></tbody>
+          </table>
+        </div>
       </div>
     </main>
   </div>
@@ -633,11 +742,18 @@
     hideClosed: document.getElementById("f-hide-closed"),
     viewToggle: document.getElementById("viewToggle"),
     tableWrap: document.getElementById("tableWrap"),
-    tableBody: document.getElementById("tableBody")
+    tableBody: document.getElementById("tableBody"),
+    mainTabs: document.getElementById("mainTabs"),
+    graphSearch: document.getElementById("graph-search"),
+    graphSearchResults: document.getElementById("graphSearchResults"),
+    ganttChart: document.getElementById("ganttChart"),
+    dashboardBody: document.getElementById("dashboardBody")
   };
 
   var activeCategory = null;
   var viewMode = "card";
+  var activeTab = "list";
+  var graphExtraIds = {};
 
   function parsePeriod(text){
     if (!text) return null;
@@ -849,6 +965,8 @@
       els.resultsList.appendChild(renderCard(m));
     });
     renderTable(view);
+    renderDashboard(matches);
+    renderGantt(matches);
   }
 
   function renderStatStrip(matches, co){
@@ -1033,6 +1151,247 @@
     });
   }
 
+  function renderDashboard(matches){
+    els.dashboardBody.innerHTML = "";
+    var view = matches.slice().sort(function(a,b){
+      return b.score - a.score || a.policy.name.localeCompare(b.policy.name,"ko");
+    });
+    view.forEach(function(m){
+      var p = m.policy;
+      var tr = document.createElement("tr");
+
+      var nameTd = document.createElement("td");
+      nameTd.className = "name-cell";
+      nameTd.textContent = p.name;
+      tr.appendChild(nameTd);
+
+      var agencyTd = document.createElement("td");
+      agencyTd.className = "dash-agency";
+      var a = document.createElement("a");
+      a.href = p.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = p.agency + " ↗";
+      agencyTd.appendChild(a);
+      tr.appendChild(agencyTd);
+
+      var scoreTd = document.createElement("td");
+      scoreTd.className = "score-cell";
+      scoreTd.textContent = m.score + "%";
+      tr.appendChild(scoreTd);
+
+      els.dashboardBody.appendChild(tr);
+    });
+  }
+
+  // --- 그래프(간트차트) 탭 ---------------------------------------------------
+
+  function currentYearBounds(){
+    var y = new Date().getFullYear();
+    return { year: y, start: new Date(y,0,1).getTime(), end: new Date(y+1,0,1).getTime() };
+  }
+
+  function periodOverlapsYear(period, bounds){
+    if (!period) return false;
+    var s = new Date(period.start + "T00:00:00").getTime();
+    var e = new Date(period.end + "T23:59:59").getTime();
+    if (isNaN(s) || isNaN(e)) return false;
+    return e >= bounds.start && s < bounds.end;
+  }
+
+  function pctInYear(ts, bounds){
+    var clamped = Math.min(Math.max(ts, bounds.start), bounds.end);
+    return (clamped - bounds.start) / (bounds.end - bounds.start) * 100;
+  }
+
+  function renderGraphSearchResults(){
+    var q = els.graphSearch.value.trim().toLowerCase();
+    els.graphSearchResults.innerHTML = "";
+    if (!q) return;
+
+    var list = document.createElement("div");
+    list.className = "graph-search-list";
+    var hits = POLICIES.filter(function(p){
+      return computeStatus(p).code === "closed" &&
+        (p.name.toLowerCase().indexOf(q) !== -1 || p.agency.toLowerCase().indexOf(q) !== -1);
+    }).slice(0, 20);
+
+    if (!hits.length){
+      var empty = document.createElement("div");
+      empty.className = "empty";
+      empty.textContent = "마감된 사업 중 일치하는 결과가 없습니다.";
+      list.appendChild(empty);
+    } else {
+      hits.forEach(function(p){
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = (graphExtraIds[p.id] ? "✓ " : "+ ") + p.name + " · " + p.agency;
+        btn.addEventListener("click", function(){
+          if (graphExtraIds[p.id]) delete graphExtraIds[p.id];
+          else graphExtraIds[p.id] = true;
+          renderGraphSearchResults();
+          render();
+        });
+        list.appendChild(btn);
+      });
+    }
+    els.graphSearchResults.appendChild(list);
+  }
+
+  function renderGantt(matches){
+    var bounds = currentYearBounds();
+    var shownIds = {};
+    var rows = [];
+
+    matches.forEach(function(m){
+      var period = getPolicyPeriod(m.policy);
+      if (!period || !periodOverlapsYear(period, bounds)) return;
+      if (computeStatus(m.policy).code === "closed") return; // 마감 건은 검색으로만 추가
+      shownIds[m.policy.id] = true;
+      rows.push({ policy: m.policy, period: period, extra: false });
+    });
+
+    Object.keys(graphExtraIds).forEach(function(id){
+      if (shownIds[id]) return;
+      var p = POLICIES.find(function(pp){ return pp.id === id; });
+      if (!p) return;
+      var period = getPolicyPeriod(p);
+      if (!period || !periodOverlapsYear(period, bounds)) return;
+      rows.push({ policy: p, period: period, extra: true });
+    });
+
+    rows.sort(function(a,b){ return new Date(a.period.start) - new Date(b.period.start); });
+
+    els.ganttChart.innerHTML = "";
+
+    if (!rows.length){
+      var empty = document.createElement("div");
+      empty.className = "gantt-empty";
+      empty.textContent = "표시할 신청기간 정보가 있는 매칭 사업이 없습니다. 위 검색창에서 과거 사업을 추가해 보세요.";
+      els.ganttChart.appendChild(empty);
+      return;
+    }
+
+    var todayTs = Date.now();
+    var todayPct = pctInYear(todayTs, bounds);
+    var todayInRange = todayTs >= bounds.start && todayTs <= bounds.end;
+
+    var wrap = document.createElement("div");
+    wrap.className = "gantt-wrap";
+
+    var axisRow = document.createElement("div");
+    axisRow.className = "gantt-row";
+    var axisLabel = document.createElement("div");
+    axisLabel.className = "gantt-label";
+    axisLabel.textContent = bounds.year + "년";
+    axisRow.appendChild(axisLabel);
+
+    var axisTrack = document.createElement("div");
+    axisTrack.className = "gantt-axis-track";
+    for (var mo=0; mo<12; mo++){
+      var pct = pctInYear(new Date(bounds.year, mo, 1).getTime(), bounds);
+      var tick = document.createElement("div");
+      tick.className = "gantt-month-tick";
+      tick.style.left = pct + "%";
+      axisTrack.appendChild(tick);
+      var lbl = document.createElement("div");
+      lbl.className = "gantt-month-label";
+      lbl.style.left = pct + "%";
+      lbl.textContent = (mo+1) + "월";
+      axisTrack.appendChild(lbl);
+    }
+    if (todayInRange){
+      var axisToday = document.createElement("div");
+      axisToday.className = "gantt-today-tick";
+      axisToday.style.left = todayPct + "%";
+      axisTrack.appendChild(axisToday);
+    }
+    axisRow.appendChild(axisTrack);
+    wrap.appendChild(axisRow);
+
+    rows.forEach(function(row){
+      var tr = document.createElement("div");
+      tr.className = "gantt-row";
+
+      var label = document.createElement("div");
+      label.className = "gantt-label";
+      var titleSpan = document.createElement("span");
+      titleSpan.style.overflow = "hidden";
+      titleSpan.style.textOverflow = "ellipsis";
+      titleSpan.textContent = row.policy.name;
+      label.appendChild(titleSpan);
+      if (row.extra){
+        var rm = document.createElement("button");
+        rm.type = "button";
+        rm.className = "remove-btn";
+        rm.textContent = "×";
+        rm.title = "그래프에서 제거";
+        rm.addEventListener("click", function(){
+          delete graphExtraIds[row.policy.id];
+          render();
+        });
+        label.appendChild(rm);
+      }
+      tr.appendChild(label);
+
+      var track = document.createElement("div");
+      track.className = "gantt-track";
+
+      var s = new Date(row.period.start + "T00:00:00").getTime();
+      var e = new Date(row.period.end + "T23:59:59").getTime();
+      var leftPct = pctInYear(s, bounds);
+      var rightPct = pctInYear(e, bounds);
+      var widthPct = Math.max(rightPct - leftPct, 0.6);
+
+      var bar = document.createElement("div");
+      bar.className = "gantt-bar";
+      bar.style.left = leftPct + "%";
+      bar.style.width = widthPct + "%";
+      bar.title = row.policy.name + " (" + row.period.start + " ~ " + row.period.end + ")";
+
+      if (row.extra){
+        bar.classList.add("past-case");
+      } else if (todayTs < s){
+        bar.classList.add("upcoming");
+      } else if (todayTs > e){
+        bar.classList.add("past-case");
+      } else {
+        var elapsedPct = (todayTs - s) / (e - s) * 100;
+        var elapsedDiv = document.createElement("div");
+        elapsedDiv.className = "elapsed";
+        elapsedDiv.style.width = elapsedPct + "%";
+        var remainDiv = document.createElement("div");
+        remainDiv.className = "remaining";
+        remainDiv.style.width = (100 - elapsedPct) + "%";
+        bar.appendChild(elapsedDiv);
+        bar.appendChild(remainDiv);
+      }
+      track.appendChild(bar);
+
+      if (todayInRange){
+        var rowToday = document.createElement("div");
+        rowToday.className = "gantt-today-tick";
+        rowToday.style.left = todayPct + "%";
+        track.appendChild(rowToday);
+      }
+
+      tr.appendChild(track);
+      wrap.appendChild(tr);
+    });
+
+    els.ganttChart.appendChild(wrap);
+  }
+
+  function setActiveTab(tab){
+    activeTab = tab;
+    els.mainTabs.querySelectorAll("button").forEach(function(btn){
+      btn.classList.toggle("active", btn.dataset.tab === tab);
+    });
+    document.querySelectorAll(".tab-panel").forEach(function(panel){
+      panel.hidden = panel.dataset.tab !== tab;
+    });
+  }
+
   function setViewMode(mode){
     viewMode = mode;
     els.resultsList.hidden = mode !== "card";
@@ -1052,7 +1411,7 @@
     };
   }
 
-  document.querySelectorAll(".panel-form select, .panel-form input").forEach(function(el){
+  document.querySelectorAll(".panel-form select, .panel-form input, .basic-info-bar select, .basic-info-bar input").forEach(function(el){
     el.addEventListener("change", render);
     el.addEventListener("input", render);
   });
@@ -1062,6 +1421,10 @@
   els.viewToggle.querySelectorAll("button").forEach(function(btn){
     btn.addEventListener("click", function(){ setViewMode(btn.dataset.view); });
   });
+  els.mainTabs.querySelectorAll("button").forEach(function(btn){
+    btn.addEventListener("click", function(){ setActiveTab(btn.dataset.tab); });
+  });
+  els.graphSearch.addEventListener("input", renderGraphSearchResults);
   els.btnReset.addEventListener("click", function(){
     try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
     applyCompany(defaultCompany());
