@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-18T04:21:06.000Z",
+  "generatedAt": "2026-08-18T05:39:53.331Z",
   "note": "기업마당 Open API 자동 수집 + 키워드 규칙 기반 자동 태깅 결과. 모든 항목은 사람이 검수(reviewed:true로 변경)하기 전까지 화면에 자동수집 · 검수대기 표시가 붙습니다. 규칙 기반 태깅은 LLM보다 정확도가 낮을 수 있으니 반드시 검수 후 반영하세요.",
   "policies": [
     {
@@ -721,7 +721,8 @@
           "sole"
         ],
         "industries": [
-          "content"
+          "content",
+          "service"
         ],
         "regions": [
           "daegu",
@@ -823,7 +824,8 @@
           "sme"
         ],
         "industries": [
-          "content"
+          "content",
+          "service"
         ],
         "regions": [
           "seoul",
@@ -1226,7 +1228,8 @@
           "sme"
         ],
         "industries": [
-          "bio"
+          "bio",
+          "service"
         ],
         "regions": [
           "busan"
@@ -1639,6 +1642,7 @@
           "sme"
         ],
         "industries": [
+          "mfg",
           "it"
         ],
         "regions": [
@@ -1696,7 +1700,9 @@
         "sizes": [
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "mfg"
+        ],
         "regions": [
           "seoul",
           "busan",
@@ -1794,7 +1800,9 @@
         "sizes": [
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "service"
+        ],
         "regions": [
           "seoul",
           "busan",
@@ -1993,7 +2001,8 @@
           "mid"
         ],
         "industries": [
-          "content"
+          "content",
+          "service"
         ],
         "regions": [
           "seoul",
@@ -2621,7 +2630,9 @@
         "sizes": [
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "mfg"
+        ],
         "regions": [
           "daejeon"
         ],
@@ -3069,7 +3080,9 @@
         "sizes": [
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "mfg"
+        ],
         "regions": [
           "chungbuk"
         ],
@@ -4029,7 +4042,9 @@
         "sizes": [
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "mfg"
+        ],
         "regions": [
           "incheon"
         ],
@@ -4339,7 +4354,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "mfg"
+        ],
         "regions": [
           "seoul",
           "busan",
@@ -4903,7 +4920,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "mfg"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -5063,7 +5082,10 @@
         ],
         "industries": "all",
         "regions": [
-          "jeju"
+          "jeju",
+          "gwangju",
+          "jeonbuk",
+          "jeonnam"
         ],
         "maxYears": null,
         "founderTypes": null,
@@ -5104,7 +5126,10 @@
           "sme"
         ],
         "industries": "all",
-        "regions": "all",
+        "regions": [
+          "daegu",
+          "gyeongbuk"
+        ],
         "maxYears": 7,
         "founderTypes": null,
         "certs": null,
@@ -5522,7 +5547,7 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "service"
         ],
         "regions": "all",
         "maxYears": null,
@@ -7148,248 +7173,6 @@
       "reviewed": false
     },
     {
-      "id": "auto--3cVsb5-LOmHVyJO",
-      "name": "원태양광발전소 기본지원사업(공공사회복지)(민간보조)",
-      "agency": "기후에너지환경부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260105000003580423&bsnsyear=2026&dtlbzId=20060385651030110014&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "발전소주변지역 주민들의 소득증대 및 복지향상",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "발전소주변지역 주민들의 소득증대 및 복지향상"
-        },
-        {
-          "label": "지원대상",
-          "value": "발전소 반경 5km 지역"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-04-20 ~ 2026-05-05"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-1KlhVhyZV9c5sct3",
-      "name": "원태양광발전소 기본지원사업(소득증대)(민간보조)",
-      "agency": "기후에너지환경부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260105000003580424&bsnsyear=2026&dtlbzId=20060385651030110014&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "발전소주변지역 주민들의 소득증대 및 복지향상",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "발전소주변지역 주민들의 소득증대 및 복지향상"
-        },
-        {
-          "label": "지원대상",
-          "value": "발전소 반경 5km 지역"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-04-20 ~ 2026-05-05"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-pm5pa1GnG9wvdFGo",
-      "name": "한그린에너지태양광발전소 기본지원사업(소득증대)(민간보조)",
-      "agency": "기후에너지환경부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260105000003580425&bsnsyear=2026&dtlbzId=20060385651030110014&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "발전소주변지역 주민들의 소득증대 및 복지향상",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "발전소주변지역 주민들의 소득증대 및 복지향상"
-        },
-        {
-          "label": "지원대상",
-          "value": "발전소 반경 5km 지역"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-04-20 ~ 2026-05-05"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "energy"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-GOZvXgRqI1N6lxcr",
-      "name": "쏠라스토리포천1호태양광발전소 기본지원사업(공공사회복지)(민간보조)",
-      "agency": "기후에너지환경부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260105000003580426&bsnsyear=2026&dtlbzId=20060385651030110014&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "발전소주변지역 주민들의 소득증대 및 복지향상",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "발전소주변지역 주민들의 소득증대 및 복지향상"
-        },
-        {
-          "label": "지원대상",
-          "value": "발전소 반경 5km 지역"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-07-21 ~ 2026-07-24"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-8IHg-kP2r2JoX0yg",
-      "name": "쏠라스토리포천1호태양광발전소 기본지원사업(소득증대)(민간보조)",
-      "agency": "기후에너지환경부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260105000003580427&bsnsyear=2026&dtlbzId=20060385651030110014&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "발전소주변지역 주민들의 소득증대 및 복지향상",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "발전소주변지역 주민들의 소득증대 및 복지향상"
-        },
-        {
-          "label": "지원대상",
-          "value": "발전소 반경 5km 지역"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-04-20 ~ 2026-05-05"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-dzOIeRKY-oUu-oAY",
-      "name": "양주열병합발전소 기본지원사업(공공사회복지)(민간보조)",
-      "agency": "기후에너지환경부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260105000003580428&bsnsyear=2026&dtlbzId=20060385651030110014&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "발전소주변지역 주민들의 소득증대 및 복지향상",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "발전소주변지역 주민들의 소득증대 및 복지향상"
-        },
-        {
-          "label": "지원대상",
-          "value": "발전소 반경 5km 지역"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-07-26 ~ 2026-07-29"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-N8nUcZKHUP4IVM4Y",
       "name": "에스엠솔라포천태양광 기본지원사업(소득증대)(민간보조)",
       "agency": "기후에너지환경부",
@@ -7408,206 +7191,6 @@
         {
           "label": "신청기간",
           "value": "2026-04-20 ~ 2026-05-05"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-PFkpnQ6yvBBWdlTy",
-      "name": "포천복합화력발전소 기본지원사업(소득증대)(민간보조)",
-      "agency": "기후에너지환경부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260105000003580416&bsnsyear=2026&dtlbzId=20060385651030110014&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "발전소주변지역 주민들의 소득증대 및 복지향상",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "발전소주변지역 주민들의 소득증대 및 복지향상"
-        },
-        {
-          "label": "지원대상",
-          "value": "발전소 반경 5km 지역"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-04-20 ~ 2026-05-05"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-jhdz_T95lZJxHOGV",
-      "name": "포천복합화력발전소 기본지원사업(공공사회복지)(민간보조)",
-      "agency": "기후에너지환경부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260105000003580417&bsnsyear=2026&dtlbzId=20060385651030110014&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "발전소주변지역 주민들의 소득증대 및 복지향상",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "발전소주변지역 주민들의 소득증대 및 복지향상"
-        },
-        {
-          "label": "지원대상",
-          "value": "발전소 반경 5km 지역"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-04-20 ~ 2026-05-05"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-emHZvEpdaIagVkKF",
-      "name": "포천천연가스발전소 기본지원사업(소득증대)(민간보조)",
-      "agency": "기후에너지환경부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260105000003580418&bsnsyear=2026&dtlbzId=20060385651030110014&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "발전소주변지역 주민들의 소득증대 및 복지향상",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "발전소주변지역 주민들의 소득증대 및 복지향상"
-        },
-        {
-          "label": "지원대상",
-          "value": "발전소 반경 5km 지역"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-04-10 ~ 2026-04-14"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-h93dLQ_j-Zjnqho9",
-      "name": "포천천연가스발전소 기본지원사업(공공사회복지)(민간보조)",
-      "agency": "기후에너지환경부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260105000003580419&bsnsyear=2026&dtlbzId=20060385651030110014&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "발전소주변지역 주민들의 소득증대 및 복지향상",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "발전소주변지역 주민들의 소득증대 및 복지향상"
-        },
-        {
-          "label": "지원대상",
-          "value": "발전소 반경 5km 지역"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-04-10 ~ 2026-04-14"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-BRWm_H0F-LiWe1wG",
-      "name": "동두천복합화력발전소 기본지원사업(공공사회복지)(민간보조)",
-      "agency": "기후에너지환경부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260105000003580420&bsnsyear=2026&dtlbzId=20060385651030110014&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "발전소주변지역 주민들의 소득증대 및 복지향상",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "발전소주변지역 주민들의 소득증대 및 복지향상"
-        },
-        {
-          "label": "지원대상",
-          "value": "발전소 반경 5km 지역"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-04-10 ~ 2026-04-14"
         }
       ],
       "elig": {
@@ -13258,6 +12841,7 @@
           "sme"
         ],
         "industries": [
+          "mfg",
           "it"
         ],
         "regions": "all",
@@ -13672,7 +13256,7 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "service"
         ],
         "regions": "all",
         "maxYears": null,
@@ -15166,6 +14750,7 @@
           "sme"
         ],
         "industries": [
+          "agri",
           "energy"
         ],
         "regions": [
@@ -15366,48 +14951,6 @@
         {
           "label": "지원대상",
           "value": "해당사항 없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-30 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "content"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": true
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-S72f-ow4IPnJQARU",
-      "name": "한국방송공사(KBS)_송캠프 입만 가져왔습니다",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260420000003803845&bsnsyear=2026&dtlbzId=201307812320301B0013&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "fund",
-      "summary": "한불수교 140주년 및 이준 열사 순국 120주년을 계기로, 한국과 유럽(프랑스·네덜란드) 뮤지션이 함께하는 국제공동제작 음악 리얼리티 프로그램 「송캠프: 입만 …",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "한불수교 140주년 및 이준 열사 순국 120주년을 계기로, 한국과 유럽(프랑스·네덜란드) 뮤지션이 함께하는 국제공동제작 음악 리얼리티 프로그램 「송캠프: 입만 가져왔습니다」를 제작하여, K-콘텐츠의 다양성 확장 및 한·EU 간 방송 문화 교류 활성화에 기여한다. 국내외 청년 창작자들이 유럽 현지에서 음악으로 소통하고 협업하는 과정을 담아, 아이돌 중심의 …(원문 확인 필요)"
-        },
-        {
-          "label": "지원대상",
-          "value": "2026년도 공동제작협정 프로그램 제작지원사업 수행지침 및 방송미디어통신위원회·한국전파진흥협회가 제시하는 사업 수행조건을 충족하는 방송사업자 ① 해외 공동제작사의 창의적·재정적 기여 비율 40% 이상 충족 ② 국내 방송사(KBS) 및 해외 공동제작사(프랑스·네덜란드) "
         },
         {
           "label": "신청기간",
@@ -16134,6 +15677,7 @@
           "sme"
         ],
         "industries": [
+          "retail",
           "energy"
         ],
         "regions": "all",
@@ -16175,7 +15719,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "energy"
+        ],
         "regions": [
           "ulsan"
         ],
@@ -16337,7 +15883,10 @@
         ],
         "industries": "all",
         "regions": [
-          "jeonnam"
+          "jeonnam",
+          "seoul",
+          "incheon",
+          "gyeonggi"
         ],
         "maxYears": null,
         "founderTypes": null,
@@ -16664,7 +16213,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "construction"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -16704,7 +16255,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "construction"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -16897,46 +16450,6 @@
         {
           "label": "신청기간",
           "value": "2025-12-08 ~ 2026-01-05"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-D7_AomDNdWr9aRJu",
-      "name": "석유시장 감시단",
-      "agency": "산업통상부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260519000003824956&bsnsyear=2026&dtlbzId=201309454320303A0012&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "소비자 관점에서의 석유제품 유통시장 모니터링을 통해 시장에 대한 소비자의 이해도 향상 및 소비자 권리 보호",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "소비자 관점에서의 석유제품 유통시장 모니터링을 통해 시장에 대한 소비자의 이해도 향상 및 소비자 권리 보호"
-        },
-        {
-          "label": "지원대상",
-          "value": "전국민, 조건없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-05-22 ~ 2026-06-05"
         }
       ],
       "elig": {
@@ -17233,7 +16746,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "service"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -18530,7 +18045,8 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "agri",
+          "service"
         ],
         "regions": "all",
         "maxYears": null,
@@ -18572,7 +18088,7 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "service"
         ],
         "regions": "all",
         "maxYears": null,
@@ -19077,6 +18593,7 @@
           "sme"
         ],
         "industries": [
+          "mfg",
           "agri"
         ],
         "regions": "all",
@@ -19119,6 +18636,7 @@
           "sme"
         ],
         "industries": [
+          "mfg",
           "agri"
         ],
         "regions": "all",
@@ -19413,7 +18931,7 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "mfg"
         ],
         "regions": "all",
         "maxYears": null,
@@ -20853,7 +20371,8 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "agri",
+          "energy"
         ],
         "regions": "all",
         "maxYears": null,
@@ -22200,6 +21719,7 @@
         ],
         "industries": [
           "agri",
+          "service",
           "energy"
         ],
         "regions": "all",
@@ -23759,6 +23279,7 @@
           "sme"
         ],
         "industries": [
+          "service",
           "energy"
         ],
         "regions": "all",
@@ -24354,7 +23875,8 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "agri",
+          "energy"
         ],
         "regions": "all",
         "maxYears": null,
@@ -24692,7 +24214,7 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "mfg"
         ],
         "regions": "all",
         "maxYears": null,
@@ -24988,7 +24510,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "energy"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -25241,7 +24765,7 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "service"
         ],
         "regions": "all",
         "maxYears": null,
@@ -25283,7 +24807,8 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "agri",
+          "energy"
         ],
         "regions": "all",
         "maxYears": null,
@@ -25579,6 +25104,7 @@
           "sme"
         ],
         "industries": [
+          "mfg",
           "agri"
         ],
         "regions": "all",
@@ -25663,7 +25189,7 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "energy"
         ],
         "regions": "all",
         "maxYears": null,
@@ -27696,7 +27222,7 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "service"
         ],
         "regions": "all",
         "maxYears": null,
@@ -27864,6 +27390,7 @@
           "sme"
         ],
         "industries": [
+          "mfg",
           "agri"
         ],
         "regions": "all",
@@ -29002,7 +28529,8 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "agri",
+          "service"
         ],
         "regions": "all",
         "maxYears": null,
@@ -29044,7 +28572,8 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "agri",
+          "service"
         ],
         "regions": "all",
         "maxYears": null,
@@ -29128,7 +28657,8 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "agri",
+          "energy"
         ],
         "regions": "all",
         "maxYears": null,
@@ -30309,7 +29839,7 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "mfg"
         ],
         "regions": "all",
         "maxYears": null,
@@ -30561,7 +30091,11 @@
           "sole"
         ],
         "industries": "all",
-        "regions": "all",
+        "regions": [
+          "seoul",
+          "incheon",
+          "gyeonggi"
+        ],
         "maxYears": null,
         "founderTypes": null,
         "certs": null,
@@ -30600,7 +30134,13 @@
           "sole"
         ],
         "industries": "all",
-        "regions": "all",
+        "regions": [
+          "busan",
+          "daegu",
+          "ulsan",
+          "gyeongbuk",
+          "gyeongnam"
+        ],
         "maxYears": null,
         "founderTypes": null,
         "certs": null,
@@ -30886,7 +30426,13 @@
           "sole"
         ],
         "industries": "all",
-        "regions": "all",
+        "regions": [
+          "busan",
+          "daegu",
+          "ulsan",
+          "gyeongbuk",
+          "gyeongnam"
+        ],
         "maxYears": null,
         "founderTypes": null,
         "certs": null,
@@ -30926,7 +30472,13 @@
           "sme"
         ],
         "industries": "all",
-        "regions": "all",
+        "regions": [
+          "daejeon",
+          "sejong",
+          "chungnam",
+          "chungbuk",
+          "gangwon"
+        ],
         "maxYears": null,
         "founderTypes": null,
         "certs": null,
@@ -30965,7 +30517,11 @@
           "sole"
         ],
         "industries": "all",
-        "regions": "all",
+        "regions": [
+          "gwangju",
+          "jeonbuk",
+          "jeonnam"
+        ],
         "maxYears": null,
         "founderTypes": null,
         "certs": null,
@@ -31004,7 +30560,11 @@
           "sole"
         ],
         "industries": "all",
-        "regions": "all",
+        "regions": [
+          "seoul",
+          "incheon",
+          "gyeonggi"
+        ],
         "maxYears": null,
         "founderTypes": null,
         "certs": null,
@@ -31163,8 +30723,7 @@
       ],
       "elig": {
         "sizes": [
-          "sole",
-          "sme"
+          "sole"
         ],
         "industries": "all",
         "regions": "all",
@@ -31245,7 +30804,10 @@
           "sole"
         ],
         "industries": "all",
-        "regions": "all",
+        "regions": [
+          "daegu",
+          "gyeongbuk"
+        ],
         "maxYears": null,
         "founderTypes": null,
         "certs": null,
@@ -31481,8 +31043,7 @@
       ],
       "elig": {
         "sizes": [
-          "sole",
-          "sme"
+          "sole"
         ],
         "industries": "all",
         "regions": "all",
@@ -31525,7 +31086,13 @@
           "sme"
         ],
         "industries": "all",
-        "regions": "all",
+        "regions": [
+          "daejeon",
+          "sejong",
+          "chungnam",
+          "chungbuk",
+          "gangwon"
+        ],
         "maxYears": null,
         "founderTypes": null,
         "certs": null,
@@ -31603,7 +31170,11 @@
           "sole"
         ],
         "industries": "all",
-        "regions": "all",
+        "regions": [
+          "gwangju",
+          "jeonbuk",
+          "jeonnam"
+        ],
         "maxYears": null,
         "founderTypes": null,
         "certs": null,
@@ -31645,7 +31216,11 @@
         "industries": [
           "energy"
         ],
-        "regions": "all",
+        "regions": [
+          "seoul",
+          "incheon",
+          "gyeonggi"
+        ],
         "maxYears": null,
         "founderTypes": null,
         "certs": null,
@@ -31787,93 +31362,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-uENuf-poze4fx_kd",
-      "name": "제주문화방송_〈공생의 식탁: 한·일 메밀전(傳)〉",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260420000003803901&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "같은 씨앗이 서로 다른 문화로 자라났다. 한국과 일본은 오랜 시간 메밀을 먹어왔지만, 그 방식은 전혀 다르다. 강원에서는 막국수로 산업적 자산이 되었고, 제주에서…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "같은 씨앗이 서로 다른 문화로 자라났다. 한국과 일본은 오랜 시간 메밀을 먹어왔지만, 그 방식은 전혀 다르다. 강원에서는 막국수로 산업적 자산이 되었고, 제주에서는 화산토 위 생활 음식으로 이어졌다. 도쿄에서는 30초 만에 허기를 달래는 도시 문화가 되었고, 나가노에서는 신에게 올리는 헌납제가 되었으며, 홋카이도에서는 고등학생들이 배우는 교육이 되었다. 〈…(원문 확인 필요)"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "content"
-        ],
-        "regions": [
-          "gangwon",
-          "jeju"
-        ],
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-_IxS80sc_jiUPQZr",
-      "name": "MBC경남_급이 다른 식사",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260415000003798277&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "ㅇ 공공성·다양성·지역성 등 주제 및 내용의 적절성 공공성-오천 만이 받아 본 그 밥상급식. -급식을 먹어 본 대한민국 국민의 비율, 100% 이보다 더 공공성을…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "ㅇ 공공성·다양성·지역성 등 주제 및 내용의 적절성 공공성-오천 만이 받아 본 그 밥상급식. -급식을 먹어 본 대한민국 국민의 비율, 100% 이보다 더 공공성을 지닌 푸드 다큐멘터리 없다. 다양성 -기본으로 들어가는 밥, 국, 김치마저 손에 꼽을 수 없을 정도로 다양 지역성 -급식판 터줏대감 김치. 지역마다 색도, 색감도, 익힘 정도도, 당연히 맛도 다르…(원문 확인 필요)"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": [
-          "gyeongnam"
-        ],
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-aZsc2hln2AifWQtw",
       "name": "2026년도 지역·중소방송 콘텐츠 경쟁력 강화",
       "agency": "과학기술정보통신부",
@@ -31903,440 +31391,6 @@
           "content"
         ],
         "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-7HEvzx5ALv7DCKum",
-      "name": "MBC경남_관용은 있다!",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260415000003798285&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지 향상, 지역문화 창달 등 지역사회 발전에 기여"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "content"
-        ],
-        "regions": [
-          "gyeongnam"
-        ],
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-5GwdZ9O52rK7z3kw",
-      "name": "MBC경남_수호자들",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260415000003798280&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지 향상, 지역문화 창달 등 지역사회 발전에 기여"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "content"
-        ],
-        "regions": [
-          "gyeongnam"
-        ],
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-udF1yP00qnn198l7",
-      "name": "MBC경남_더 터미널 쇼 시즌2",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260415000003798284&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지 향상, 지역문화 창달 등 지역사회 발전에 기여"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "content"
-        ],
-        "regions": [
-          "gyeongnam"
-        ],
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-w2wHUMz8CmWZz63C",
-      "name": "대전MBC_역전의 빵",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260415000003798290&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지 향상, 지역문화 창달 등 지역사회 발전에 기여"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "content"
-        ],
-        "regions": [
-          "daejeon"
-        ],
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-2cHTV3MEdmC3Qr08",
-      "name": "MBC경남_뉴스파다-지역소생연구소",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260415000003798808&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "세상의 모든 뉴스를 지역소생의 관점으로 분석하는 뉴스 큐레이션",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "세상의 모든 뉴스를 지역소생의 관점으로 분석하는 뉴스 큐레이션"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": [
-          "gyeongnam"
-        ],
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-Hi_CYJaxJLPO2HEO",
-      "name": "MBC경남_이렇게 된 이상 국회로 간다 MKTK",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260415000003798812&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "“국회는 말하는 사람만 보이지만, 사실은 보이지 않는 사람들이 움직인다” 국회는 정치적 갈등과 뉴스의 중심지로 소비되지만, 실제로는 수많은 직군과 시스템이 맞물려…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "“국회는 말하는 사람만 보이지만, 사실은 보이지 않는 사람들이 움직인다” 국회는 정치적 갈등과 뉴스의 중심지로 소비되지만, 실제로는 수많은 직군과 시스템이 맞물려 움직이는 하나의 거대한 사회 인프라다. ‘정치’가 아닌 ‘사람과 구조’에 초점을 맞춰, 국회를 유지하는 다양한 직업군과 숨겨진 공간, 보이지 않는 노동을 탐구하는 콘텐츠를 제작하고자 한다. 엠키타…(원문 확인 필요)"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "content"
-        ],
-        "regions": [
-          "gyeongnam"
-        ],
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-hPTR-RcjvfT2Rs9y",
-      "name": "목포MBC_어영차바다야_청년 섬을 깨우다",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260415000003798480&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지 향상, 지역문화 창달 등 지역사회 발전에 기여"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당 없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "content"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-hmOY0Q07JTAlgwBd",
-      "name": "MBC경남_한국이 좋아서",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260415000003798549&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "한국 워킹홀리데이",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "한국 워킹홀리데이"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": [
-          "gyeongnam"
-        ],
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-didhFZzK0HwpKRLM",
-      "name": "KNN_로컬 셰프의 발견",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260415000003798935&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "market",
-      "summary": "수도권 중심의 파인다이닝, K-FOOD의 뿌리를 찾아서 2026년 ‘대한민국 미식’은 화려한 스타 셰프의 마케팅과 요리 경연 프로그램으로 ‘서울 중심의 파인다이닝…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "수도권 중심의 파인다이닝, K-FOOD의 뿌리를 찾아서 2026년 ‘대한민국 미식’은 화려한 스타 셰프의 마케팅과 요리 경연 프로그램으로 ‘서울 중심의 파인다이닝’에 집중되어 있다. 진정한 K-FOOD의 뿌리는 어디에 있는가? 우리는 그 해답을 ‘로컬의 주방’에서 찾으려 한다. 본 프로그램은 지역 소멸이라는 시대적 파고 속에서, ‘맛’이라는 강력한 무기로 …(원문 확인 필요)"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "content"
-        ],
-        "regions": [
-          "seoul",
-          "busan",
-          "gyeongnam"
-        ],
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": true
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-vnnu4WXr2X89ZdWn",
-      "name": "울산MBC_공약택배:뜯어봐야 압니다",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260415000003799005&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "이 프로그램은 제9회 지방선거에서 특히 시의원 후보자들에 초점을 맞춰서 공약과 정당정책을 꼼꼼히 따져보고, 시의원의 역할이 어떠해야 하는지 유권자에게 각인시켜, …",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "이 프로그램은 제9회 지방선거에서 특히 시의원 후보자들에 초점을 맞춰서 공약과 정당정책을 꼼꼼히 따져보고, 시의원의 역할이 어떠해야 하는지 유권자에게 각인시켜, 건강한 투표 문화를 조성하는데 목적이 있다."
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": [
-          "ulsan"
-        ],
         "maxYears": null,
         "founderTypes": null,
         "certs": null,
@@ -32560,50 +31614,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-Tg1nyVKYOdTOc-q4",
-      "name": "광주MBC_나비처럼 날아올라, STING",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260416000003800426&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지 향상, 지역문화 창달 등 지역사회 발전에 기여"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당 없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "content"
-        ],
-        "regions": [
-          "gwangju"
-        ],
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-iWaLJdgyGpAcQCDc",
       "name": "광주방송_원더풀 고을",
       "agency": "과학기술정보통신부",
@@ -32643,132 +31653,6 @@
         "rndRequired": false,
         "insuranceRequired": false,
         "taxClean": true
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-SCrIi0tNNOpg9OSk",
-      "name": "목포문화방송_마을호텔;주민이 도시를 살리는 법",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260417000003801469&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "관광객들의 발길은 점점 번화가로 향하고 숙박은 대형 호텔로 집중된다. 그 결과 목포 원도심의 골목과 상점, 작은 게스트하우스들은 조용히 사람의 기억 속에서 잊혀져…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "관광객들의 발길은 점점 번화가로 향하고 숙박은 대형 호텔로 집중된다. 그 결과 목포 원도심의 골목과 상점, 작은 게스트하우스들은 조용히 사람의 기억 속에서 잊혀져 가고 있다. 이들은 선택의 기로에 섰다. 각자 버티며 사라질 것인가! 아니면 함께 운영하며 새로운 방식을 만들 것인가! 그 선택의 결과는 ‘마을호텔’이다. 마을호텔은 하나의 건물을 세우는 숙박사업…(원문 확인 필요)"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "content"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-JMdL0rUYvJt1AaeF",
-      "name": "전주MBC_5일장 3분레시피",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260420000003802717&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "한국의 오일장은 물건을 사고파는 장소 이상이다. 계절이 드러나고, 노동이 쌓이며, 기억과 관계가 교차하며 한 지역의 시간이 겹겹이 남아있는 생활 아카이브이다. 하…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "한국의 오일장은 물건을 사고파는 장소 이상이다. 계절이 드러나고, 노동이 쌓이며, 기억과 관계가 교차하며 한 지역의 시간이 겹겹이 남아있는 생활 아카이브이다. 하지만 현대의 빠른 소비문화 속에서 시장은 점점 ‘풍경’으로만 소비되고 있다. 시장에는 우리가 잃어가고 있는 것들의 흔적이 남아 있다. 한 장터, 한 사람, 한 재료. 그 삶의 기억을 담아 완성되는 …(원문 확인 필요)"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-wDILOTVYRYrui6jT",
-      "name": "부산MBC_오늘은 뭐묵지? 시즌3",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260415000003799007&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지 향상, 지역문화 창달 등 지역사회 발전에 기여"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "content"
-        ],
-        "regions": [
-          "busan"
-        ],
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
       },
       "source": "auto",
       "sourceApi": "mpb",
@@ -33016,7 +31900,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "retail"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -33728,7 +32614,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "service"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -33999,50 +32887,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-72Hpr3GHUj4lLIlH",
-      "name": "제주문화방송_그날의 경고, 세이프 시그널",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260421000003804217&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "재난과 사고가 반복되는 시대에도 우리는 여전히 사고를 ‘사건 이후’ 만 기억하고 있으며, 정작 사고를 막을 수 있었던 수많은 전조 신호는 놓치고 있다. 지금 필요…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "재난과 사고가 반복되는 시대에도 우리는 여전히 사고를 ‘사건 이후’ 만 기억하고 있으며, 정작 사고를 막을 수 있었던 수많은 전조 신호는 놓치고 있다. 지금 필요한 것은 사고를 소비하는 콘텐츠가 아니라, 사고를 예방하는 콘텐츠다. 이에 지역의 실제 사건에서 출발해 누구나 일상에서 마주할 수 있는 위험을 다루며, 사고를 보여주는 데서 끝나지 않고 ‘사고가 시…(원문 확인 필요)"
-        },
-        {
-          "label": "지원대상",
-          "value": "조건 없음_전 국민 대상"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "content"
-        ],
-        "regions": [
-          "jeju"
-        ],
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-D4BypMrl6OgcTTml",
       "name": "JTV전주방송_이맛에 캠핑",
       "agency": "과학기술정보통신부",
@@ -34114,50 +32958,6 @@
           "content"
         ],
         "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-kykDxuEN2WrGgAR6",
-      "name": "광주MBC_생방송 빛나는 나의 도시",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260420000003802952&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지 향상, 지역문화 창달 등 지역사회 발전에 기여"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "content"
-        ],
-        "regions": [
-          "gwangju"
-        ],
         "maxYears": null,
         "founderTypes": null,
         "certs": null,
@@ -34257,48 +33057,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-daIEmV8JE8XA4a57",
-      "name": "두 얼굴의 소나무_안동문화방송",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260427000003810339&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "대형재난이 있었던 지역의 심층취재",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "대형재난이 있었던 지역의 심층취재"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "content"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-CrOQyns7LiykFDnP",
       "name": "부산글로벌도시재단_부산월드와이드",
       "agency": "과학기술정보통신부",
@@ -34329,50 +33087,6 @@
         ],
         "regions": [
           "busan"
-        ],
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-6YY8XX2f7eePR4JJ",
-      "name": "MBC강원영동_두 얼굴의 소나무 : 불과 공존의 조건 (가제)",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260429000003813021&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "(지역방송, 중소방송, 프로그램, 콘텐츠, 제작지원)지역방송의 재정안정화 기반 구축 및 건전한 발전을 통하여 방송의 공공성 다양성 구현, 지역 시청자 청취자 복지 향상, 지역문화 창달 등 지역사회 발전에 기여"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "content"
-        ],
-        "regions": [
-          "gangwon"
         ],
         "maxYears": null,
         "founderTypes": null,
@@ -35125,7 +33839,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -36844,8 +35560,14 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
-        "regions": "all",
+        "industries": [
+          "bio"
+        ],
+        "regions": [
+          "seoul",
+          "incheon",
+          "gyeonggi"
+        ],
         "maxYears": null,
         "founderTypes": null,
         "certs": null,
@@ -37137,7 +35859,7 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "service"
         ],
         "regions": "all",
         "maxYears": null,
@@ -37179,7 +35901,8 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "agri",
+          "service"
         ],
         "regions": "all",
         "maxYears": null,
@@ -37221,7 +35944,8 @@
           "sme"
         ],
         "industries": [
-          "mfg"
+          "mfg",
+          "service"
         ],
         "regions": "all",
         "maxYears": null,
@@ -39361,7 +38085,8 @@
           "sme"
         ],
         "industries": [
-          "agri"
+          "agri",
+          "retail"
         ],
         "regions": "all",
         "maxYears": null,
@@ -39787,7 +38512,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "energy"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -41556,6 +40283,7 @@
           "sme"
         ],
         "industries": [
+          "mfg",
           "agri",
           "service",
           "energy"
@@ -42391,7 +41119,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "energy"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -42427,7 +41157,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "energy"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -42463,7 +41195,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "energy"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,

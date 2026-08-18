@@ -279,11 +279,27 @@ const SOURCES = [
       // (주)/㈜/(유) 같은 법인 표기가 제목에 있는 항목은 실사용 데이터 확인 결과(2026-08-18) 전부
       // "이미 특정 업체가 선정·집행된 예산 내역"(예: "유피로지스(주) 남양주센터 ... 도입사업",
       // "(주)엠비씨넷_발효인간")이었습니다 — 다른 회사가 신청할 수 있는 공모가 아닙니다.
+      // 2026-08-18 추가 발견: "OOO발전소 기본지원사업(공공사회복지)(민간보조)"류는 발전소
+      // 주변지역 주민·지자체 대상 상생지원금(전원개발촉진법에 따른 발전소주변지역 지원사업)이라
+      // 회사가 신청하는 사업이 아닙니다. 발전소 하나당 여러 세부항목(공공사회복지/소득증대 등)이
+      // 나오는데 전국 발전소 수만큼 반복되어 목록을 심하게 오염시킵니다.
+      const POWER_PLANT_SUBSIDY_RE = /발전소.*기본지원사업|기본지원사업.*발전소/;
+      // "OO감시단"(민간 감시인력 모집)도 회사 지원사업이 아니라 개인 위촉 성격입니다.
+      const CITIZEN_MONITOR_RE = /감시단|모니터링단/;
       const NON_APPLICABLE_RE =
         /실태조사|종합상황실|학술활동|학술대회|정책\s*포럼|포럼$|경제협력\s*네트워크|산업통상\s*협력|시장조사|가입\s*지원$|비즈니스\s*파트너십|경제통상\s*정책|지방정부\s*협력|경상보조|위탁운영|\(주\)|㈜|\(유\)/;
+      // 특정 지역 방송사가 이미 제작을 위탁받은 콘텐츠 항목(예: "MBC경남_뉴스파다", "제주문화방송_...",
+      // "전주MBC_5일장 3분레시피")도 다른 회사가 신청할 수 있는 공모가 아니라 이미 정해진 수행사에게
+      // 준 제작비입니다. "_" 앞부분에 방송사명이 있는 경우만 좁게 잡아서, "동반성장문화조성_..."처럼
+      // 그냥 항목 구분에 "_"를 쓴 일반 지원사업까지 걸러내지 않도록 합니다.
+      const BROADCASTER_COMMISSION_RE = /^.{0,15}(MBC|KBS|SBS|KNN|방송공사|문화방송)/;
       function isApplicableProgram(item) {
         const name = pickField(item, ["DDTLBZ_NM", "DTLBZ_NM"]);
-        return !NON_APPLICABLE_RE.test(name);
+        if (NON_APPLICABLE_RE.test(name)) return false;
+        if (POWER_PLANT_SUBSIDY_RE.test(name)) return false;
+        if (CITIZEN_MONITOR_RE.test(name)) return false;
+        if (name.includes("_") && BROADCASTER_COMMISSION_RE.test(name)) return false;
+        return true;
       }
 
       const bsnsyear = String(new Date().getFullYear());
@@ -442,7 +458,11 @@ const CERT_RULES = [
 
 const SIZE_RULES = [
   { code: "pre", keywords: ["예비창업자", "예비 창업"] },
-  { code: "sole", keywords: ["소상공인"] },
+  // 2026-08-18 추가: "소공인"은 소상공인 중에서도 제조업 등 상시근로자 10인 미만 사업체를
+  // 가리키는 법정 하위 구분인데, 별도 코드가 없어서 소상공인과 같은 "sole"로 묶었습니다.
+  // 그래야 "소공인스마트제조지원" 같은 사업이 sizes:["sole","sme"] 기본값으로 빠지지 않고
+  // 중소기업 필터에서 정상적으로 제외됩니다.
+  { code: "sole", keywords: ["소상공인", "소공인"] },
   { code: "sme", keywords: ["중소기업"] },
   { code: "mid", keywords: ["중견기업"] },
 ];
@@ -451,23 +471,30 @@ const INDUSTRY_RULES = [
   // "제조업"이라는 정확한 단어 없이 "제조DX", "스마트공장", "제조혁신 전문가" 같은 표현만
   // 쓰는 공고가 많아서(예: "제조DX멘토단 활용지원" 15건 중 14건이 industries:"all"로 잘못
   // 넓어졌던 문제, 2026-08-14 발견) 제조업 특화임이 명백한 표현들을 추가했습니다.
-  { code: "mfg", keywords: ["제조업", "스마트공장", "제조혁신", "제조DX", "제조데이터", "자동화 설비"] },
+  // 2026-08-18 추가: "로봇산업기술개발사업" 등 로봇 특화 R&D가 제조업 키워드 없이 나오던 문제.
+  { code: "mfg", keywords: ["제조업", "스마트공장", "제조혁신", "제조DX", "제조데이터", "자동화 설비", "로봇"] },
   { code: "it", keywords: ["정보통신", "소프트웨어", "IT"] },
-  { code: "bio", keywords: ["바이오", "헬스케어", "제약"] },
+  // 2026-08-18 추가: "AI 응용제품 신속 상용화(보건분야, 만성질환관리)" 등 "보건" 표현만 쓰는
+  // 사업이 걸러지지 않던 문제.
+  { code: "bio", keywords: ["바이오", "헬스케어", "제약", "보건"] },
   // 2026-08-18 추가: 방송·미디어·OTT 관련 사업이 "콘텐츠" 키워드가 본문에 없어서
   // industries:"all"로 잘못 넓어지던 문제(예: "지역 방송 제작역량 강화", "OTT산업 경쟁력 강화",
   // "AI 더빙 특화 K-FAST 확산") - 방송/미디어 특화 표현들을 추가했습니다.
   { code: "content", keywords: ["콘텐츠", "게임", "영상", "웹툰", "방송", "미디어", "OTT", "더빙"] },
-  { code: "agri", keywords: ["농식품", "농업", "축산", "수산", "임업", "산림", "목재"] },
+  // 2026-08-18 추가: "국)식문화개선지원" 등 "식문화" 표현만 쓰는 농식품 관련 사업.
+  { code: "agri", keywords: ["농식품", "농업", "축산", "수산", "임업", "산림", "목재", "식문화"] },
   // 2026-08-18 추가: "플랜트-EPC" 등 플랜트·엔지니어링 특화 사업이 걸러지지 않던 문제.
-  { code: "construction", keywords: ["건설업", "플랜트"] },
-  { code: "retail", keywords: ["도소매업", "유통업"] },
-  // 2026-08-18 추가: "스포츠산업 선도기업 육성" 등 실제로는 특정 업종(스포츠산업) 대상인
-  // 문화체육관광부 사업이 industries:"all"로 잘못 넓어지던 문제.
-  { code: "service", keywords: ["서비스업", "스포츠산업", "스포츠기업"] },
+  // 2026-08-18 추가: "한옥전문인력양성" 등 한옥·전통건축 특화 사업.
+  { code: "construction", keywords: ["건설업", "플랜트", "한옥"] },
+  // 2026-08-18 추가: "시장상권인프라조성(시장경영지원)" 등 전통시장 상인 대상 사업.
+  { code: "retail", keywords: ["도소매업", "유통업", "전통시장", "시장경영"] },
+  // 2026-08-18 추가: "스포츠산업 선도기업 육성", "관광교통" 등 실제로는 특정 업종(스포츠산업/
+  // 관광업) 대상인 문화체육관광부 사업이 industries:"all"로 잘못 넓어지던 문제.
+  { code: "service", keywords: ["서비스업", "스포츠산업", "스포츠기업", "관광"] },
   // 2026-08-14 추가: 기후에너지환경부류 사업(온실가스/분산에너지/녹색산업 등)이 기존 8개
   // 업종 어디에도 안 맞아 계속 industries:"all"로 빠지던 문제 - "에너지·환경" 업종을 새로 만듦.
-  { code: "energy", keywords: ["에너지", "환경", "온실가스", "탄소중립", "신재생", "미세먼지", "자원순환", "녹색산업"] },
+  // 2026-08-18 추가: "수소기업", "재자원화 시설" 등도 같은 부류라 키워드 보강.
+  { code: "energy", keywords: ["에너지", "환경", "온실가스", "탄소중립", "신재생", "미세먼지", "자원순환", "녹색산업", "수소", "재자원화", "물기업"] },
 ];
 
 // 기획재정부(mpb) 데이터는 문장이 짧아서(예: "과수무병묘목(보급종)생산공급지원") INDUSTRY_RULES
@@ -498,6 +525,17 @@ const REGION_RULES = [
   { code: "gyeongbuk", keywords: ["경상북도", "경북"] },
   { code: "gyeongnam", keywords: ["경상남도", "경남"] },
   { code: "jeju", keywords: ["제주"] },
+  // 2026-08-18 추가: 개별 시/도명이 아니라 "수도권/중부권/호남권" 같은 광역 권역 단위로만
+  // 표기하는 사업들(예: "소상공인협업아카데미(중부권)")이 REGION_RULES에 안 걸려서 지역무관
+  // (all)으로 잘못 넓어지던 문제 - 권역별로 소속 시/도 코드 전체를 매핑합니다. 권역 구분은
+  // 기관마다 조금씩 달라서(예: "중부권"에 강원을 포함하는지 여부) 완벽히 정확하지는 않습니다.
+  { code: ["seoul", "incheon", "gyeonggi"], keywords: ["수도권"] },
+  { code: ["daejeon", "sejong", "chungnam", "chungbuk", "gangwon"], keywords: ["중부권"] },
+  { code: ["daejeon", "sejong", "chungnam", "chungbuk"], keywords: ["충청권"] },
+  { code: ["gwangju", "jeonbuk", "jeonnam"], keywords: ["호남권"] },
+  { code: ["busan", "daegu", "ulsan", "gyeongbuk", "gyeongnam"], keywords: ["영남권"] },
+  { code: ["busan", "ulsan", "gyeongnam"], keywords: ["동남권"] },
+  { code: ["daegu", "gyeongbuk"], keywords: ["대경권"] },
 ];
 
 function matchCategory(text) {
@@ -513,8 +551,16 @@ function matchMany(text, rules) {
 }
 
 function matchAllOr(text, rules) {
-  const hits = rules.filter((r) => includesAny(text, r.keywords)).map((r) => r.code);
-  return hits.length ? hits : "all";
+  // rule.code는 보통 문자열 하나지만, REGION_RULES의 광역 권역 규칙("수도권" 등)처럼 여러 지역
+  // 코드를 한 번에 매핑해야 하는 경우 배열일 수 있어서 평탄화합니다.
+  const hits = [];
+  for (const rule of rules) {
+    if (!includesAny(text, rule.keywords)) continue;
+    if (Array.isArray(rule.code)) hits.push(...rule.code);
+    else hits.push(rule.code);
+  }
+  const unique = [...new Set(hits)];
+  return unique.length ? unique : "all";
 }
 
 // "창업기업"은 중소기업창업 지원법상 기본적으로 "창업 후 7년 이내인 기업"을 뜻합니다.
