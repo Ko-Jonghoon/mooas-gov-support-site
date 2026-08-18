@@ -270,9 +270,26 @@ const SOURCES = [
         return hasBusinessCategory && !hasIndividualTag;
       }
 
+      // 이 데이터에는 "기업이 신청하는 지원사업"이 아니라 부처가 자체 예산으로 집행하는 항목
+      // (실태조사·연구용역, 부처 직영 시설 운영비, 행사·기념일 개최비, 정책 포럼·통상 협력 활동
+      // 등)도 카테고리 필터를 통과한 채 섞여 있습니다(2026-08-18 실사용 중 발견: "외주제작 거래
+      // 실태조사", "재난방송 종합상황실 운영", "2026년도 한국임업진흥원 지원(경상보조)" 등).
+      // 문구 기반 추정이라 완벽하지 않고(드물게 진짜 지원사업을 걸러낼 수 있음), 그래도 회사가
+      // 신청할 수 없는 항목이 목록에 뒤섞이는 것보다는 낫다고 판단해 제외합니다.
+      // (주)/㈜/(유) 같은 법인 표기가 제목에 있는 항목은 실사용 데이터 확인 결과(2026-08-18) 전부
+      // "이미 특정 업체가 선정·집행된 예산 내역"(예: "유피로지스(주) 남양주센터 ... 도입사업",
+      // "(주)엠비씨넷_발효인간")이었습니다 — 다른 회사가 신청할 수 있는 공모가 아닙니다.
+      const NON_APPLICABLE_RE =
+        /실태조사|종합상황실|학술활동|학술대회|정책\s*포럼|포럼$|경제협력\s*네트워크|산업통상\s*협력|시장조사|가입\s*지원$|비즈니스\s*파트너십|경제통상\s*정책|지방정부\s*협력|경상보조|위탁운영|\(주\)|㈜|\(유\)/;
+      function isApplicableProgram(item) {
+        const name = pickField(item, ["DDTLBZ_NM", "DTLBZ_NM"]);
+        return !NON_APPLICABLE_RE.test(name);
+      }
+
       const bsnsyear = String(new Date().getFullYear());
       const numOfRows = 1000;
-      const passesFilter = (item) => item.RCEPT_BEGIN_DE && item.RCEPT_END_DE && isBusinessRelevant(item);
+      const passesFilter = (item) =>
+        item.RCEPT_BEGIN_DE && item.RCEPT_END_DE && isBusinessRelevant(item) && isApplicableProgram(item);
 
       const firstUrl = withServiceKey(endpoint, process.env.MPB_API_KEY, {
         pageNo: "1", numOfRows: String(numOfRows), resultType: "json", bsnsyear,
@@ -306,9 +323,27 @@ const SOURCES = [
       // 이 데이터는 같은 사업이 수행기관/지역별로 쪼개진 세부 항목이 통째로 들어있어서
       // "제목+소관명"이 같은 항목이 수백 번씩 반복됩니다. 사용자에게는 사실상 같은 사업으로
       // 보이므로 대표 1건만 남기고 합칩니다.
+      // 같은 사업인데도 표기만 다른 경우(예: "Jump-Up" vs "JUMP-UP" vs "Jump-up", 괄호 안팎
+      // 띄어쓰기 차이)가 있어서 원문 그대로 비교하면 중복 제거가 안 됩니다(2026-08-18 발견:
+      // "2026년 도약(Jump-Up) 프로그램"이 표기 차이로 5건 넘게 남아있던 문제). 대소문자·공백·
+      // 괄호를 무시하고 비교하되, 실제로 저장/표시하는 제목은 원문 그대로 둡니다.
+      function normalizeForDedup(text) {
+        // 제목 맨 앞의 연도 표기("2026년" vs "2026년도" vs "2026")만 표기 차이로 보고 통일합니다.
+        // 문장 중간의 "OO년 선발기업" 같은 회차 표기는 건드리지 않습니다 - 이건 실제로 다른
+        // 회차(예: 25년/26년 선발기업)를 가리킬 수 있어서 지워버리면 서로 다른 예산 항목이
+        // 하나로 합쳐지는 부작용이 생깁니다.
+        // "년도"는 두 글자가 붙어있을 때만 하나로 취급해야 합니다 - "\s*도?"처럼 느슨하게 쓰면
+        // "2026년 도약" 같은 제목에서 "도약"의 "도"를 "년도"의 "도"로 착각해 "2026 약"으로
+        // 잘못 잘라먹는 문제가 있었습니다(2026-08-18 발견).
+        const withNormalizedYear = text.trim().replace(/^(\d{4})\s*(?:년도|년)\s*/, "$1 ");
+        return withNormalizedYear.toLowerCase().replace(/[\s()（）\-_.]/g, "");
+      }
       const seen = new Map();
       for (const item of items) {
-        const key = pickField(item, ["DDTLBZ_NM", "DTLBZ_NM"]) + "||" + pickField(item, ["JRSD_NM"]);
+        const key =
+          normalizeForDedup(pickField(item, ["DDTLBZ_NM", "DTLBZ_NM"])) +
+          "||" +
+          normalizeForDedup(pickField(item, ["JRSD_NM"]));
         if (!seen.has(key)) seen.set(key, item);
       }
       const deduped = [...seen.values()];
@@ -419,11 +454,17 @@ const INDUSTRY_RULES = [
   { code: "mfg", keywords: ["제조업", "스마트공장", "제조혁신", "제조DX", "제조데이터", "자동화 설비"] },
   { code: "it", keywords: ["정보통신", "소프트웨어", "IT"] },
   { code: "bio", keywords: ["바이오", "헬스케어", "제약"] },
-  { code: "content", keywords: ["콘텐츠", "게임", "영상", "웹툰"] },
+  // 2026-08-18 추가: 방송·미디어·OTT 관련 사업이 "콘텐츠" 키워드가 본문에 없어서
+  // industries:"all"로 잘못 넓어지던 문제(예: "지역 방송 제작역량 강화", "OTT산업 경쟁력 강화",
+  // "AI 더빙 특화 K-FAST 확산") - 방송/미디어 특화 표현들을 추가했습니다.
+  { code: "content", keywords: ["콘텐츠", "게임", "영상", "웹툰", "방송", "미디어", "OTT", "더빙"] },
   { code: "agri", keywords: ["농식품", "농업", "축산", "수산", "임업", "산림", "목재"] },
-  { code: "construction", keywords: ["건설업"] },
+  // 2026-08-18 추가: "플랜트-EPC" 등 플랜트·엔지니어링 특화 사업이 걸러지지 않던 문제.
+  { code: "construction", keywords: ["건설업", "플랜트"] },
   { code: "retail", keywords: ["도소매업", "유통업"] },
-  { code: "service", keywords: ["서비스업"] },
+  // 2026-08-18 추가: "스포츠산업 선도기업 육성" 등 실제로는 특정 업종(스포츠산업) 대상인
+  // 문화체육관광부 사업이 industries:"all"로 잘못 넓어지던 문제.
+  { code: "service", keywords: ["서비스업", "스포츠산업", "스포츠기업"] },
   // 2026-08-14 추가: 기후에너지환경부류 사업(온실가스/분산에너지/녹색산업 등)이 기존 8개
   // 업종 어디에도 안 맞아 계속 industries:"all"로 빠지던 문제 - "에너지·환경" 업종을 새로 만듦.
   { code: "energy", keywords: ["에너지", "환경", "온실가스", "탄소중립", "신재생", "미세먼지", "자원순환", "녹색산업"] },
