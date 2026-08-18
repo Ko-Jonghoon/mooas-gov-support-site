@@ -504,8 +504,9 @@ const INDUSTRY_RULES = [
   // 2026-08-18 추가: "한옥전문인력양성" 등 한옥·전통건축 특화 사업, "디지털도로 AI 신기술
   // 지원사업" 등 도로·교통 인프라 특화 사업(국토교통부).
   { code: "construction", keywords: ["건설업", "플랜트", "한옥", "도로", "교통인프라"] },
-  // 2026-08-18 추가: "시장상권인프라조성(시장경영지원)" 등 전통시장 상인 대상 사업.
-  { code: "retail", keywords: ["도소매업", "유통업", "전통시장", "시장경영"] },
+  // 2026-08-18 추가: "시장상권인프라조성(시장경영지원)" 등 전통시장 상인 대상 사업,
+  // "프랜차이즈 로드쇼 참가기업 모집" 등 프랜차이즈 특화 사업.
+  { code: "retail", keywords: ["도소매업", "유통업", "전통시장", "시장경영", "프랜차이즈"] },
   // 2026-08-18 추가: "스포츠산업 선도기업 육성", "관광교통" 등 실제로는 특정 업종(스포츠산업/
   // 관광업) 대상인 문화체육관광부 사업이 industries:"all"로 잘못 넓어지던 문제.
   { code: "service", keywords: ["서비스업", "스포츠산업", "스포츠기업", "관광"] },
@@ -596,7 +597,13 @@ function matchMaxYears(text) {
 function tagAndBuildPolicy(normalized, source) {
   const text = buildTextBlob(normalized);
   const category = matchCategory(text);
-  const sizes = matchMany(text, SIZE_RULES) || ["sole", "sme"]; // 명시 안 되면 가장 흔한 대상으로 넓게 잡음
+  // "중소기업특별지원지역"은 위기지역 지정 명칭일 뿐인데 "중소기업"이라는 글자가 우연히 들어있어서
+  // 소상공인 전용 사업까지 sizes:["sole","sme"]로 잘못 넓히는 문제가 있었습니다(2026-08-18 발견:
+  // "(서울강원 한지회) 2026년 재기사업화 지원" - 실제로는 "경영위기 소상공인" 전용인데 지원대상
+  // 문구에 있는 "중소기업특별지원지역"(위기지역 유형명) 때문에 중소기업도 대상인 것처럼 보임).
+  // 기업 규모(sizes) 판정에서만 이 문구를 제거하고 판단합니다.
+  const sizeText = text.replace(/중소기업특별지원지역/g, "");
+  const sizes = matchMany(sizeText, SIZE_RULES) || ["sole", "sme"]; // 명시 안 되면 가장 흔한 대상으로 넓게 잡음
   const founderTypes = matchMany(text, FOUNDER_TYPE_RULES);
   const certs = matchMany(text, CERT_RULES);
   let industries = matchAllOr(text, INDUSTRY_RULES);
