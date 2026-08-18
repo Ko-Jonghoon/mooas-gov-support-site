@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-14T07:57:12.542Z",
+  "generatedAt": "2026-08-14T08:27:49.750Z",
   "note": "기업마당 Open API 자동 수집 + 키워드 규칙 기반 자동 태깅 결과. 모든 항목은 사람이 검수(reviewed:true로 변경)하기 전까지 화면에 자동수집 · 검수대기 표시가 붙습니다. 규칙 기반 태깅은 LLM보다 정확도가 낮을 수 있으니 반드시 검수 후 반영하세요.",
   "policies": [
     {
@@ -5754,7 +5754,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -5794,7 +5796,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -5834,7 +5838,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -5874,7 +5880,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -5998,7 +6006,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -6038,7 +6048,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -6164,7 +6176,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": [
           "busan"
         ],
@@ -6250,7 +6264,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": [
           "busan"
         ],
@@ -6292,7 +6308,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": [
           "busan"
         ],
@@ -6555,7 +6573,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -9597,7 +9617,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -9637,7 +9659,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -9677,7 +9701,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -9801,7 +9827,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -9841,7 +9869,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -9881,7 +9911,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -9921,7 +9953,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -9961,7 +9995,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -10001,7 +10037,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -10041,7 +10079,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -10081,7 +10121,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -10247,7 +10289,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -10287,7 +10331,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -10327,7 +10373,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -10367,7 +10415,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -10447,7 +10497,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -10571,7 +10623,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -10611,7 +10665,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -10651,7 +10707,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -10691,7 +10749,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -10731,7 +10791,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -10771,7 +10833,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -11023,7 +11087,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -11063,7 +11129,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -11103,7 +11171,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -11143,7 +11213,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -11183,7 +11255,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -11266,7 +11340,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -11306,7 +11382,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -11346,7 +11424,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -11386,7 +11466,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -11426,7 +11508,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -12857,7 +12941,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -12897,7 +12983,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -12937,7 +13025,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -12977,7 +13067,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -13059,7 +13151,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -13099,7 +13193,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -13139,7 +13235,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -13179,7 +13277,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -13219,7 +13319,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -13259,7 +13361,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -13383,7 +13487,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -14508,7 +14614,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -14590,7 +14698,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -14672,7 +14782,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -14880,7 +14992,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -15046,7 +15160,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -16281,7 +16397,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -18758,7 +18876,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -18798,7 +18918,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -21536,7 +21658,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -21576,7 +21700,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -21828,7 +21954,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -21868,7 +21996,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -21908,7 +22038,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -21948,7 +22080,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -22030,7 +22164,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -22070,7 +22206,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -22110,7 +22248,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -22276,7 +22416,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -22652,7 +22794,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -22902,7 +23046,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -22942,7 +23088,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -23024,7 +23172,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -23064,7 +23214,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -23188,7 +23340,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -23228,7 +23382,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -23352,7 +23508,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -23644,7 +23802,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -23684,7 +23844,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -23724,7 +23886,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -23806,7 +23970,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -24099,7 +24265,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -24225,7 +24393,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -24265,7 +24435,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -24305,7 +24477,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -24345,7 +24519,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -24847,7 +25023,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -25095,7 +25273,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -25177,7 +25357,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -25387,7 +25569,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -25469,7 +25653,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -25803,7 +25989,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -25885,7 +26073,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": [
           "busan"
         ],
@@ -26225,7 +26415,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -26559,7 +26751,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -26599,7 +26793,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -26639,7 +26835,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -26721,7 +26919,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -26803,7 +27003,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -26843,7 +27045,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -26925,7 +27129,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -27007,7 +27213,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -27265,7 +27473,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -27519,7 +27729,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -27643,7 +27855,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -27683,7 +27897,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -27807,7 +28023,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -27847,7 +28065,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -27929,7 +28149,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -28179,7 +28401,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -28429,7 +28653,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -28469,7 +28695,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -28509,7 +28737,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -28759,7 +28989,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -29179,7 +29411,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -29345,7 +29579,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -29385,7 +29621,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -29425,7 +29663,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -29759,7 +29999,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -29927,7 +30169,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -29967,7 +30211,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -30217,7 +30463,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -30299,7 +30547,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -30381,7 +30631,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -30463,7 +30715,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -30503,7 +30757,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -30543,7 +30799,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -30751,7 +31009,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -30791,7 +31051,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -30831,7 +31093,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -30913,7 +31177,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -30995,7 +31261,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -31119,7 +31387,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -31159,7 +31429,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -31199,7 +31471,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -31239,7 +31513,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -31279,7 +31555,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -31361,7 +31639,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -31445,7 +31725,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -31569,7 +31851,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -31651,7 +31935,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -31691,7 +31977,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -31773,7 +32061,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -31898,7 +32188,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -31938,7 +32230,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -32268,7 +32562,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -32350,7 +32646,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -32852,7 +33150,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -32892,7 +33192,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -32974,7 +33276,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -33098,7 +33402,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -33265,7 +33571,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -33558,7 +33866,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -33726,7 +34036,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -33808,7 +34120,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -33890,7 +34204,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -34056,7 +34372,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -34264,7 +34582,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -34304,7 +34624,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -34344,7 +34666,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -34384,7 +34708,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -34466,7 +34792,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -35263,7 +35591,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -35345,7 +35675,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -38666,7 +38998,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -38706,7 +39040,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -39156,7 +39492,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -39238,7 +39576,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -39278,7 +39618,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -40897,7 +41239,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": [
           "chungnam"
         ],
@@ -40939,7 +41283,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": [
           "chungnam"
         ],
@@ -40981,7 +41327,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": [
           "chungnam"
         ],
@@ -41023,7 +41371,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": [
           "chungnam"
         ],
@@ -41065,7 +41415,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -41105,7 +41457,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": [
           "gyeonggi"
         ],
@@ -41191,7 +41545,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": [
           "gyeonggi"
         ],
@@ -41322,7 +41678,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": [
           "gyeonggi"
         ],
@@ -41540,7 +41898,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": [
           "chungnam"
         ],
@@ -41582,7 +41942,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": [
           "chungbuk"
         ],
@@ -41624,7 +41986,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": [
           "chungnam"
         ],
@@ -46536,7 +46900,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "agri"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,

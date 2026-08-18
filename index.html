@@ -484,6 +484,7 @@
         <option value="agri">농림수산업</option>
         <option value="bio">바이오·헬스케어</option>
         <option value="content">문화콘텐츠</option>
+        <option value="energy">에너지·환경</option>
         <option value="etc">기타</option>
       </select>
     </div>
@@ -616,6 +617,7 @@
         <button type="button" data-tab="dashboard" class="active">대시보드</button>
         <button type="button" data-tab="graph">그래프</button>
         <button type="button" data-tab="list">목록</button>
+        <button type="button" data-tab="rndhistory">R&D 이력</button>
         <button type="button" data-tab="progress">진행중</button>
         <button type="button" data-tab="done">완료</button>
       </div>
@@ -675,6 +677,52 @@
           <span><span class="dot" style="background:var(--ink-faint);opacity:.55;"></span>마감된 과거 사례(검색 추가·찜한 항목)</span>
         </div>
         <div id="ganttChart"></div>
+      </div>
+
+      <div class="tab-panel" data-tab="rndhistory" hidden>
+        <div class="disclaimer" style="margin-bottom:18px;">
+          <span class="mark">i</span>
+          <span><b>이 탭은 "지금 신청 가능한 공고"가 아니라 NTIS(국가과학기술지식정보서비스)에 등록된
+          과거~현재 국가R&D 과제 이력입니다.</b> 어떤 정부 R&D 프로그램이 우리 업종·키워드에서
+          반복적으로 운영되어 왔는지 참고하는 용도이며, 실제 지금 공모 중인지는 소관 부처·전문기관
+          공고를 별도로 확인하세요.</span>
+        </div>
+        <div class="cat-filters" id="rndKeywordFilters"></div>
+        <h3 style="margin:20px 0 10px;font-size:.95rem;">반복 운영 프로그램 요약</h3>
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>프로그램명</th>
+                <th>소관부처</th>
+                <th>과제 건수</th>
+                <th>누적 정부출연금</th>
+                <th>운영 연도</th>
+              </tr>
+            </thead>
+            <tbody id="rndProgramBody"></tbody>
+          </table>
+        </div>
+        <h3 style="margin:24px 0 10px;font-size:.95rem;">과제 목록</h3>
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>연도</th>
+                <th>과제명</th>
+                <th>수행기관</th>
+                <th>프로그램</th>
+                <th>정부출연금</th>
+                <th>링크</th>
+              </tr>
+            </thead>
+            <tbody id="rndProjectBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="rndEmptyState" hidden>
+          <h3>R&D 이력 데이터가 아직 없습니다</h3>
+          <p>scripts/fetch-ntis.mjs를 실행하면 이 탭이 채워집니다. (NTIS_APPRV_KEY 필요)</p>
+        </div>
       </div>
 
       <div class="tab-panel" data-tab="dashboard">
@@ -754,7 +802,7 @@
     consulting:{label:"컨설팅·멘토링"}, esg:{label:"ESG·탄소중립"}, smart:{label:"스마트공장·디지털전환"},
     etc:{label:"기타"}
   };
-  var IND_LABEL = {mfg:"제조업",it:"IT·소프트웨어",service:"서비스업",retail:"도소매업",construction:"건설업",agri:"농림수산업",bio:"바이오·헬스케어",content:"문화콘텐츠",etc:"기타"};
+  var IND_LABEL = {mfg:"제조업",it:"IT·소프트웨어",service:"서비스업",retail:"도소매업",construction:"건설업",agri:"농림수산업",bio:"바이오·헬스케어",content:"문화콘텐츠",energy:"에너지·환경",etc:"기타"};
   var REG_LABEL = {seoul:"서울",busan:"부산",daegu:"대구",incheon:"인천",gwangju:"광주",daejeon:"대전",ulsan:"울산",sejong:"세종",gyeonggi:"경기",gangwon:"강원",chungbuk:"충북",chungnam:"충남",jeonbuk:"전북",jeonnam:"전남",gyeongbuk:"경북",gyeongnam:"경남",jeju:"제주"};
   var FOUNDER_LABEL = {youth:"청년대표",woman:"여성대표",disabled:"장애인대표",senior:"시니어대표"};
   var CERT_LABEL = {venture:"벤처기업확인",innobiz:"이노비즈",mainbiz:"메인비즈",social:"사회적기업",root:"뿌리기업확인"};
@@ -794,8 +842,15 @@
     progressBody: document.getElementById("progressBody"),
     progressEmpty: document.getElementById("progressEmpty"),
     doneBody: document.getElementById("doneBody"),
-    doneEmpty: document.getElementById("doneEmpty")
+    doneEmpty: document.getElementById("doneEmpty"),
+    rndKeywordFilters: document.getElementById("rndKeywordFilters"),
+    rndProgramBody: document.getElementById("rndProgramBody"),
+    rndProjectBody: document.getElementById("rndProjectBody"),
+    rndEmptyState: document.getElementById("rndEmptyState")
   };
+
+  var RND_DATA = { keywords: [], programs: [], projects: [] };
+  var activeRndKeyword = null;
 
   var activeCategory = null;
   var viewMode = "card";
@@ -1594,6 +1649,81 @@
     els.ganttChart.appendChild(wrap);
   }
 
+  function formatKRW(n){
+    if (!n) return "-";
+    if (n >= 100000000) return (n/100000000).toFixed(1).replace(/\.0$/,"") + "억원";
+    if (n >= 10000) return Math.round(n/10000).toLocaleString("ko-KR") + "만원";
+    return n.toLocaleString("ko-KR") + "원";
+  }
+
+  function renderRndKeywordFilters(){
+    var el = els.rndKeywordFilters;
+    el.innerHTML = "";
+    var allBtn = document.createElement("button");
+    allBtn.type = "button";
+    allBtn.textContent = "전체";
+    if (!activeRndKeyword) allBtn.classList.add("active");
+    allBtn.addEventListener("click", function(){ activeRndKeyword = null; renderRnd(); });
+    el.appendChild(allBtn);
+    RND_DATA.keywords.forEach(function(kw){
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = kw;
+      if (activeRndKeyword === kw) btn.classList.add("active");
+      btn.addEventListener("click", function(){ activeRndKeyword = kw; renderRnd(); });
+      el.appendChild(btn);
+    });
+  }
+
+  function renderRnd(){
+    renderRndKeywordFilters();
+
+    var projects = RND_DATA.projects.filter(function(p){
+      return !activeRndKeyword || (p.matchedKeywords || []).indexOf(activeRndKeyword) !== -1;
+    });
+
+    var hasData = RND_DATA.projects.length > 0;
+    els.rndEmptyState.hidden = hasData;
+
+    // 프로그램 요약은 필터링된 과제 기준으로 다시 집계합니다(선택한 키워드에 안 맞는 과제는 제외).
+    var byProgram = {};
+    projects.forEach(function(p){
+      if (!p.budgetProgram) return;
+      var key = p.budgetProgram + "||" + p.ministry;
+      if (!byProgram[key]) byProgram[key] = {name:p.budgetProgram, ministry:p.ministry, count:0, funds:0, years:{}};
+      byProgram[key].count += 1;
+      byProgram[key].funds += (p.governmentFunds || 0);
+      if (p.projectYear) byProgram[key].years[p.projectYear] = true;
+    });
+    var programs = Object.keys(byProgram).map(function(k){ return byProgram[k]; }).sort(function(a,b){ return b.count - a.count; });
+
+    els.rndProgramBody.innerHTML = "";
+    programs.slice(0, 30).forEach(function(prog){
+      var tr = document.createElement("tr");
+      var years = Object.keys(prog.years).sort();
+      tr.innerHTML =
+        "<td>" + prog.name + "</td>" +
+        "<td>" + (prog.ministry || "-") + "</td>" +
+        "<td>" + prog.count + "건</td>" +
+        "<td>" + formatKRW(prog.funds) + "</td>" +
+        "<td>" + (years.length ? years.join(", ") : "-") + "</td>";
+      els.rndProgramBody.appendChild(tr);
+    });
+
+    els.rndProjectBody.innerHTML = "";
+    projects.slice(0, 200).forEach(function(p){
+      var tr = document.createElement("tr");
+      tr.innerHTML =
+        "<td>" + (p.projectYear || "-") + "</td>" +
+        "<td>" + (p.titleKo || "이름 미확인") + "</td>" +
+        "<td>" + (p.researchAgency || "-") + "</td>" +
+        "<td>" + (p.budgetProgram || "-") + "</td>" +
+        "<td>" + formatKRW(p.governmentFunds) + "</td>" +
+        '<td><a href="' + p.detailUrl + '" target="_blank" rel="noopener" title="NTIS 로그인 필요">상세</a></td>';
+      els.rndProjectBody.appendChild(tr);
+    });
+  }
+
   function setActiveTab(tab){
     activeTab = tab;
     els.mainTabs.querySelectorAll("button").forEach(function(btn){
@@ -1679,6 +1809,24 @@
     .catch(function(err){
       console.error("정책 데이터 로드 실패:", err);
       showLoadError();
+    });
+
+  fetch("./data/rnd-history.json")
+    .then(function(res){
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    })
+    .then(function(data){
+      RND_DATA = {
+        keywords: data.keywords || [],
+        programs: data.programs || [],
+        projects: data.projects || []
+      };
+      renderRnd();
+    })
+    .catch(function(err){
+      console.error("R&D 이력 데이터 로드 실패:", err);
+      els.rndEmptyState.hidden = false;
     });
 })();
 </script>

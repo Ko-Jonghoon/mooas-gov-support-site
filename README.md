@@ -8,7 +8,9 @@ Claude Artifact 프로토타입에서 시작해, **API 데이터로 갱신 가�
 ```
 index.html                 # 화면 (Claude Artifact와 동일한 UI, JSON을 fetch해서 렌더링)
 data/policies.json          # 지원사업 데이터 (32건 수동 시드 + 자동 수집분)
+data/rnd-history.json       # NTIS 국가R&D 과제 이력 데이터 ("R&D 이력" 탭 전용, 공고 목록과 무관)
 scripts/fetch-and-tag.mjs   # 기업마당 Open API → 키워드 규칙 기반 자동 태깅 → policies.json 갱신
+scripts/fetch-ntis.mjs      # NTIS 국가R&D 과제검색 API → rnd-history.json 갱신
 .github/workflows/
   deploy-pages.yml          # main 브랜치 push 시 GitHub Pages 배포 (자동)
 ```
@@ -78,6 +80,26 @@ npx serve .
 **정확도가 완벽하지 않을 수 있습니다** — 키워드가 없으면 놓치고, 문맥 이해 없이 단순 매칭이라 오탐도 있을 수 있습니다.
 그래서 모든 자동 수집 항목은 `reviewed: false`로 표시되어 사이트에 "자동수집 · 검수대기" 배지가 붙습니다.
 위 "데이터 갱신하는 방법" 4단계에서 눈으로 한 번 훑어보고 push하는 것을 권장합니다.
+
+## NTIS 국가R&D 과제 이력 ("R&D 이력" 탭)
+
+`scripts/fetch-ntis.mjs`는 `scripts/fetch-and-tag.mjs`와 별도로 동작하는 스크립트입니다. NTIS(국가과학기술
+지식정보서비스)의 "국가R&D 과제검색 서비스(전체용)" API는 **"지금 신청 가능한 공고"가 아니라 이미 승인·
+수행된 국가R&D 과제의 메타정보(수행기관/예산/연구기간 등)** 를 검색하는 서비스라서, `data/policies.json`
+(공고 목록 + 신청자격 매칭)과는 데이터 성격이 완전히 달라 별도 파일(`data/rnd-history.json`)과 별도 탭
+("R&D 이력")으로 분리했습니다. 용도는 "우리 업종·키워드에서 어떤 정부 R&D 프로그램이 반복적으로 운영되어
+왔는지" 참고하는 것이며, 실제 지금 공모 중인지는 소관 부처·전문기관 공고를 별도로 확인해야 합니다.
+
+- 인증키: NTIS 마이페이지 → 활용신청 현황 → 국가R&D 과제검색 서비스(전체용) 상세의 "키정보"
+- **IP 화이트리스트 방식**이라, 신청 시 등록한 서버 IP와 실제 요청 IP가 정확히 일치해야 합니다. 사설 IP
+  (예: `192.168.x.x`)를 등록하면 막힙니다 — 반드시 공인(외부) IP를 등록하세요. 가정/사무실 회선은 보통
+  유동 IP라 나중에 다시 막힐 수 있고, 그때는 NTIS에 IP 변경을 요청해야 합니다(자체 수정 메뉴가 없어
+  1:1 문의로 처리).
+- `scripts/.env.local`에 `NTIS_APPRV_KEY`, `NTIS_KEYWORDS`(쉼표로 구분한 검색어) 설정 후
+  `node scripts/fetch-ntis.mjs` 실행 → `data/rnd-history.json` 갱신
+- GitHub Actions(`fetch-policies.yml`)에도 같은 단계가 있지만, IP 화이트리스트 특성상 해외 클라우드
+  러너에서는 막힐 가능성이 높아 `continue-on-error`로 처리해뒀습니다 — 사실상 로컬 PC에서 수동 실행이
+  주력 경로입니다(`run-fetch.bat` 더블클릭 시 같이 실행됩니다).
 
 ## 앞으로 더 고려할 것
 

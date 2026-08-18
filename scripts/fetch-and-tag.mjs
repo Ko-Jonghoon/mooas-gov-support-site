@@ -420,10 +420,13 @@ const INDUSTRY_RULES = [
   { code: "it", keywords: ["정보통신", "소프트웨어", "IT"] },
   { code: "bio", keywords: ["바이오", "헬스케어", "제약"] },
   { code: "content", keywords: ["콘텐츠", "게임", "영상", "웹툰"] },
-  { code: "agri", keywords: ["농식품", "농업", "축산", "수산"] },
+  { code: "agri", keywords: ["농식품", "농업", "축산", "수산", "임업", "산림", "목재"] },
   { code: "construction", keywords: ["건설업"] },
   { code: "retail", keywords: ["도소매업", "유통업"] },
   { code: "service", keywords: ["서비스업"] },
+  // 2026-08-14 추가: 기후에너지환경부류 사업(온실가스/분산에너지/녹색산업 등)이 기존 8개
+  // 업종 어디에도 안 맞아 계속 industries:"all"로 빠지던 문제 - "에너지·환경" 업종을 새로 만듦.
+  { code: "energy", keywords: ["에너지", "환경", "온실가스", "탄소중립", "신재생", "미세먼지", "자원순환", "녹색산업"] },
 ];
 
 // 기획재정부(mpb) 데이터는 문장이 짧아서(예: "과수무병묘목(보급종)생산공급지원") INDUSTRY_RULES
@@ -432,6 +435,8 @@ const INDUSTRY_RULES = [
 const AGENCY_INDUSTRY_HINTS = {
   "농림축산식품부": ["agri"],
   "해양수산부": ["agri"],
+  "농촌진흥청": ["agri"],
+  "산림청": ["agri"],
 };
 
 const REGION_RULES = [
