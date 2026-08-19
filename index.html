@@ -366,6 +366,15 @@
   .progress-cell{width:1%;white-space:nowrap;}
   select.progress-select{width:auto;min-width:132px;font-size:.78rem;padding:7px 8px;}
 
+  /* 2026-08-19 추가: "제외" 탭은 칸이 6개(사업명/주관부처/상태/제외한 사람/제외 사유/진행 관리)라
+     다른 탭보다 더 좁아져서 주관부처·진행관리 글자가 잘렸습니다. 이 탭만 전체 글자 크기를 줄이고
+     주관부처·진행관리 칸을 넓혀 다 보이게 합니다. */
+  .excluded-table{font-size:.78rem;}
+  .excluded-table th, .excluded-table td{padding:9px 10px;}
+  .excluded-table .dash-agency{max-width:180px;}
+  .excluded-table select.progress-select{min-width:150px;font-size:.72rem;padding:6px 6px;}
+  .excluded-table .assignee-input{font-size:.76rem;}
+
   /* gantt chart */
   .graph-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px;}
   .graph-head .search{width:260px;}
@@ -417,6 +426,25 @@
   .gantt-bar.upcoming{background:var(--accent-soft);}
   .gantt-bar.past-case{background:repeating-linear-gradient(135deg,var(--ink-faint) 0,var(--ink-faint) 4px,transparent 4px,transparent 8px);opacity:.55;}
   .gantt-empty{padding:24px;text-align:center;color:var(--ink-faint);font-size:.86rem;}
+
+  /* 2026-08-19 추가: "신청기간"이 "상시"·"예산 소진시까지"처럼 날짜 2개로 못 읽히는 사업은
+     막대로 그릴 수가 없어 그래프에서 통째로 안 보이던 문제 - 이런 항목은 막대 없이 아래에
+     목록으로 따로 보여줍니다(누락 방지). */
+  .gantt-undated{
+    margin-top:16px;background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    box-shadow:var(--shadow);padding:14px 18px;
+  }
+  .gantt-undated-title{font-size:.8rem;font-weight:700;color:var(--ink-soft);margin-bottom:8px;}
+  .gantt-undated-row{
+    display:flex;align-items:center;gap:6px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.84rem;
+  }
+  .gantt-undated-row:last-child{border-bottom:none;}
+  .gantt-undated-row a{color:var(--accent);font-weight:700;text-decoration:none;}
+  .gantt-undated-row a:hover{text-decoration:underline;}
+  .gantt-undated-row .remove-btn{
+    border:none;background:var(--surface-alt);color:var(--ink-faint);
+    border-radius:50%;width:16px;height:16px;font-size:.7rem;line-height:1;cursor:pointer;
+  }
 
   .card{
     background:var(--surface);border:1px solid var(--border);border-radius:14px;
@@ -660,14 +688,15 @@
         <button type="button" data-tab="progress">진행중</button>
         <button type="button" data-tab="done">완료</button>
         <button type="button" data-tab="excluded">제외</button>
+        <button type="button" data-tab="notes">비고</button>
       </div>
 
       <div class="tab-panel" data-tab="list" hidden>
+        <p class="bar-hint" style="margin-bottom:12px;">찜한 사업과 진행중인 사업만 항상 모아서 보여줍니다(조건·필터와 무관).</p>
         <div class="stat-strip" id="statStrip"></div>
         <div class="results-head" style="margin-top:18px;">
-          <div class="results-count"><b id="count-num">0</b>건의 지원사업이 조건에 맞습니다</div>
+          <div class="results-count"><b id="count-num">0</b>건의 찜·진행중 사업이 있습니다</div>
           <div class="controls">
-            <label class="hide-closed-toggle"><input type="checkbox" id="f-starred-only" checked> 찜한 것만</label>
             <input type="text" class="search" id="f-search" placeholder="사업명·기관명 검색">
             <select id="f-sort">
               <option value="name">사업명순</option>
@@ -696,14 +725,14 @@
           </table>
         </div>
         <div class="empty-state" id="emptyState" hidden>
-          <h3>조건에 맞는 지원사업이 없습니다</h3>
-          <p>기업 구분·업종·지역 조건을 조금 넓혀 보시거나, 체납·고용보험 조건을 다시 확인해 보세요.</p>
+          <h3>찜했거나 진행중인 사업이 없습니다</h3>
+          <p>대시보드에서 사업을 찜하거나 "진행 관리"에서 진행중으로 옮기면 여기에 모아서 보여줍니다.</p>
         </div>
       </div>
 
       <div class="tab-panel" data-tab="graph" hidden>
+        <p class="bar-hint" style="margin-bottom:12px;">찜한 사업과 진행중인 사업만 항상 모아서 보여줍니다(조건·필터와 무관).</p>
         <div class="graph-head">
-          <label class="hide-closed-toggle"><input type="checkbox" id="graph-starred-only" checked> 찜한 것만</label>
           <input type="text" class="search" id="graph-search" placeholder="마감·접수예정 사업 검색해서 그래프에 추가">
           <div class="graph-search-results" id="graphSearchResults"></div>
         </div>
@@ -829,7 +858,7 @@
       <div class="tab-panel" data-tab="excluded" hidden>
         <p class="bar-hint" style="margin-bottom:12px;">필터가 걸러내지 못한 사업을 직접 제외로 옮겨두면, 조건을 바꿔도 대시보드·목록·그래프에서 계속 빠진 채로 유지됩니다.</p>
         <div class="table-wrap">
-          <table class="results-table">
+          <table class="results-table excluded-table">
             <thead>
               <tr>
                 <th>사업명</th>
@@ -846,6 +875,48 @@
         <div class="empty-state" id="excludedEmpty" hidden>
           <h3>제외로 표시한 사업이 없습니다</h3>
           <p>대시보드 목록에서 "진행 관리" 열의 상태를 "제외로 이동"으로 바꿔 여기로 옮겨보세요.</p>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-tab="notes" hidden>
+        <p class="bar-hint" style="margin-bottom:12px;">이 사이트가 현재 데이터를 가져오는 기관·API 현황입니다.</p>
+        <div class="notes-panel">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>기관</th>
+                <th>데이터</th>
+                <th>연동 상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>기업마당(중소벤처기업부)</td>
+                <td>중소기업 지원사업 통합공고</td>
+                <td>연동됨 · 매일 자동 수집</td>
+              </tr>
+              <tr>
+                <td>K-Startup(창업진흥원)</td>
+                <td>창업지원사업 공고</td>
+                <td>연동됨 · 매일 자동 수집</td>
+              </tr>
+              <tr>
+                <td>기획재정부</td>
+                <td>정부 정책·지원사업 정보</td>
+                <td>연동됨 · 매일 자동 수집</td>
+              </tr>
+              <tr>
+                <td>NTIS(국가과학기술지식정보서비스)</td>
+                <td>R&D 과제 이력(R&D 이력 탭)</td>
+                <td>연동됨 · IP 등록 필요(허용 IP 아니면 이 단계만 건너뜀)</td>
+              </tr>
+              <tr>
+                <td>중소벤처24</td>
+                <td>공고·행사 정보</td>
+                <td>미연동 · API 엔드포인트 미설정</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
   </main>
@@ -945,8 +1016,6 @@
     statStrip: document.getElementById("statStrip"),
     btnReset: document.getElementById("btn-reset"),
     statusFilter: document.getElementById("f-status"),
-    starredOnlyList: document.getElementById("f-starred-only"),
-    starredOnlyGraph: document.getElementById("graph-starred-only"),
     viewToggle: document.getElementById("viewToggle"),
     tableWrap: document.getElementById("tableWrap"),
     tableBody: document.getElementById("tableBody"),
@@ -975,9 +1044,6 @@
   var viewMode = "card";
   var activeTab = "dashboard";
   var graphExtraIds = {};
-  // 2026-08-19 수정: "목록" 탭을 "찜 상세보기"로 바꾸면서, 이 탭을 열면 처음부터 찜한 것만
-  // 보이도록 기본값을 true로 바꿨습니다(사용자 요청). 체크는 그대로 해제할 수 있습니다.
-  var starredOnly = true;
 
   // 2026-08-19 추가: 찜/진행 관리 상태는 팀원 전체가 공유해서 봐야 하므로(사용자 요청)
   // 브라우저 로컬 저장이 아니라 Supabase의 policy_state 테이블에 저장합니다. 로그인이 없어
@@ -1058,13 +1124,6 @@
   }
   function normalizeForMatch(s){
     return (s || "").replace(/\s+/g, "").toLowerCase();
-  }
-
-  function setStarredOnly(value){
-    starredOnly = value;
-    els.starredOnlyList.checked = value;
-    els.starredOnlyGraph.checked = value;
-    render();
   }
 
   // 진행 상태 관리: 신청기간(접수중/마감) 같은 공고 자체 상태와는 별개로, "우리 회사가 이미
@@ -1296,8 +1355,27 @@
       }
       allMatches.push({policy:p, reasons:reasons, interestMatch:r.interestMatch});
     });
-    // 진행중/완료/제외로 표시해둔 사업은 대시보드·그래프·목록에서는 빼고 해당 탭에서만 보여줍니다.
+    // 진행중/완료/제외로 표시해둔 사업은 대시보드에서는 빼고 해당 탭에서만 보여줍니다.
     var matches = allMatches.filter(function(m){ return !appStatus[m.policy.id]; });
+
+    // 2026-08-19 수정: "일정보기"/"찜 상세보기"는 회사 조건 매칭 여부와 무관하게 찜한 사업 +
+    // 진행중인 사업만 항상 모아서 보여줍니다(사용자 요청 - 이전엔 조건 매칭에서 빠지면 같이
+    // 사라졌음). evaluate()가 실패해도(예: 조건이 바뀌어 더는 매칭 안 됨) 찜/진행중이면 계속 보여야
+    // 하므로 POLICIES 전체를 다시 훑습니다.
+    var starredTrack = [];
+    POLICIES.forEach(function(p){
+      var isStarred = !!starredIds[p.id];
+      var isInProgress = appStatus[p.id] === "in_progress";
+      if (!isStarred && !isInProgress) return;
+      var r = evaluate(p, co);
+      starredTrack.push({
+        policy: p,
+        reasons: r ? r.reasons : [],
+        interestMatch: r ? r.interestMatch : false,
+        starred: isStarred,
+        inProgress: isInProgress
+      });
+    });
     // 조회 상태(접수중/마감임박 등) 필터는 대시보드·목록 모두에 공통으로 적용됩니다 -
     // 탭 안에 있으면 다른 탭에서는 안 보여서 헷갈린다는 리포트가 있어 탭 바깥 공용 필터로 옮겼습니다.
     if (els.statusFilter.value){
@@ -1310,13 +1388,13 @@
       matches = matches.filter(function(m){ return m.interestMatch; });
     }
 
-    renderStatStrip(matches, co);
+    renderStatStrip(starredTrack);
 
     var counts = {};
-    matches.forEach(function(m){ counts[m.policy.category] = (counts[m.policy.category]||0) + 1; });
-    renderCatFilters(counts, matches.length);
+    starredTrack.forEach(function(m){ counts[m.policy.category] = (counts[m.policy.category]||0) + 1; });
+    renderCatFilters(counts, starredTrack.length);
 
-    var view = matches.slice();
+    var view = starredTrack.slice();
     if (activeCategory){
       view = view.filter(function(m){ return m.policy.category === activeCategory; });
     }
@@ -1325,9 +1403,6 @@
       view = view.filter(function(m){
         return m.policy.name.toLowerCase().indexOf(q) !== -1 || m.policy.agency.toLowerCase().indexOf(q) !== -1;
       });
-    }
-    if (starredOnly){
-      view = view.filter(function(m){ return !!starredIds[m.policy.id]; });
     }
 
     var sortBy = els.sort.value;
@@ -1348,23 +1423,23 @@
     });
     renderTable(view);
     renderDashboard(matches);
-    renderGantt(matches);
+    renderGantt(starredTrack);
     renderProgress("in_progress", els.progressBody, els.progressEmpty);
     renderProgress("done", els.doneBody, els.doneEmpty);
     renderProgress("excluded", els.excludedBody, els.excludedEmpty);
   }
 
-  function renderStatStrip(matches, co){
-    var total = matches.length;
-    var closingCount = matches.filter(function(m){ return computeStatus(m.policy).code === "closing"; }).length;
-    var openCount = matches.filter(function(m){ return computeStatus(m.policy).code === "open"; }).length;
-    var interestCount = co.interests.length;
+  function renderStatStrip(track){
+    var total = track.length;
+    var starredCount = track.filter(function(m){ return m.starred; }).length;
+    var inProgressCount = track.filter(function(m){ return m.inProgress; }).length;
+    var closingCount = track.filter(function(m){ return computeStatus(m.policy).code === "closing"; }).length;
 
     els.statStrip.innerHTML =
-      "<div class='stat-cell'><div class='s-label'>매칭 지원사업</div><div class='s-value'>" + total + "<span class='unit'>건</span></div></div>" +
-      "<div class='stat-cell'><div class='s-label'>접수중</div><div class='s-value'>" + openCount + "<span class='unit'>건</span></div></div>" +
-      "<div class='stat-cell'><div class='s-label'>마감임박</div><div class='s-value'>" + closingCount + "<span class='unit'>건</span></div></div>" +
-      "<div class='stat-cell'><div class='s-label'>선택한 관심분야</div><div class='s-value'>" + interestCount + "<span class='unit'>개</span></div></div>";
+      "<div class='stat-cell'><div class='s-label'>찜+진행중 합계</div><div class='s-value'>" + total + "<span class='unit'>건</span></div></div>" +
+      "<div class='stat-cell'><div class='s-label'>찜한 사업</div><div class='s-value'>" + starredCount + "<span class='unit'>건</span></div></div>" +
+      "<div class='stat-cell'><div class='s-label'>진행중인 사업</div><div class='s-value'>" + inProgressCount + "<span class='unit'>건</span></div></div>" +
+      "<div class='stat-cell'><div class='s-label'>마감임박</div><div class='s-value'>" + closingCount + "<span class='unit'>건</span></div></div>";
   }
 
   function renderCatFilters(counts, total){
@@ -1416,6 +1491,12 @@
       reviewTag.style.background = "var(--warn-bg)";
       reviewTag.textContent = "자동수집 · 검수대기";
       tagsRow.appendChild(reviewTag);
+    }
+    if (m.inProgress){
+      var progTag = document.createElement("span");
+      progTag.className = "status-pill open";
+      progTag.textContent = "진행중";
+      tagsRow.appendChild(progTag);
     }
     left.appendChild(tagsRow);
 
@@ -1552,7 +1633,7 @@
       starCb.title = "찜하기";
       starCb.addEventListener("change", function(){
         toggleStarred(p);
-        if (starredOnly) render();
+        render();
       });
       starTd.appendChild(starCb);
       tr.appendChild(starTd);
@@ -1672,7 +1753,9 @@
       }
 
       var progressTd = document.createElement("td");
+      progressTd.className = "progress-cell";
       var progressSelect = document.createElement("select");
+      progressSelect.className = "progress-select";
       var opts = "<option value=''>진행 관리</option>";
       if (status !== "in_progress") opts += "<option value='in_progress'>진행중으로 이동</option>";
       if (status !== "done") opts += "<option value='done'>완료로 이동</option>";
@@ -1745,68 +1828,105 @@
     els.graphSearchResults.appendChild(list);
   }
 
-  function renderGantt(matches){
+  function renderGantt(track){
     var bounds = currentYearBounds();
     var shownIds = {};
     var rows = [];
+    // 2026-08-19 추가: "신청기간"이 "상시"·"예산 소진시까지"처럼 날짜 2개로 파싱이 안 되면
+    // getPolicyPeriod()가 null을 반환해서 막대를 그릴 수 없습니다 - 이런 경우 그냥 빼버리면
+    // 찜/진행중 항목이 그래프에서 조용히 사라지는 문제(사용자 리포트)가 생기므로, 막대 없이
+    // 아래 목록에 따로 모아서 보여줍니다.
+    var undated = [];
 
-    if (starredOnly){
-      // 찜한 것만 보기: 회사 조건 매칭이나 마감 여부와 무관하게, 찜한 사업만 전부 보여줍니다
-      // (마감된 것도 포함 - 놓치지 않고 다음 회차 시기를 참고하려는 용도).
-      POLICIES.forEach(function(p){
-        if (!starredIds[p.id]) return;
-        var period = getPolicyPeriod(p);
-        if (!period || !periodOverlapsYear(period, bounds)) return;
-        shownIds[p.id] = true;
-        rows.push({ policy: p, period: period, source: "starred" });
-      });
-    } else {
-      matches.forEach(function(m){
-        var period = getPolicyPeriod(m.policy);
-        if (!period || !periodOverlapsYear(period, bounds)) return;
-        if (computeStatus(m.policy).code === "closed") return; // 마감 건은 검색으로만 추가
-        shownIds[m.policy.id] = true;
-        rows.push({ policy: m.policy, period: period, source: "match" });
-      });
-
-      Object.keys(graphExtraIds).forEach(function(id){
-        if (shownIds[id]) return;
-        var p = POLICIES.find(function(pp){ return pp.id === id; });
-        if (!p) return;
-        var period = getPolicyPeriod(p);
-        if (!period || !periodOverlapsYear(period, bounds)) return;
-        shownIds[id] = true;
-        rows.push({ policy: p, period: period, source: "graphExtra" });
-      });
-    }
-
-    // 2026-08-19 추가: 사업을 대시보드에서 "진행중"으로 옮기면 회사 조건 매칭(matches)에서는
-    // 빠지지만(이미 신청 절차를 진행 중이라서), 이 화면에서 일정 추적은 계속 필요하므로 찜
-    // 여부와 무관하게 "진행중" 표시로 계속 보여줍니다(사용자 요청 - 이전엔 매칭에서 빠지는
-    // 순간 여기서도 그냥 사라졌고, 1차 수정에서는 찜한 것만 남게 해서 여전히 안 보였음).
-    POLICIES.forEach(function(p){
-      if (shownIds[p.id]) return;
-      if (appStatus[p.id] !== "in_progress") return;
-      var period = getPolicyPeriod(p);
-      if (!period || !periodOverlapsYear(period, bounds)) return;
+    // 찜한 사업 + 진행중인 사업은 회사 조건 매칭이나 마감 여부와 무관하게 항상 보여줍니다.
+    track.forEach(function(m){
+      var p = m.policy;
       shownIds[p.id] = true;
-      rows.push({ policy: p, period: period, source: "inProgress" });
+      var source = m.inProgress ? "inProgress" : "starred";
+      var period = getPolicyPeriod(p);
+      if (!period){ undated.push({ policy: p, source: source }); return; }
+      if (!periodOverlapsYear(period, bounds)) return;
+      rows.push({ policy: p, period: period, source: source });
+    });
+
+    Object.keys(graphExtraIds).forEach(function(id){
+      if (shownIds[id]) return;
+      var p = POLICIES.find(function(pp){ return pp.id === id; });
+      if (!p) return;
+      shownIds[id] = true;
+      var period = getPolicyPeriod(p);
+      if (!period){ undated.push({ policy: p, source: "graphExtra" }); return; }
+      if (!periodOverlapsYear(period, bounds)) return;
+      rows.push({ policy: p, period: period, source: "graphExtra" });
     });
 
     rows.sort(function(a,b){ return new Date(a.period.start) - new Date(b.period.start); });
 
     els.ganttChart.innerHTML = "";
 
-    if (!rows.length){
+    if (!rows.length && !undated.length){
       var empty = document.createElement("div");
       empty.className = "gantt-empty";
-      empty.textContent = starredOnly
-        ? "찜한 사업 중 표시할 신청기간 정보가 있는 사업이 없습니다. 대시보드에서 사업을 찜해 보세요."
-        : "표시할 신청기간 정보가 있는 매칭 사업이 없습니다. 위 검색창에서 과거 사업을 추가해 보세요.";
+      empty.textContent = "찜했거나 진행중인 사업이 없습니다. 대시보드에서 사업을 찜하거나 진행중으로 옮겨 보세요.";
       els.ganttChart.appendChild(empty);
       return;
     }
 
+    if (rows.length) renderGanttBars(rows, bounds);
+    if (undated.length) renderGanttUndated(undated);
+  }
+
+  function renderGanttUndated(undated){
+    var wrap = document.createElement("div");
+    wrap.className = "gantt-undated";
+    var title = document.createElement("div");
+    title.className = "gantt-undated-title";
+    title.textContent = "신청기간 정보가 명확하지 않아 막대로 표시할 수 없는 사업 (예: 상시·예산 소진시까지)";
+    wrap.appendChild(title);
+
+    undated.forEach(function(item){
+      var row = document.createElement("div");
+      row.className = "gantt-undated-row";
+
+      var name = document.createElement("span");
+      name.textContent = item.policy.name + " · " + item.policy.agency;
+      row.appendChild(name);
+
+      if (item.source === "inProgress"){
+        var progBadge = document.createElement("span");
+        progBadge.className = "status-pill open";
+        progBadge.textContent = "진행중";
+        row.appendChild(progBadge);
+      }
+
+      if (item.source === "graphExtra" || item.source === "starred"){
+        var rm = document.createElement("button");
+        rm.type = "button";
+        rm.className = "remove-btn";
+        rm.textContent = "×";
+        rm.title = item.source === "starred" ? "찜 해제" : "그래프에서 제거";
+        rm.addEventListener("click", function(){
+          if (item.source === "starred") toggleStarred(item.policy);
+          else delete graphExtraIds[item.policy.id];
+          render();
+        });
+        row.appendChild(rm);
+      }
+
+      var a = document.createElement("a");
+      a.href = item.policy.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = "바로가기 ↗";
+      row.appendChild(a);
+
+      wrap.appendChild(row);
+    });
+
+    els.ganttChart.appendChild(wrap);
+  }
+
+  function renderGanttBars(rows, bounds){
     var todayTs = Date.now();
     var todayPct = pctInYear(todayTs, bounds);
     var todayInRange = todayTs >= bounds.start && todayTs <= bounds.end;
@@ -2071,8 +2191,6 @@
   els.search.addEventListener("input", render);
   els.sort.addEventListener("change", render);
   els.statusFilter.addEventListener("change", render);
-  els.starredOnlyList.addEventListener("change", function(){ setStarredOnly(els.starredOnlyList.checked); });
-  els.starredOnlyGraph.addEventListener("change", function(){ setStarredOnly(els.starredOnlyGraph.checked); });
   els.viewToggle.querySelectorAll("button").forEach(function(btn){
     btn.addEventListener("click", function(){ setViewMode(btn.dataset.view); });
   });
@@ -2099,9 +2217,9 @@
     if (meta && meta.generatedAt){
       var d = new Date(meta.generatedAt);
       var text = isNaN(d.getTime()) ? meta.generatedAt : d.toLocaleString("ko-KR");
-      el.textContent = "데이터 갱신: " + text;
+      el.textContent = "데이터 갱신: " + text + " (자동갱신 : 매일 오전 6:00)";
     } else {
-      el.textContent = "데이터 갱신: 수동 시드 데이터(자동 수집 전)";
+      el.textContent = "데이터 갱신: 수동 시드 데이터(자동 수집 전) (자동갱신 : 매일 오전 6:00)";
     }
   }
 
