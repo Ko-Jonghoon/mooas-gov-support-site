@@ -252,8 +252,9 @@
   .basic-info-bar .field:has(.toggle2){flex:1 1 170px;min-width:150px;}
   .basic-info-bar .bar-hint{flex:0 0 100%;margin:-2px 0 6px;font-size:.76rem;color:var(--ink-faint);}
   .basic-info-bar .persist-note{flex:1 1 100%;margin-top:14px;}
-  .interest-bar{margin-top:14px;padding:18px 20px;}
-  .interest-bar .field{flex:1 1 100%;}
+  .interest-bar{padding:18px 20px;}
+  .interest-bar .chipset{flex-direction:column;align-items:stretch;}
+  .interest-bar .chipset label{justify-content:flex-start;}
 
   /* 대시보드·목록 등 모든 탭에 공통으로 적용되는 상태 필터 - 탭 안에 있으면 다른 탭에서는
      안 보여서 헷갈리므로(2026-08-19 사용자 리포트) 탭 바깥, 항상 보이는 위치에 둡니다. */
@@ -262,6 +263,18 @@
   }
   .status-filter-bar label{font-size:.82rem;font-weight:600;color:var(--ink-soft);}
   .status-filter-bar select{width:auto;min-width:140px;}
+
+  /* 2026-08-19 추가: "관심 지원 분야"를 본문 흐름에서 빼서 오른쪽에 고정된 사이드바로
+     보여줍니다(사용자 요청) - 목록이 길어 스크롤해도 계속 보이도록 position:sticky를 씁니다.
+     화면이 좁아지면(사이드바+본문이 나란히 둘 공간이 부족하면) 다시 본문 위쪽으로 내려옵니다. */
+  .layout-with-sidebar{display:flex;align-items:flex-start;gap:20px;margin-top:20px;}
+  .layout-with-sidebar .main-col{flex:1 1 auto;min-width:0;}
+  .layout-with-sidebar .main-col > *:first-child{margin-top:0;}
+  .interest-sidebar{flex:0 0 240px;position:sticky;top:20px;}
+  @media (max-width:900px){
+    .layout-with-sidebar{display:block;}
+    .interest-sidebar{position:static;flex:none;margin-top:20px;}
+  }
 
   /* tabs */
   .tabs{display:flex;gap:8px;border-bottom:2px solid var(--border);margin-bottom:22px;}
@@ -481,6 +494,9 @@
     </div>
   </div>
 
+  <div class="layout-with-sidebar">
+  <div class="main-col">
+
   <details class="panel filter-panel" open>
     <summary>기본 정보 <span class="stage-tag">1차 필터</span></summary>
     <div class="basic-info-bar">
@@ -617,25 +633,6 @@
     </div>
     </div>
   </details>
-
-  <section class="panel basic-info-bar interest-bar">
-    <div class="field">
-      <label>관심 지원 분야 <span class="hint" style="display:inline">(선택 시 해당 분야만 조회)</span></label>
-      <div class="chipset" id="f-interest">
-        <label><input type="checkbox" value="fund"><span>사업화자금</span></label>
-        <label><input type="checkbox" value="rnd"><span>R&D 기술개발</span></label>
-        <label><input type="checkbox" value="ai"><span>AI</span></label>
-        <label><input type="checkbox" value="hr"><span>인력채용·교육</span></label>
-        <label><input type="checkbox" value="export"><span>수출·해외진출</span></label>
-        <label><input type="checkbox" value="market"><span>판로·마케팅</span></label>
-        <label><input type="checkbox" value="facility"><span>시설·장비</span></label>
-        <label><input type="checkbox" value="consulting"><span>컨설팅·멘토링</span></label>
-        <label><input type="checkbox" value="esg"><span>ESG·탄소중립</span></label>
-        <label><input type="checkbox" value="smart"><span>스마트공장·디지털전환</span></label>
-        <label><input type="checkbox" value="etc"><span>기타</span></label>
-      </div>
-    </div>
-  </section>
 
   <div class="status-filter-bar">
     <label for="f-status">조회 상태</label>
@@ -847,6 +844,31 @@
         </div>
       </div>
   </main>
+
+  </div>
+
+  <aside class="interest-sidebar">
+    <section class="panel interest-bar">
+      <div class="field">
+        <label>관심 지원 분야 <span class="hint" style="display:inline">(선택 시 해당 분야만 조회)</span></label>
+        <div class="chipset" id="f-interest">
+          <label><input type="checkbox" value="fund"><span>사업화자금</span></label>
+          <label><input type="checkbox" value="rnd"><span>R&D 기술개발</span></label>
+          <label><input type="checkbox" value="ai"><span>AI</span></label>
+          <label><input type="checkbox" value="hr"><span>인력채용·교육</span></label>
+          <label><input type="checkbox" value="export"><span>수출·해외진출</span></label>
+          <label><input type="checkbox" value="market"><span>판로·마케팅</span></label>
+          <label><input type="checkbox" value="facility"><span>시설·장비</span></label>
+          <label><input type="checkbox" value="consulting"><span>컨설팅·멘토링</span></label>
+          <label><input type="checkbox" value="esg"><span>ESG·탄소중립</span></label>
+          <label><input type="checkbox" value="smart"><span>스마트공장·디지털전환</span></label>
+          <label><input type="checkbox" value="etc"><span>기타</span></label>
+        </div>
+      </div>
+    </section>
+  </aside>
+
+  </div>
 
   <footer>
     본 도구는 정부·공공 지원사업 탐색을 돕기 위한 참고용 프로토타입입니다. 등록된 사업 목록·자격 요건·지원 규모는 실제 공고와 다를 수 있으니, 최종 지원 전 반드시 기업마당(bizinfo.go.kr), K-Startup(k-startup.go.kr), 각 소관 기관의 공식 공고문을 확인하세요.
@@ -2033,7 +2055,7 @@
   // 옛 구/군 목록으로 한 번 더 렌더링된 뒤에야 바뀌는 문제가 생겨서, 아래 forEach로 render를
   // 붙이기 전에 먼저 등록해 항상 이 리스너가 먼저 실행되도록 합니다.
   els.region.addEventListener("change", function(){ populateDistrictOptions(els.region.value, ""); });
-  document.querySelectorAll(".basic-info-bar select, .basic-info-bar input").forEach(function(el){
+  document.querySelectorAll(".basic-info-bar select, .basic-info-bar input, .interest-bar input").forEach(function(el){
     el.addEventListener("change", render);
     el.addEventListener("input", render);
   });
