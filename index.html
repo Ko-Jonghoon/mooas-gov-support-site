@@ -616,7 +616,7 @@
 
   <section class="panel basic-info-bar interest-bar">
     <div class="field">
-      <label>관심 지원 분야 <span class="hint" style="display:inline">(선택 시 매칭 우선순위 반영)</span></label>
+      <label>관심 지원 분야 <span class="hint" style="display:inline">(선택 시 해당 분야만 조회)</span></label>
       <div class="chipset" id="f-interest">
         <label><input type="checkbox" value="fund"><span>사업화자금</span></label>
         <label><input type="checkbox" value="rnd"><span>R&D 기술개발</span></label>
@@ -1203,6 +1203,12 @@
     if (els.statusFilter.value){
       matches = matches.filter(function(m){ return computeStatus(m.policy).code === els.statusFilter.value; });
     }
+    // 관심 지원 분야를 하나라도 선택하면 그 분야에 해당하는 사업만 남기는 필터로 동작합니다
+    // (선택 안 하면 전체를 보여줍니다). 2026-08-19 사용자 요청으로 "우선순위 정렬"에서
+    // "필터"로 변경 - 총 매칭 숫자도 여기에 맞춰 함께 줄어듭니다.
+    if (co.interests.length){
+      matches = matches.filter(function(m){ return m.interestMatch; });
+    }
 
     renderStatStrip(matches, co);
 
@@ -1226,9 +1232,6 @@
 
     var sortBy = els.sort.value;
     view.sort(function(a,b){
-      // 관심 지원 분야에 해당하는 사업을 항상 먼저 보여주고("선택 시 매칭 우선순위 반영"),
-      // 그 안에서 선택한 정렬 기준을 적용합니다.
-      if (a.interestMatch !== b.interestMatch) return a.interestMatch ? -1 : 1;
       if (sortBy === "name") return a.policy.name.localeCompare(b.policy.name,"ko");
       if (sortBy === "agency") return a.policy.agency.localeCompare(b.policy.agency,"ko");
       return 0;
@@ -1433,7 +1436,6 @@
 
     els.dashboardBody.innerHTML = "";
     var view = matches.slice().sort(function(a,b){
-      if (a.interestMatch !== b.interestMatch) return a.interestMatch ? -1 : 1;
       return a.policy.name.localeCompare(b.policy.name,"ko");
     });
     view.forEach(function(m){
