@@ -739,6 +739,25 @@ async function main() {
     autoPolicies.push(...(await collectFromSource(source)));
   }
 
+  // 2026-08-19 추가: API 장애/키 만료 등으로 이번 실행에서 가져온 공고가 기존 데이터보다
+  // 크게 줄어들면(절반 미만), 원인 파악 전까지는 파일을 덮어쓰지 않고 기존 데이터를 그대로
+  // 둡니다. 이 안전장치가 없어서 2026-08-19 새벽 자동 실행 때 모든 소스가 0건을 반환했는데도
+  // 그대로 덮어써서 963건이던 policies.json이 통째로 비어버린 사고가 있었습니다.
+  let previousCount = 0;
+  try {
+    const prev = JSON.parse(fs.readFileSync(DATA_PATH, "utf8"));
+    previousCount = Array.isArray(prev.policies) ? prev.policies.length : 0;
+  } catch (err) {
+    previousCount = 0;
+  }
+  if (previousCount > 0 && autoPolicies.length < previousCount * 0.5) {
+    console.error(
+      `수집된 공고(${autoPolicies.length}건)가 기존 데이터(${previousCount}건)보다 크게 줄어들어, ` +
+      `안전을 위해 data/policies.json을 덮어쓰지 않고 종료합니다. API 키/네트워크 상태를 확인한 뒤 다시 실행하세요.`
+    );
+    process.exit(1);
+  }
+
   const out = {
     generatedAt: new Date().toISOString(),
     note: "기업마당 Open API 자동 수집 + 키워드 규칙 기반 자동 태깅 결과. 모든 항목은 사람이 검수(reviewed:true로 변경)하기 전까지 화면에 자동수집 · 검수대기 표시가 붙습니다. 규칙 기반 태깅은 LLM보다 정확도가 낮을 수 있으니 반드시 검수 후 반영하세요.",
