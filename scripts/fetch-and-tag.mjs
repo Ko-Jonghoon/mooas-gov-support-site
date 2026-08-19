@@ -283,13 +283,15 @@ const SOURCES = [
       // 주변지역 주민·지자체 대상 상생지원금(전원개발촉진법에 따른 발전소주변지역 지원사업)이라
       // 회사가 신청하는 사업이 아닙니다. 발전소 하나당 여러 세부항목(공공사회복지/소득증대 등)이
       // 나오는데 전국 발전소 수만큼 반복되어 목록을 심하게 오염시킵니다.
+      // 2026-08-19 추가: "발전소"라는 단어가 제목에 없이 특정 발전소 고유명("에스엠솔라포천태양광")
+      // 으로만 쓰인 사업이 이름만 봐서는 안 걸러지던 문제 - 지원내용/지원대상까지 합쳐서 검사합니다.
       const POWER_PLANT_SUBSIDY_RE = /발전소.*기본지원사업|기본지원사업.*발전소/;
       // "OO감시단"(민간 감시인력 모집)도 회사 지원사업이 아니라 개인 위촉 성격입니다.
       const CITIZEN_MONITOR_RE = /감시단|모니터링단/;
       // 2026-08-18 추가: "영광군 건강증진형 스마트경로당 구축사업" 등 경로당(공공 복지시설)
       // 구축·리모델링 사업, "한-베트남·몽골 유통물류 정책협력사업" 등 정부간 정책협력 활동.
       const NON_APPLICABLE_RE =
-        /실태조사|종합상황실|학술활동|학술대회|정책\s*포럼|포럼$|경제협력\s*네트워크|산업통상\s*협력|시장조사|가입\s*지원$|비즈니스\s*파트너십|경제통상\s*정책|지방정부\s*협력|경상보조|위탁운영|\(주\)|㈜|\(유\)|경로당|정책협력/;
+        /실태조사|종합상황실|학술활동|학술대회|정책\s*포럼|포럼$|경제협력\s*네트워크|산업통상\s*협력|시장조사|가입\s*지원$|비즈니스\s*파트너십|경제통상\s*정책|지방정부\s*협력|경상보조|위탁운영|\(주\)|㈜|\(유\)|경로당|정책협력|심층조사|피해구제|분쟁조정|팩트체크|특별기획|기업간거래공정화/;
       // "OO 개최"로 끝나면서 "지원"이라는 말이 아예 없는 항목(예: "과학의날 개최")은 정부가 직접
       // 여는 행사 예산이지 회사가 신청하는 지원사업이 아닙니다. "OO박람회 참가 지원" 같은 진짜
       // 지원사업까지 걸러내지 않도록 "지원"이 포함된 경우는 제외 대상에서 뺍니다.
@@ -301,13 +303,42 @@ const SOURCES = [
       // 준 제작비입니다. "_" 앞부분에 방송사명이 있는 경우만 좁게 잡아서, "동반성장문화조성_..."처럼
       // 그냥 항목 구분에 "_"를 쓴 일반 지원사업까지 걸러내지 않도록 합니다.
       const BROADCASTER_COMMISSION_RE = /^.{0,15}(MBC|KBS|SBS|KNN|방송공사|문화방송)/;
+      // 2026-08-19 추가: "지원대상" 필드가 이미 "이 사업은 회사가 신청하는 게 아니다"를 말해주는
+      // 경우가 있는데 지금까지 안 쓰고 있었습니다("전 국민"/"대한민국 전국민" = 공공 서비스·시스템
+      // 운영, "한국 청년 인재"/"대학생,일반인" = 개인 대상 프로그램, "OO군민"/"OO시민" = 특정
+      // 지역 주민 대상). 발견 계기: "한국청년 일본취업지원"(한국 청년 인재), "스마트빌리지 보급
+      // 및 확산 사업"(진안군민) 등이 회사 지원사업 목록에 섞여 나온 문제(2026-08-19 사용자 리포트).
+      // "해당없음"/"해당사항 없음"은 시험해보니 방송콘텐츠·연구용역(비적용) 뿐 아니라 "물류AI기술
+      // 도입 지원사업", "우리 기업의 해외시장 진출 지원"처럼 실제로는 회사 대상인데 원본 API가
+      // 지원대상 필드를 그냥 비워둔 경우도 많이 걸려서(오탐 다수) 이 패턴은 채택하지 않았습니다 -
+      // 애매한 "해당없음" 하나만으로 제외하기보다는 위양성(진짜 지원사업을 놓치는 것)을 피하는
+      // 쪽을 택했습니다. 이런 예산성 항목은 NON_APPLICABLE_RE의 구체적인 주제 키워드로 개별
+      // 대응합니다(예: "심층조사", "팩트체크", "특별기획").
+      const NON_BUSINESS_TARGET_RE = /전\s*국민/;
+      const INDIVIDUAL_TARGET_RE = /대학생|일반인|청년\s*인재|청년\s*구직자|취업\s*준비생|(시민|군민|구민)$/;
+      // 2026-08-19 추가(1차 적용 후 발견): "청소년,대학생,일반인,대학,연구기관,일반기업,1인
+      // 창조기업"처럼 여러 대상을 나열한 목록형 지원대상은 "대학생"/"일반인"이 함께 있어도
+      // "일반기업"/"1인 창조기업"도 같이 있으면 회사도 신청 가능하다는 뜻이라 제외하면 안 됩니다
+      // (강북창업지원센터, 도봉구 중소기업창업보육센터 등을 잘못 제거했던 문제). 지원대상에
+      // 기업 신호(기업/법인/소상공인/중소기업/벤처/사업자)가 하나라도 있으면 제외하지 않습니다.
+      const BUSINESS_TARGET_RE = /기업|법인|소상공인|중소기업|벤처|사업자/;
+      function hasNonBusinessTarget(item) {
+        const target = (pickField(item, ["SPORT_CND_CN", "SPORT_CN_DC"]) || "").trim();
+        if (!target) return false;
+        if (BUSINESS_TARGET_RE.test(target)) return false;
+        return NON_BUSINESS_TARGET_RE.test(target) || INDIVIDUAL_TARGET_RE.test(target);
+      }
       function isApplicableProgram(item) {
         const name = pickField(item, ["DDTLBZ_NM", "DTLBZ_NM"]);
-        if (NON_APPLICABLE_RE.test(name)) return false;
+        const desc = pickField(item, ["DDTLBZ_BSNS_PURPS_DC", "DTLBZ_BSNS_PURPS_DC"]) || "";
+        const target = pickField(item, ["SPORT_CND_CN", "SPORT_CN_DC"]) || "";
+        const checkText = [name, desc, target].filter(Boolean).join(" ");
+        if (NON_APPLICABLE_RE.test(checkText)) return false;
         if (isGovernmentHostedEvent(name)) return false;
-        if (POWER_PLANT_SUBSIDY_RE.test(name)) return false;
-        if (CITIZEN_MONITOR_RE.test(name)) return false;
+        if (POWER_PLANT_SUBSIDY_RE.test(checkText)) return false;
+        if (CITIZEN_MONITOR_RE.test(checkText)) return false;
         if (name.includes("_") && BROADCASTER_COMMISSION_RE.test(name)) return false;
+        if (hasNonBusinessTarget(item)) return false;
         return true;
       }
 
@@ -483,17 +514,36 @@ const SIZE_RULES = [
   { code: "mid", keywords: ["중견기업"] },
 ];
 
+// 2026-08-19 추가: "희망리턴패키지"처럼 기획재정부(mpb) 원본 텍스트가 너무 짧아서
+// ("희망리턴패키지 지원 등") SIZE_RULES 키워드가 전혀 안 걸리는 잘 알려진 사업들은
+// 기본값 ["sole","sme"]로 빠지는 대신 실제 대상으로 직접 지정합니다(희망리턴패키지는
+// 폐업·재기 소상공인 전용 사업으로, 중소기업은 대상이 아님 - 2026-08-19 사용자 리포트).
+const KNOWN_PROGRAM_SIZE_HINTS = {
+  "희망리턴패키지": ["sole"],
+};
+
 const INDUSTRY_RULES = [
   // "제조업"이라는 정확한 단어 없이 "제조DX", "스마트공장", "제조혁신 전문가" 같은 표현만
   // 쓰는 공고가 많아서(예: "제조DX멘토단 활용지원" 15건 중 14건이 industries:"all"로 잘못
   // 넓어졌던 문제, 2026-08-14 발견) 제조업 특화임이 명백한 표현들을 추가했습니다.
   // 2026-08-18 추가: "로봇산업기술개발사업" 등 로봇 특화 R&D가 제조업 키워드 없이 나오던 문제.
-  { code: "mfg", keywords: ["제조업", "스마트공장", "제조혁신", "제조DX", "제조데이터", "자동화 설비", "로봇"] },
+  // 2026-08-19 추가: "화학안전 사업장 조성 지원사업"(유해화학물질 취급시설), "한-베 섬유의류
+  // 테크비즈 고도화"(섬유업), "조선기자재및중소형선박해외시장개척지원"(조선업), "균형잡힌
+  // 스트림 경쟁력 확보"(원사-제조-염색-봉제 등 섬유 공급망)처럼 업종명 없이 세부 공정·소재
+  // 용어만 쓰는 제조업 특화 사업이 걸러지지 않던 문제(2026-08-19 사용자 리포트: 도소매업으로
+  // 검색해도 이런 제조업 전용 사업이 그대로 나옴).
+  // 주의: "원사"는 넣지 마세요 - "지원사업"이라는 흔한 단어의 부분 문자열이라
+  // 거의 모든 공고가 섬유업으로 오탐됩니다(2026-08-19 발견: 963건 중 115건이 걸림).
+  { code: "mfg", keywords: ["제조업", "스마트공장", "제조혁신", "제조DX", "제조데이터", "자동화 설비", "로봇", "유해화학물질", "화학물질관리", "섬유", "조선", "선박기자재", "봉제", "염색가공"] },
   // 2026-08-18 추가: "5G 기반 통신망 서비스" 등 통신 인프라 특화 사업.
-  { code: "it", keywords: ["정보통신", "소프트웨어", "IT", "5G", "통신망"] },
+  // 2026-08-19 추가: "비면허 주파수 활용 유망기술 실증" 등 주파수 특화 사업.
+  // 주의: "전파"는 넣지 마세요 - "질병 전파" 등 일반적인 "퍼진다"는 뜻으로도 흔히 쓰여
+  // 통신/전파 산업과 무관한 사업(예: 축산 방역)까지 오탐됩니다.
+  { code: "it", keywords: ["정보통신", "소프트웨어", "IT", "5G", "통신망", "주파수"] },
   // 2026-08-18 추가: "AI 응용제품 신속 상용화(보건분야, 만성질환관리)" 등 "보건" 표현만 쓰는
-  // 사업이 걸러지지 않던 문제.
-  { code: "bio", keywords: ["바이오", "헬스케어", "제약", "보건"] },
+  // 사업이 걸러지지 않던 문제. 2026-08-19 추가: "의료기기 사업화 촉진"처럼 "의료기기"만 쓰고
+  // "바이오/헬스케어" 표현은 없는 사업.
+  { code: "bio", keywords: ["바이오", "헬스케어", "제약", "보건", "의료기기"] },
   // 2026-08-18 추가: 방송·미디어·OTT 관련 사업이 "콘텐츠" 키워드가 본문에 없어서
   // industries:"all"로 잘못 넓어지던 문제(예: "지역 방송 제작역량 강화", "OTT산업 경쟁력 강화",
   // "AI 더빙 특화 K-FAST 확산") - 방송/미디어 특화 표현들을 추가했습니다.
@@ -513,7 +563,7 @@ const INDUSTRY_RULES = [
   // 2026-08-14 추가: 기후에너지환경부류 사업(온실가스/분산에너지/녹색산업 등)이 기존 8개
   // 업종 어디에도 안 맞아 계속 industries:"all"로 빠지던 문제 - "에너지·환경" 업종을 새로 만듦.
   // 2026-08-18 추가: "수소기업", "재자원화 시설" 등도 같은 부류라 키워드 보강.
-  { code: "energy", keywords: ["에너지", "환경", "온실가스", "탄소중립", "신재생", "미세먼지", "자원순환", "녹색산업", "수소", "재자원화", "물기업"] },
+  { code: "energy", keywords: ["에너지", "환경", "온실가스", "탄소중립", "신재생", "미세먼지", "자원순환", "녹색산업", "수소", "재자원화", "물기업", "태양광", "풍력"] },
 ];
 
 // 기획재정부(mpb) 데이터는 문장이 짧아서(예: "과수무병묘목(보급종)생산공급지원") INDUSTRY_RULES
@@ -602,6 +652,38 @@ function matchDistrict(text, matchedRegions) {
   return found;
 }
 
+// 2026-08-19 추가: "충청북도"가 발주한 "충북청주강소연구개발특구..." 공고의 본문이 "전국 16개
+// 강소특구 네트워크"처럼 여러 시/도 이름을 배경 설명으로 언급하고 있어서, 본문 전체를 훑는
+// REGION_RULES만으로는 regions가 경기를 제외한 16개 시/도 전부로 잘못 넓어지는 문제가
+// 있었습니다(2026-08-19 사용자 리포트: 서울 회사인데 지역이 전혀 안 맞는 충북 사업이 뜸).
+// 반대로 "도봉구청"이 발주한 "도봉구 중소기업창업보육센터"는 본문에 "서울"이라는 시/도명 자체가
+// 없어서 regions가 아예 "all"로 빠지는 문제도 있었습니다. 두 경우 모두 "발주기관명 자체가 이미
+// 관할 지역을 확정"하므로, 본문 스캔보다 발주기관명을 우선합니다.
+const PROVINCE_AGENCY_NAMES = {
+  "서울특별시": "seoul", "부산광역시": "busan", "대구광역시": "daegu", "인천광역시": "incheon",
+  "광주광역시": "gwangju", "대전광역시": "daejeon", "울산광역시": "ulsan", "세종특별자치시": "sejong",
+  "경기도": "gyeonggi", "강원특별자치도": "gangwon", "강원도": "gangwon",
+  "충청북도": "chungbuk", "충청남도": "chungnam",
+  "전북특별자치도": "jeonbuk", "전라북도": "jeonbuk", "전라남도": "jeonnam",
+  "경상북도": "gyeongbuk", "경상남도": "gyeongnam", "제주특별자치도": "jeju",
+};
+
+function inferRegionFromAgency(agency) {
+  if (!agency) return null;
+  if (PROVINCE_AGENCY_NAMES[agency]) {
+    return { regions: [PROVINCE_AGENCY_NAMES[agency]], district: null };
+  }
+  const m = agency.match(/^(.+?(?:구|시|군))청$/);
+  if (!m) return null;
+  const localName = m[1];
+  for (const [province, districts] of Object.entries(DISTRICT_RULES)) {
+    if (districts.includes(localName)) {
+      return { regions: [province], district: { province, district: localName } };
+    }
+  }
+  return null;
+}
+
 function matchCategory(text) {
   for (const rule of CATEGORY_RULES) {
     if (includesAny(text, rule.keywords)) return rule.category;
@@ -648,15 +730,22 @@ function tagAndBuildPolicy(normalized, source) {
   // 문구에 있는 "중소기업특별지원지역"(위기지역 유형명) 때문에 중소기업도 대상인 것처럼 보임).
   // 기업 규모(sizes) 판정에서만 이 문구를 제거하고 판단합니다.
   const sizeText = text.replace(/중소기업특별지원지역/g, "");
-  const sizes = matchMany(sizeText, SIZE_RULES) || ["sole", "sme"]; // 명시 안 되면 가장 흔한 대상으로 넓게 잡음
+  let sizes = matchMany(sizeText, SIZE_RULES) || ["sole", "sme"]; // 명시 안 되면 가장 흔한 대상으로 넓게 잡음
+  if (KNOWN_PROGRAM_SIZE_HINTS[normalized.title]) {
+    sizes = KNOWN_PROGRAM_SIZE_HINTS[normalized.title];
+  }
   const founderTypes = matchMany(text, FOUNDER_TYPE_RULES);
   const certs = matchMany(text, CERT_RULES);
   let industries = matchAllOr(text, INDUSTRY_RULES);
   if (industries === "all" && AGENCY_INDUSTRY_HINTS[normalized.agency]) {
     industries = AGENCY_INDUSTRY_HINTS[normalized.agency];
   }
-  const regions = matchAllOr(text, REGION_RULES);
-  const district = matchDistrict(text, regions);
+  let regions = matchAllOr(text, REGION_RULES);
+  const agencyRegion = inferRegionFromAgency(normalized.agency);
+  if (agencyRegion) {
+    regions = agencyRegion.regions;
+  }
+  const district = agencyRegion && agencyRegion.district ? agencyRegion.district : matchDistrict(text, regions);
   const maxYears = matchMaxYears(text);
   const exportRequired = includesAny(text, ["수출실적 보유", "수출 실적이 있는"]);
   const rndRequired = includesAny(text, ["부설연구소 보유", "연구전담부서 보유"]);

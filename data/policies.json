@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-18T07:52:37.824Z",
+  "generatedAt": "2026-08-19T01:28:30.515Z",
   "note": "기업마당 Open API 자동 수집 + 키워드 규칙 기반 자동 태깅 결과. 모든 항목은 사람이 검수(reviewed:true로 변경)하기 전까지 화면에 자동수집 · 검수대기 표시가 붙습니다. 규칙 기반 태깅은 LLM보다 정확도가 낮을 수 있으니 반드시 검수 후 반영하세요.",
   "policies": [
     {
@@ -89,22 +89,7 @@
           "bio"
         ],
         "regions": [
-          "seoul",
-          "busan",
-          "daegu",
-          "incheon",
-          "gwangju",
-          "daejeon",
-          "ulsan",
-          "sejong",
-          "gangwon",
-          "chungbuk",
-          "chungnam",
-          "jeonbuk",
-          "jeonnam",
-          "gyeongbuk",
-          "gyeongnam",
-          "jeju"
+          "busan"
         ],
         "maxYears": 7,
         "founderTypes": null,
@@ -233,10 +218,7 @@
         ],
         "industries": "all",
         "regions": [
-          "daejeon",
-          "sejong",
-          "chungnam",
-          "chungbuk"
+          "daejeon"
         ],
         "maxYears": 7,
         "founderTypes": null,
@@ -890,21 +872,6 @@
         ],
         "industries": "all",
         "regions": [
-          "seoul",
-          "busan",
-          "daegu",
-          "incheon",
-          "gwangju",
-          "daejeon",
-          "ulsan",
-          "sejong",
-          "gangwon",
-          "chungbuk",
-          "chungnam",
-          "jeonbuk",
-          "jeonnam",
-          "gyeongbuk",
-          "gyeongnam",
           "jeju"
         ],
         "maxYears": null,
@@ -985,7 +952,9 @@
         "sizes": [
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "mfg"
+        ],
         "regions": [
           "seoul",
           "busan",
@@ -1974,7 +1943,6 @@
           "energy"
         ],
         "regions": [
-          "daejeon",
           "gyeongnam"
         ],
         "maxYears": null,
@@ -2076,7 +2044,6 @@
         ],
         "industries": "all",
         "regions": [
-          "busan",
           "gyeongnam"
         ],
         "maxYears": null,
@@ -2717,8 +2684,7 @@
         ],
         "industries": "all",
         "regions": [
-          "daegu",
-          "gyeongbuk"
+          "daegu"
         ],
         "maxYears": null,
         "founderTypes": null,
@@ -2763,22 +2729,7 @@
           "agri"
         ],
         "regions": [
-          "seoul",
-          "busan",
-          "daegu",
-          "incheon",
-          "gwangju",
-          "daejeon",
-          "ulsan",
-          "sejong",
-          "gangwon",
-          "chungbuk",
-          "chungnam",
-          "jeonbuk",
-          "jeonnam",
-          "gyeongbuk",
-          "gyeongnam",
-          "jeju"
+          "jeonbuk"
         ],
         "maxYears": 7,
         "founderTypes": null,
@@ -2864,22 +2815,7 @@
           "content"
         ],
         "regions": [
-          "seoul",
-          "busan",
-          "daegu",
-          "incheon",
-          "gwangju",
-          "daejeon",
-          "ulsan",
-          "sejong",
-          "gangwon",
-          "chungbuk",
-          "chungnam",
-          "jeonbuk",
-          "jeonnam",
-          "gyeongbuk",
-          "gyeongnam",
-          "jeju"
+          "daegu"
         ],
         "maxYears": null,
         "founderTypes": null,
@@ -3157,7 +3093,6 @@
           "service"
         ],
         "regions": [
-          "daegu",
           "gyeongbuk"
         ],
         "maxYears": null,
@@ -4332,22 +4267,7 @@
         ],
         "industries": "all",
         "regions": [
-          "seoul",
-          "busan",
-          "daegu",
-          "incheon",
-          "gwangju",
-          "daejeon",
-          "ulsan",
-          "sejong",
-          "gangwon",
-          "chungbuk",
-          "chungnam",
-          "jeonbuk",
-          "jeonnam",
-          "gyeongbuk",
-          "gyeongnam",
-          "jeju"
+          "chungbuk"
         ],
         "maxYears": null,
         "founderTypes": null,
@@ -4579,8 +4499,7 @@
         ],
         "industries": "all",
         "regions": [
-          "daegu",
-          "gyeongbuk"
+          "daegu"
         ],
         "maxYears": null,
         "founderTypes": null,
@@ -5151,53 +5070,20 @@
           "sme"
         ],
         "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "kstartup",
-      "reviewed": false
-    },
-    {
-      "id": "auto-2hbgU426Y3d88p_5",
-      "name": "창업보육센터및 기업 지원",
-      "agency": "국립공주대학교 산학협력단",
-      "url": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do?schM=view&pbancSn=178897",
-      "category": "etc",
-      "summary": "국립공주대학교 산학협력단(창업보육센터)에서는 기술집약형 중소기업의 창업 촉진을 위하여 우수한 기술력을 바탕으로 도전적이고 창의적인 입주기업을 모집하오니, 입주를 …",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "국립공주대학교 산학협력단(창업보육센터)에서는 기술집약형 중소기업의 창업 촉진을 위하여 우수한 기술력을 바탕으로 도전적이고 창의적인 입주기업을 모집하오니, 입주를 희망하시는 분들의 많은 지원 바랍니다."
-        },
-        {
-          "label": "지원대상",
-          "value": "대학생,일반인"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-08-13 ~ 2026-08-27"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sme"
+        "regions": [
+          "seoul"
         ],
-        "industries": "all",
-        "regions": "all",
         "maxYears": null,
         "founderTypes": null,
         "certs": null,
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": false
+        "taxClean": false,
+        "district": {
+          "province": "seoul",
+          "district": "도봉구"
+        }
       },
       "source": "auto",
       "sourceApi": "kstartup",
@@ -7278,130 +7164,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-FrQiVa4SgVx1VaFh",
-      "name": "GS포천그린에너지 기본지원사업(공공사회복지)(민간보조)",
-      "agency": "기후에너지환경부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260105000003580421&bsnsyear=2026&dtlbzId=20060385651030110014&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "발전소주변지역 주민들의 소득증대 및 복지향상",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "발전소주변지역 주민들의 소득증대 및 복지향상"
-        },
-        {
-          "label": "지원대상",
-          "value": "발전소 반경 5km 지역"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-04-10 ~ 2026-04-14"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "energy"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-zVjzj-HFVVThN9oN",
-      "name": "GS포천그린에너지 기본지원사업(소득증대)(민간보조)",
-      "agency": "기후에너지환경부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260105000003580422&bsnsyear=2026&dtlbzId=20060385651030110014&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "발전소주변지역 주민들의 소득증대 및 복지향상",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "발전소주변지역 주민들의 소득증대 및 복지향상"
-        },
-        {
-          "label": "지원대상",
-          "value": "발전소 반경 5km 지역"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-04-10 ~ 2026-04-14"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "energy"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-N8nUcZKHUP4IVM4Y",
-      "name": "에스엠솔라포천태양광 기본지원사업(소득증대)(민간보조)",
-      "agency": "기후에너지환경부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260105000003580429&bsnsyear=2026&dtlbzId=20060385651030110014&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "발전소주변지역 주민들의 소득증대 및 복지향상",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "발전소주변지역 주민들의 소득증대 및 복지향상"
-        },
-        {
-          "label": "지원대상",
-          "value": "발전소 반경 5km"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-04-20 ~ 2026-05-05"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-wsMcmJEie5kWakDo",
       "name": "수산종자산업육성(스마트 종자생산시설 지원)(국비)",
       "agency": "해양수산부",
@@ -8511,45 +8273,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-Kcv8amls50W_0bQH",
-      "name": "대중소기업동반성장생태계구축(기업간거래공정화)",
-      "agency": "중소벤처기업부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260203000003711295&bsnsyear=2026&dtlbzId=201910242310301A0013&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "납품대금 연동제 현장안착 지원 및 불공정거래 근절 지원제도에 대한 인식을 중견․중소기업으로 강화하고, 피해 기업에 보다 신속한 구제 지원",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "납품대금 연동제 현장안착 지원 및 불공정거래 근절 지원제도에 대한 인식을 중견․중소기업으로 강화하고, 피해 기업에 보다 신속한 구제 지원"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당사항없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-02-27 ~ 2026-03-17"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-IN2VlZHCu3D5823h",
       "name": "대중소기업동반성장생태계구축(동반성장문화조성_민관공동전략형 상생협력사업(창의트랙))",
       "agency": "중소벤처기업부",
@@ -9163,46 +8886,6 @@
         "industries": [
           "agri"
         ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-z-CgWvMzIU0qDbEH",
-      "name": "팩트체크 활성화",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260303000003747778&bsnsyear=2026&dtlbzId=202016231320317A0009&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "인터넷상에서 허위조작정보가 생산·유통·확산되지 않도록 팩트체크를 활성화하기 위한 플랫폼 구축 운영 및 활동 지원 등 관련 기반 확충",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "인터넷상에서 허위조작정보가 생산·유통·확산되지 않도록 팩트체크를 활성화하기 위한 플랫폼 구축 운영 및 활동 지원 등 관련 기반 확충"
-        },
-        {
-          "label": "지원대상",
-          "value": "전 국민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-08-14 ~ 2026-08-30"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -11491,48 +11174,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-kbI_BUDmQNxsUELV",
-      "name": "어구보증금제 회수관리",
-      "agency": "해양수산부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260205000003717879&bsnsyear=2026&dtlbzId=20070411065030110009&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "어구보증금제의 시행에 따라 어업인 등이 반납한 폐어구 수거·처리 및 반환장소 운영, 보증금 환급 지원 등을 통한 해양환경 개선",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "어구보증금제의 시행에 따라 어업인 등이 반납한 폐어구 수거·처리 및 반환장소 운영, 보증금 환급 지원 등을 통한 해양환경 개선"
-        },
-        {
-          "label": "지원대상",
-          "value": "창원시민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-03 ~ 2025-12-09"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "energy"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-tVWvxpkL1rxMnrpM",
       "name": "지역 주도형 AI 대전환 사업",
       "agency": "중소벤처기업부",
@@ -12206,48 +11847,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-FH2oJkSdixFrkcyF",
-      "name": "흑삼생산 시설지원",
-      "agency": "농촌진흥청",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260116000003654325&bsnsyear=2026&dtlbzId=200902912310300A0013&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "지역특화소득작목 활용을 통한 신소득원 창출 및 농업인 소득향상",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "지역특화소득작목 활용을 통한 신소득원 창출 및 농업인 소득향상"
-        },
-        {
-          "label": "지원대상",
-          "value": "진안군민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-01-20 ~ 2025-02-03"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-KyKMC_O1BYyfME0B",
       "name": "기술보급 블렌딩 협력모델 시범(1년차)(기술보급 블렌딩 협력모델 시범(1년차))",
       "agency": "농촌진흥청",
@@ -12476,48 +12075,6 @@
         {
           "label": "신청기간",
           "value": "2025-12-31 ~ 2026-01-31"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-xDXU6hj4qX1b-7oV",
-      "name": "산업체 연계 원료공급 비즈니스 모델화",
-      "agency": "농촌진흥청",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260108000003603316&bsnsyear=2026&dtlbzId=200902912310300A0028&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "농촌진흥청 개발 품종 및 국유특허 기반한 농식품 기술사업화의 확산을 위해 안정적 원료공급 지원체계 구축",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "농촌진흥청 개발 품종 및 국유특허 기반한 농식품 기술사업화의 확산을 위해 안정적 원료공급 지원체계 구축"
-        },
-        {
-          "label": "지원대상",
-          "value": "포항시민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-01-02 ~ 2025-01-22"
         }
       ],
       "elig": {
@@ -13246,46 +12803,6 @@
         "industries": [
           "agri"
         ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-VI6ecd0gghQ-BTfQ",
-      "name": "인터넷 피해 상담센터 구축 운영",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260209000003720349&bsnsyear=2026&dtlbzId=202216232510319A0001&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "ㅇ 국민들이 인터넷 상에서 발생하는 각종 피해에 대해 효과적, 체계적으로 대처할 수 있도록 전문상담 서비스 제공을 통한 국민들의 불편 및 피해구제를 체계적으로 지…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "ㅇ 국민들이 인터넷 상에서 발생하는 각종 피해에 대해 효과적, 체계적으로 대처할 수 있도록 전문상담 서비스 제공을 통한 국민들의 불편 및 피해구제를 체계적으로 지원하여 국민권익 증진 도모"
-        },
-        {
-          "label": "지원대상",
-          "value": "ㅇ 전국민(인터넷 서비스 이용자)"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-09 ~ 2025-12-24"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -14875,51 +14392,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-CqLTHlvQ0fEwAC4Y",
-      "name": "푸드서비스 선진화",
-      "agency": "농림축산식품부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260114000003645849&bsnsyear=2026&dtlbzId=201308928320370A0019&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "consulting",
-      "summary": "외식업소에 대한 식재료 공급 기반 구축과 전문 컨설팅 지원을 통해 경영 안정과 음식문화 개선을 도모하고 지속 가능한 외식환경을 조성하고자 함.",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "외식업소에 대한 식재료 공급 기반 구축과 전문 컨설팅 지원을 통해 경영 안정과 음식문화 개선을 도모하고 지속 가능한 외식환경을 조성하고자 함."
-        },
-        {
-          "label": "지원대상",
-          "value": "부산시민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-02-24 ~ 2026-03-11"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri",
-          "energy"
-        ],
-        "regions": [
-          "busan"
-        ],
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-lVJmHmprQUgeTHTR",
       "name": "스마트팜 현장실습형 교육사업",
       "agency": "농림축산식품부",
@@ -15155,7 +14627,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "it"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -15932,46 +15406,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-0olmLE9OYYtiaIHw",
-      "name": "스마트빌리지 보급 및 확산 사업",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260127000003692290&bsnsyear=2026&dtlbzId=202316220330300A0001&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "이상기상 대응 시설하우스 일사량 감응 스마트 LED 시스템 구축",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "이상기상 대응 시설하우스 일사량 감응 스마트 LED 시스템 구축"
-        },
-        {
-          "label": "지원대상",
-          "value": "진안군민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-01-19 ~ 2026-02-02"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-3RpiogpVz-NbCgHA",
       "name": "2026년 국가첨단전략산업 소부장 중소·중견기업 투자지원금 사업",
       "agency": "산업통상부",
@@ -16158,7 +15592,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "mfg"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -16490,86 +15926,6 @@
         "rndRequired": false,
         "insuranceRequired": false,
         "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-ae8xVuJXMgx8dN6z",
-      "name": "한국청년 일본취업지원",
-      "agency": "산업통상부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260327000003780567&bsnsyear=2026&dtlbzId=201309419310301A0006&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "재단이 30여 년간 축적한 한일 협력네트워크와 사업 노하우를 활용, 한국청년인재의 일본취업 지원을 통해 미래의 한일산업협력 기반구축",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "재단이 30여 년간 축적한 한일 협력네트워크와 사업 노하우를 활용, 한국청년인재의 일본취업 지원을 통해 미래의 한일산업협력 기반구축"
-        },
-        {
-          "label": "지원대상",
-          "value": "한국 청년 인재"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-05"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-OiC_L1lK0XXqqQ_c",
-      "name": "중국 비관세장벽 심층조사",
-      "agency": "산업통상부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260727000003864444&bsnsyear=2026&dtlbzId=201309419310301A0006&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "export",
-      "summary": "□ 본 연구는 한·중 FTA 발효 이후 관세 장벽은 낮아진 반면, 자국 산업 및 시장 보호를 위해 점차 정교해지고 있는 중국의 비관세장벽(Non-Tariff Ba…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "□ 본 연구는 한·중 FTA 발효 이후 관세 장벽은 낮아진 반면, 자국 산업 및 시장 보호를 위해 점차 정교해지고 있는 중국의 비관세장벽(Non-Tariff Barriers, NTB)의 실태를 파악하는 것을 목적으로 함. □ 특히 중국의 기술무역장벽(TBT), 위생 및 검역(SPS), 통관절차, 지식재산권 보호 등 다양한 비관세 조치를 국내외 문헌 및 재중…(원문 확인 필요)"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당사항 없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-05"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": true
       },
       "source": "auto",
       "sourceApi": "mpb",
@@ -17226,7 +16582,9 @@
         "sizes": [
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "mfg"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -21084,48 +20442,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-kPElYyiiOU-fkq2W",
-      "name": "국내육성 신품종 채종기술 보급 시범",
-      "agency": "농촌진흥청",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260106000003590908&bsnsyear=2026&dtlbzId=202502921310301A0005&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "ㅇ 농촌진흥청 육성 품종의 조기 보급을 위한 종묘 생산 체계 구축 ㅇ 농촌진흥청 육성 품종의 생산단지 조성 ㅇ 생산단지의 규모화를 통한 소비자 품종 인지도 및 브…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "ㅇ 농촌진흥청 육성 품종의 조기 보급을 위한 종묘 생산 체계 구축 ㅇ 농촌진흥청 육성 품종의 생산단지 조성 ㅇ 생산단지의 규모화를 통한 소비자 품종 인지도 및 브랜드 제고"
-        },
-        {
-          "label": "지원대상",
-          "value": "청송군민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-01-12 ~ 2026-02-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-QQ_y1QmnJYxY18CG",
       "name": "파속채소 신품종 인정생산 기술 시범(보조)",
       "agency": "농촌진흥청",
@@ -24422,91 +23738,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-5FBB2_pDVheYdYr4",
-      "name": "농업신기술시범(한우 번식우 분만전후 영양관리 생산성 향상 시범)",
-      "agency": "농촌진흥청",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260110000003620724&bsnsyear=2026&dtlbzId=202502921310301A0005&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "한우 임신암소 분만전후 적정 영양 관리로 번식우 생산성 향상 기술 투입",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "한우 임신암소 분만전후 적정 영양 관리로 번식우 생산성 향상 기술 투입"
-        },
-        {
-          "label": "지원대상",
-          "value": "홍천군민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-01-05 ~ 2026-01-23"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-is72ochE-jpOgc5B",
-      "name": "농업신기술시범(염소 고급육 생산 및 다목적 보정장치 보급 시범)",
-      "agency": "농촌진흥청",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260110000003620725&bsnsyear=2026&dtlbzId=202502921310301A0005&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "염소 사육환경 조성을 통한 안정생산 기반 구축",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "염소 사육환경 조성을 통한 안정생산 기반 구축"
-        },
-        {
-          "label": "지원대상",
-          "value": "홍천군민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-01-05 ~ 2026-01-23"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri",
-          "energy"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-Vjy1hanfyJjvTwTJ",
       "name": "극한폭염 대비 온열질환 예방기술 시범",
       "agency": "농촌진흥청",
@@ -24585,90 +23816,6 @@
         "rndRequired": false,
         "insuranceRequired": false,
         "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-AOBmOZE0Z3t_IlaZ",
-      "name": "농업신기술시범(한우 스마트팜 번식관리시스템 보급 시범)",
-      "agency": "농촌진흥청",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260110000003620733&bsnsyear=2026&dtlbzId=202502921310301A0005&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "ai",
-      "summary": "축산 ICT 장비활용 인공지능(AI)기술 구축 한우 번식우 체계적인 관리",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "축산 ICT 장비활용 인공지능(AI)기술 구축 한우 번식우 체계적인 관리"
-        },
-        {
-          "label": "지원대상",
-          "value": "홍천군민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-01-05 ~ 2026-01-23"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": true
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-MpcnhYIjNN2CZjsa",
-      "name": "농업신기술시범(인공지능(AI) 기반 가축 이상 징후 탐지시스템 보급 시범)",
-      "agency": "농촌진흥청",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260110000003620734&bsnsyear=2026&dtlbzId=202502921310301A0005&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "ai",
-      "summary": "한우 농장의 발정, 분만징후, 뒤집힘, 열질병 등 인공지능 탐지 시스템으로 노동력절감",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "한우 농장의 발정, 분만징후, 뒤집힘, 열질병 등 인공지능 탐지 시스템으로 노동력절감"
-        },
-        {
-          "label": "지원대상",
-          "value": "홍천군민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-01-05 ~ 2026-01-23"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": true
       },
       "source": "auto",
       "sourceApi": "mpb",
@@ -28060,90 +27207,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-v6VBiOpGwrIte2rN",
-      "name": "농촌체험 신기술 시범사업",
-      "agency": "농촌진흥청",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260130000003705930&bsnsyear=2026&dtlbzId=202502921310301A0005&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "치유농업 활성화",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "치유농업 활성화"
-        },
-        {
-          "label": "지원대상",
-          "value": "아산시민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-01-20 ~ 2026-02-19"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-D8h9U8O5bBq88CuD",
-      "name": "지역사회서비스원 맞춤형 치유시설 및 프로그램 시범(자본)(보조)",
-      "agency": "농촌진흥청",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260108000003605736&bsnsyear=2026&dtlbzId=202502921310301A0005&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "ㅇ 지역사회서비스와 연계하여 지역 특성에 맞는 치유서비스 선도모델을 발굴하고, 사회서비스 제공기관의 역할을 할 수 있는 치유마을?농장 육성",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "ㅇ 지역사회서비스와 연계하여 지역 특성에 맞는 치유서비스 선도모델을 발굴하고, 사회서비스 제공기관의 역할을 할 수 있는 치유마을?농장 육성"
-        },
-        {
-          "label": "지원대상",
-          "value": "양평군민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-01-16 ~ 2026-01-30"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-frk6FyqrJMtYkQQJ",
       "name": "탄소감축 논 물관리.깊이비료주기 시범단지 조성",
       "agency": "농촌진흥청",
@@ -29457,48 +28520,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-mhRwNcCMjvJY6Tpr",
-      "name": "산업자원 기술",
-      "agency": "농촌진흥청",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260108000003610682&bsnsyear=2026&dtlbzId=202502921310301A0005&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "○농업 스마트화 기반 조성 및 실증○이상기후(고온,지속적 강우 등) 대응 농업 신기술보급으로 관내 영농 현장 문제 해결○낮은 농업 노동력 및 농업인구 고령화 문제…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "○농업 스마트화 기반 조성 및 실증○이상기후(고온,지속적 강우 등) 대응 농업 신기술보급으로 관내 영농 현장 문제 해결○낮은 농업 노동력 및 농업인구 고령화 문제 해결로 가평군 농산업 발전 도모○낮은 식량자급률 및 곡물자급률 대응 국내육성 신품종 확산을 통한 국가 경쟁력 확보○주요 작물 북상에 따른 신품종 도입으로 가평군 농업인 신소득 창출"
-        },
-        {
-          "label": "지원대상",
-          "value": "가평군민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-01-05 ~ 2026-02-04"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-2dUYhRIkm4tEzZAN",
       "name": "국내육성 과수 신품종 묘목 생산 보급",
       "agency": "농촌진흥청",
@@ -29904,48 +28925,6 @@
         ],
         "industries": [
           "mfg"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-x9jK5LGjfNAS7r1U",
-      "name": "노지 밭작물 국산 지중점적 자동관개 시스템 보급",
-      "agency": "농촌진흥청",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260119000003665061&bsnsyear=2026&dtlbzId=202502921310301A0005&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "노지 밭작물 국산 지중점적 자동관개 시스템 보급",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "노지 밭작물 국산 지중점적 자동관개 시스템 보급"
-        },
-        {
-          "label": "지원대상",
-          "value": "진안군민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-01-02 ~ 2026-01-12"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri"
         ],
         "regions": "all",
         "maxYears": null,
@@ -30629,48 +29608,6 @@
           "incheon",
           "gyeonggi"
         ],
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-FaYP9Ik5LKHuuCB6",
-      "name": "스마트과수원특화단지 조성(교육컨설팅)",
-      "agency": "농림축산식품부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260224000003739413&bsnsyear=2026&dtlbzId=202508922200371A0006&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "consulting",
-      "summary": "스마트과수원특화단지 조성(교육컨설팅)",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "스마트과수원특화단지 조성(교육컨설팅)"
-        },
-        {
-          "label": "지원대상",
-          "value": "철원군민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-01-19 ~ 2026-02-02"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri"
-        ],
-        "regions": "all",
         "maxYears": null,
         "founderTypes": null,
         "certs": null,
@@ -31554,46 +30491,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-Ciqy0zysXU4qVb2B",
-      "name": "특별기획 양심2",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260416000003800062&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "광복80주년 (1945-2025) 특별기획 ‘양심(良心)’ 이후, 2026년, 다시 한번 “양심2“를 말하고자 한다. 양심이란 어쩌면 그저 손을 놓지 않는 것일지…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "광복80주년 (1945-2025) 특별기획 ‘양심(良心)’ 이후, 2026년, 다시 한번 “양심2“를 말하고자 한다. 양심이란 어쩌면 그저 손을 놓지 않는 것일지도, 누군가의 불안을 끝까지 지켜내는 것일지도, 그리고 마침내 그 불편함 속에 서는 것일지도 모른다. 이 프로그램에서 ‘양심’을 이야기하는 이유는 첫째, 한국 사회가 역사적 ‘사실의 무게’ 를 알아…(원문 확인 필요)"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-RA4lg3LBGHgg2jBc",
       "name": "청춘찬가 100인의 기록",
       "agency": "과학기술정보통신부",
@@ -32065,46 +30962,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-4MW-UUWpCSF0sDhi",
-      "name": "통신분쟁조정제도 운영을 통한 이용자 피해구제 강화",
-      "agency": "방송미디어통신위원회",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260210000003724717&bsnsyear=2026&dtlbzId=202514521410301A0001&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "통신분쟁조정 상담센터를 통한 전문적인 상담서비스 제공, 통신분쟁조정 지원시스템을 통한 분쟁조정 전 과정의 온라인화, 통신분쟁조정 품질측정체계 운영 등 신속하고 효…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "통신분쟁조정 상담센터를 통한 전문적인 상담서비스 제공, 통신분쟁조정 지원시스템을 통한 분쟁조정 전 과정의 온라인화, 통신분쟁조정 품질측정체계 운영 등 신속하고 효율적인 이용자 피해구제 지원"
-        },
-        {
-          "label": "지원대상",
-          "value": "대한민국 전국민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-09 ~ 2025-12-24"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-qyV1HCvgqzUs6L97",
       "name": "방송통신시장 서비스분야별 시장모니터링 실시",
       "agency": "방송미디어통신위원회",
@@ -32174,48 +31031,6 @@
           "sme"
         ],
         "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-c98LAqBtJoUxBy3i",
-      "name": "모바일 앱 결제 피해예방 및 이용자보호",
-      "agency": "방송미디어통신위원회",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260209000003722711&bsnsyear=2026&dtlbzId=202514521410302A0003&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "ㅇ 모바일 앱 결제 피해 예방을 통한 안전한 이용환경 조성 및 다양한 차세대 융합 서비스의 급성장에 따른 부가통신서비스 대상 금지행위 점검을 통한 이용자 권익보호…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "ㅇ 모바일 앱 결제 피해 예방을 통한 안전한 이용환경 조성 및 다양한 차세대 융합 서비스의 급성장에 따른 부가통신서비스 대상 금지행위 점검을 통한 이용자 권익보호 필요 ㅇ국내 출시되는 스마트폰 선탑재 앱에 대한 정확한 현황 파악 및 선탑재 앱의 삭제를 부당하게 제한하는 행위 모니터링을 통한 이용자 선택권 제고 필요"
-        },
-        {
-          "label": "지원대상",
-          "value": "전국민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-03 ~ 2025-12-18"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "energy"
-        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -32352,49 +31167,6 @@
         "rndRequired": false,
         "insuranceRequired": false,
         "taxClean": true
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-Yej_Zw5cKzRuA352",
-      "name": "미래 농업인재 육성 지원",
-      "agency": "농촌진흥청",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260210000003724316&bsnsyear=2026&dtlbzId=202602924310301A0002&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "□ 미래세대 농업인재 육성을 통한 청년농업인으로의 성장 경로 구축 ○ 청소년과 대학생의 농업ㆍ농촌에 대한 이해와 농산업 진로 탐색을 지원하는 미래 농업인재 육성을…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "□ 미래세대 농업인재 육성을 통한 청년농업인으로의 성장 경로 구축 ○ 청소년과 대학생의 농업ㆍ농촌에 대한 이해와 농산업 진로 탐색을 지원하는 미래 농업인재 육성을 통해 청년농업인으로의 성장 경로 구축이 요구됨 ○ 본 사업은 교육·현장 활동·정책 제안을 유기적으로 연계하여, 미래세대가 청년농업인으로 성장하고 지역 공동체의 바른 리더로 성장할 수 있는 기반을 …(원문 확인 필요)"
-        },
-        {
-          "label": "지원대상",
-          "value": "농업ㆍ생명ㆍ환경의 가치 실현에 동참하고자 하는 전국의 청소년, 대학생, 청년농업인 및 지도자"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-01-20 ~ 2026-02-03"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri",
-          "energy"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
       },
       "source": "auto",
       "sourceApi": "mpb",
@@ -32735,48 +31507,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-lsg8AZ0RuAabnfiJ",
-      "name": "해외플랜트 시장개척 지원사업",
-      "agency": "산업통상부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260203000003713166&bsnsyear=2026&dtlbzId=201409435520301A0020&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "export",
-      "summary": "ㅇ 해외 프로젝트 발굴 및 해외 신규시장 개척활동 지원을 통한 우리 플랜트 기업의 해외 수주 확대 ㅇ 중소‧중견 플랜트 기업의 해외사업 경험축적 및 해외진출 활성…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "ㅇ 해외 프로젝트 발굴 및 해외 신규시장 개척활동 지원을 통한 우리 플랜트 기업의 해외 수주 확대 ㅇ 중소‧중견 플랜트 기업의 해외사업 경험축적 및 해외진출 활성화 ㅇ 시장조사 및 수주교섭 지원으로 수주 제고"
-        },
-        {
-          "label": "지원대상",
-          "value": "- 타당성조사 및 시장조사를 위한, 수주교섭 비용 및 외주용역비 등 지원"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-02-03 ~ 2026-02-26"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "construction"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": true
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-MQVUu6eMbHLFA3vn",
       "name": "인삼 생산시설 현대화",
       "agency": "농림축산식품부",
@@ -32806,52 +31536,6 @@
           "agri"
         ],
         "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-7lEt1z108T3ArLKC",
-      "name": "맛나면 좋은 친구 녹색 곳간 숲",
-      "agency": "과학기술정보통신부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260420000003803984&bsnsyear=2026&dtlbzId=201408531310308A0004&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "〈맛나면 좋은 친구〉 임산물 특별기획은 강원특별자치도의 산림 환경 속에서 형성된 전통 식문화와 지역민의 삶을 기록하고, 이를 현재의 가치와 미래 산업으로 연결하는…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "〈맛나면 좋은 친구〉 임산물 특별기획은 강원특별자치도의 산림 환경 속에서 형성된 전통 식문화와 지역민의 삶을 기록하고, 이를 현재의 가치와 미래 산업으로 연결하는 지역 밀착형 콘텐츠이다. 강원 산촌은 고령화와 지역소멸이라는 구조적 위기 속에서 수십 년간 축적된 임산물 채취·가공·조리 지식이 빠르게 사라지고 있다. 본 프로그램은 이러한 지역의 생활 지식을 공…(원문 확인 필요)"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당없음"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-06"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "content",
-          "agri",
-          "energy"
-        ],
-        "regions": [
-          "gangwon"
-        ],
         "maxYears": null,
         "founderTypes": null,
         "certs": null,
@@ -34070,7 +32754,9 @@
         "sizes": [
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "mfg"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -34535,8 +33221,7 @@
       ],
       "elig": {
         "sizes": [
-          "sole",
-          "sme"
+          "sole"
         ],
         "industries": "all",
         "regions": "all",
@@ -36090,7 +34775,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "mfg"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -36381,7 +35068,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "mfg"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -36421,7 +35110,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "mfg"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -37617,50 +36308,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-WZ-reXkV9dDuoUPo",
-      "name": "농축산물 소비촉진(바른 식생활교육 지원)",
-      "agency": "농림축산식품부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260414000003797928&bsnsyear=2026&dtlbzId=202608930410300A0001&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "경기도 지역특색에 맞는 식생활 교육 및 체험 기회를 확대하여 도민의 건강 증진 및 식생활 개선을 통한 농식품 소비 기반 확충",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "경기도 지역특색에 맞는 식생활 교육 및 체험 기회를 확대하여 도민의 건강 증진 및 식생활 개선을 통한 농식품 소비 기반 확충"
-        },
-        {
-          "label": "지원대상",
-          "value": "경기도민(영유아, 학생, 일반인 등)"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-03-10 ~ 2026-03-24"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri"
-        ],
-        "regions": [
-          "gyeonggi"
-        ],
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-nRH5X3O7FBHvjkIQ",
       "name": "수산식품산업육성(새싹기업 도약지원)",
       "agency": "해양수산부",
@@ -37829,48 +36476,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-uGTppn5sQcqGAk_o",
-      "name": "온라인 구매 시스템 확충 (2026)",
-      "agency": "해양수산부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260227000003745076&bsnsyear=2026&dtlbzId=202609630400303A0001&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "온라인 중심의 소비트렌드 변화에 대한 어업인 등의 대응능력 강화를 위해 온라인 구매시스템 확충 사업 추진",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "온라인 중심의 소비트렌드 변화에 대한 어업인 등의 대응능력 강화를 위해 온라인 구매시스템 확충 사업 추진"
-        },
-        {
-          "label": "지원대상",
-          "value": "국비(민간경상보조) 100%"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-03-03 ~ 2026-03-17"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-i3QVJj9LldiW9BhM",
       "name": "수산물 물류환경 개선",
       "agency": "해양수산부",
@@ -37943,46 +36548,6 @@
           "agri",
           "energy"
         ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-WIfCiCVWP_JEBjRo",
-      "name": "강소형스마트도시조성사업",
-      "agency": "국토교통부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260223000003737573&bsnsyear=2026&dtlbzId=202609556330301A0001&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "청년인구 감소로 인한 지역경제 쇠퇴 문제를 해결하고자 기존의 도시 인프라를 연계?활용하여 데이터 기반 첨단산업 활성화 도시 조성",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "청년인구 감소로 인한 지역경제 쇠퇴 문제를 해결하고자 기존의 도시 인프라를 연계?활용하여 데이터 기반 첨단산업 활성화 도시 조성"
-        },
-        {
-          "label": "지원대상",
-          "value": "경산시민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2024-02-01 ~ 2024-02-20"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -38702,7 +37267,9 @@
           "sole",
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "bio"
+        ],
         "regions": "all",
         "maxYears": null,
         "founderTypes": null,
@@ -40616,90 +39183,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-IvxCNqp8ijyy3m8b",
-      "name": "농촌인력중개센터 지원사업",
-      "agency": "농림축산식품부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260209000003721093&bsnsyear=2026&dtlbzId=201808911360333A0002&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "농업분야 특화된 인력수급 지원체계 구축을 통해 농촌인구 감소, 고령화 및 계절성에 따른 농촌 일손부족문제 완화 및 해소에 기여",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "농업분야 특화된 인력수급 지원체계 구축을 통해 농촌인구 감소, 고령화 및 계절성에 따른 농촌 일손부족문제 완화 및 해소에 기여"
-        },
-        {
-          "label": "지원대상",
-          "value": "(*상위보조사업자 정보) 지원대상: 지방자치단체 지원조건: (지자체경상보조)국비50%, 지방비50%"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-11-10 ~ 2025-11-17"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-8c8YcHrIT0iErhSN",
-      "name": "농촌인력중개센터사업(정액)",
-      "agency": "농림축산식품부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260209000003721512&bsnsyear=2026&dtlbzId=201808911360333A0002&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "○ 농촌인력중개센터 운영을 통한 인력난 해소 기여",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "○ 농촌인력중개센터 운영을 통한 인력난 해소 기여"
-        },
-        {
-          "label": "지원대상",
-          "value": "(*상위보조사업자 정보) 지원대상: 지방자치단체 지원조건: (지자체경상보조)국비50%, 지방비50%"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-11-10 ~ 2025-11-13"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-mJdSWCjzs5D5t6_s",
       "name": "농촌고용인력지원",
       "agency": "농림축산식품부",
@@ -40802,48 +39285,6 @@
         {
           "label": "신청기간",
           "value": "2026-03-05 ~ 2026-03-12"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-RhNJ6ueqxOMPRXGU",
-      "name": "[국비]농촌인력중개센터운영지원",
-      "agency": "농림축산식품부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260211000003725258&bsnsyear=2026&dtlbzId=201808911360333A0002&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "농촌일손부족해결을 위한 인력중개센터 운영",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "농촌일손부족해결을 위한 인력중개센터 운영"
-        },
-        {
-          "label": "지원대상",
-          "value": "(*상위보조사업자 정보) 지원대상: 지방자치단체 지원조건: (지자체경상보조)국비50%, 지방비50%"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-11-11 ~ 2025-11-12"
         }
       ],
       "elig": {
