@@ -358,8 +358,13 @@
     #tableWrap{display:none !important;}
   }
 
+  .dash-agency{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .dash-agency a{color:var(--accent);font-weight:700;text-decoration:none;}
   .dash-agency a:hover{text-decoration:underline;}
+  /* 2026-08-19 수정: "진행 관리" select 안의 글자("진행중으로 이동" 등)가 주관부처 칸에
+     밀려 잘리던 문제 - 주관부처 폭을 줄이고(위) 이 select만 글자를 작게+최소 폭을 넉넉히 줍니다. */
+  .progress-cell{width:1%;white-space:nowrap;}
+  select.progress-select{width:auto;min-width:132px;font-size:.78rem;padding:7px 8px;}
 
   /* gantt chart */
   .graph-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px;}
@@ -650,7 +655,7 @@
       <div class="tabs" id="mainTabs" role="tablist">
         <button type="button" data-tab="dashboard" class="active">대시보드</button>
         <button type="button" data-tab="graph">일정보기</button>
-        <button type="button" data-tab="list">목록</button>
+        <button type="button" data-tab="list">찜 상세보기</button>
         <button type="button" data-tab="rndhistory">R&D 이력</button>
         <button type="button" data-tab="progress">진행중</button>
         <button type="button" data-tab="done">완료</button>
@@ -662,7 +667,7 @@
         <div class="results-head" style="margin-top:18px;">
           <div class="results-count"><b id="count-num">0</b>건의 지원사업이 조건에 맞습니다</div>
           <div class="controls">
-            <label class="hide-closed-toggle"><input type="checkbox" id="f-starred-only"> 찜한 것만</label>
+            <label class="hide-closed-toggle"><input type="checkbox" id="f-starred-only" checked> 찜한 것만</label>
             <input type="text" class="search" id="f-search" placeholder="사업명·기관명 검색">
             <select id="f-sort">
               <option value="name">사업명순</option>
@@ -698,7 +703,7 @@
 
       <div class="tab-panel" data-tab="graph" hidden>
         <div class="graph-head">
-          <label class="hide-closed-toggle"><input type="checkbox" id="graph-starred-only"> 찜한 것만</label>
+          <label class="hide-closed-toggle"><input type="checkbox" id="graph-starred-only" checked> 찜한 것만</label>
           <input type="text" class="search" id="graph-search" placeholder="마감·접수예정 사업 검색해서 그래프에 추가">
           <div class="graph-search-results" id="graphSearchResults"></div>
         </div>
@@ -970,7 +975,9 @@
   var viewMode = "card";
   var activeTab = "dashboard";
   var graphExtraIds = {};
-  var starredOnly = false;
+  // 2026-08-19 수정: "목록" 탭을 "찜 상세보기"로 바꾸면서, 이 탭을 열면 처음부터 찜한 것만
+  // 보이도록 기본값을 true로 바꿨습니다(사용자 요청). 체크는 그대로 해제할 수 있습니다.
+  var starredOnly = true;
 
   // 2026-08-19 추가: 찜/진행 관리 상태는 팀원 전체가 공유해서 봐야 하므로(사용자 요청)
   // 브라우저 로컬 저장이 아니라 Supabase의 policy_state 테이블에 저장합니다. 로그인이 없어
@@ -1574,7 +1581,9 @@
       tr.appendChild(statusTd);
 
       var progressTd = document.createElement("td");
+      progressTd.className = "progress-cell";
       var progressSelect = document.createElement("select");
+      progressSelect.className = "progress-select";
       progressSelect.innerHTML =
         "<option value=''>진행 관리</option>" +
         "<option value='in_progress'>진행중으로 이동</option>" +
