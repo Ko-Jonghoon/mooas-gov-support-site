@@ -251,6 +251,14 @@
   .interest-bar{margin-top:14px;padding:18px 20px;}
   .interest-bar .field{flex:1 1 100%;}
 
+  /* 대시보드·목록 등 모든 탭에 공통으로 적용되는 상태 필터 - 탭 안에 있으면 다른 탭에서는
+     안 보여서 헷갈리므로(2026-08-19 사용자 리포트) 탭 바깥, 항상 보이는 위치에 둡니다. */
+  .status-filter-bar{
+    display:flex;align-items:center;gap:10px;margin-top:14px;
+  }
+  .status-filter-bar label{font-size:.82rem;font-weight:600;color:var(--ink-soft);}
+  .status-filter-bar select{width:auto;min-width:140px;}
+
   /* tabs */
   .tabs{display:flex;gap:8px;border-bottom:2px solid var(--border);margin-bottom:22px;}
   .tabs button{
@@ -625,6 +633,18 @@
     </div>
   </section>
 
+  <div class="status-filter-bar">
+    <label for="f-status">조회 상태</label>
+    <select id="f-status">
+      <option value="">전체 상태</option>
+      <option value="open">접수중</option>
+      <option value="closing">마감임박</option>
+      <option value="upcoming">접수 예정</option>
+      <option value="ongoing">상시</option>
+      <option value="closed">마감</option>
+    </select>
+  </div>
+
   <main>
       <div class="tabs" id="mainTabs" role="tablist">
         <button type="button" data-tab="dashboard" class="active">대시보드</button>
@@ -633,6 +653,7 @@
         <button type="button" data-tab="rndhistory">R&D 이력</button>
         <button type="button" data-tab="progress">진행중</button>
         <button type="button" data-tab="done">완료</button>
+        <button type="button" data-tab="excluded">제외</button>
       </div>
 
       <div class="tab-panel" data-tab="list" hidden>
@@ -640,14 +661,6 @@
         <div class="results-head" style="margin-top:18px;">
           <div class="results-count"><b id="count-num">0</b>건의 지원사업이 조건에 맞습니다</div>
           <div class="controls">
-            <select id="f-status">
-              <option value="">전체 상태</option>
-              <option value="open">접수중</option>
-              <option value="closing">마감임박</option>
-              <option value="upcoming">접수 예정</option>
-              <option value="ongoing">상시</option>
-              <option value="closed">마감</option>
-            </select>
             <label class="hide-closed-toggle"><input type="checkbox" id="f-starred-only"> 찜한 것만</label>
             <input type="text" class="search" id="f-search" placeholder="사업명·기관명 검색">
             <select id="f-sort">
@@ -802,6 +815,27 @@
           <p>진행중 목록에서 완료 처리하면 여기로 옮겨집니다.</p>
         </div>
       </div>
+
+      <div class="tab-panel" data-tab="excluded" hidden>
+        <p class="bar-hint" style="margin-bottom:12px;">필터가 걸러내지 못한 사업을 직접 제외로 옮겨두면, 조건을 바꿔도 대시보드·목록·그래프에서 계속 빠진 채로 유지됩니다.</p>
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>사업명</th>
+                <th>주관부처</th>
+                <th>상태</th>
+                <th>진행 관리</th>
+              </tr>
+            </thead>
+            <tbody id="excludedBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="excludedEmpty" hidden>
+          <h3>제외로 표시한 사업이 없습니다</h3>
+          <p>대시보드 목록에서 "진행 관리" 열의 상태를 "제외로 이동"으로 바꿔 여기로 옮겨보세요.</p>
+        </div>
+      </div>
   </main>
 
   <footer>
@@ -881,6 +915,8 @@
     progressEmpty: document.getElementById("progressEmpty"),
     doneBody: document.getElementById("doneBody"),
     doneEmpty: document.getElementById("doneEmpty"),
+    excludedBody: document.getElementById("excludedBody"),
+    excludedEmpty: document.getElementById("excludedEmpty"),
     rndKeywordFilters: document.getElementById("rndKeywordFilters"),
     rndProgramBody: document.getElementById("rndProgramBody"),
     rndProjectBody: document.getElementById("rndProjectBody"),
@@ -1123,8 +1159,13 @@
       var r = evaluate(p, co);
       if (r) allMatches.push({policy:p, reasons:r.reasons});
     });
-    // 진행중/완료로 표시해둔 사업은 대시보드·그래프·목록에서는 빼고 해당 탭에서만 보여줍니다.
+    // 진행중/완료/제외로 표시해둔 사업은 대시보드·그래프·목록에서는 빼고 해당 탭에서만 보여줍니다.
     var matches = allMatches.filter(function(m){ return !appStatus[m.policy.id]; });
+    // 조회 상태(접수중/마감임박 등) 필터는 대시보드·목록 모두에 공통으로 적용됩니다 -
+    // 탭 안에 있으면 다른 탭에서는 안 보여서 헷갈린다는 리포트가 있어 탭 바깥 공용 필터로 옮겼습니다.
+    if (els.statusFilter.value){
+      matches = matches.filter(function(m){ return computeStatus(m.policy).code === els.statusFilter.value; });
+    }
 
     renderStatStrip(matches, co);
 
@@ -1141,9 +1182,6 @@
       view = view.filter(function(m){
         return m.policy.name.toLowerCase().indexOf(q) !== -1 || m.policy.agency.toLowerCase().indexOf(q) !== -1;
       });
-    }
-    if (els.statusFilter.value){
-      view = view.filter(function(m){ return computeStatus(m.policy).code === els.statusFilter.value; });
     }
     if (starredOnly){
       view = view.filter(function(m){ return !!starredIds[m.policy.id]; });
@@ -1168,6 +1206,7 @@
     renderGantt(matches);
     renderProgress("in_progress", els.progressBody, els.progressEmpty);
     renderProgress("done", els.doneBody, els.doneEmpty);
+    renderProgress("excluded", els.excludedBody, els.excludedEmpty);
   }
 
   function renderStatStrip(matches, co){
@@ -1401,7 +1440,8 @@
       progressSelect.innerHTML =
         "<option value=''>진행 관리</option>" +
         "<option value='in_progress'>진행중으로 이동</option>" +
-        "<option value='done'>완료로 이동</option>";
+        "<option value='done'>완료로 이동</option>" +
+        "<option value='excluded'>제외로 이동</option>";
       progressSelect.addEventListener("change", function(){
         if (progressSelect.value) setAppStatus(p.id, progressSelect.value);
       });
@@ -1448,6 +1488,7 @@
       var opts = "<option value=''>진행 관리</option>";
       if (status !== "in_progress") opts += "<option value='in_progress'>진행중으로 이동</option>";
       if (status !== "done") opts += "<option value='done'>완료로 이동</option>";
+      if (status !== "excluded") opts += "<option value='excluded'>제외로 이동</option>";
       opts += "<option value='none'>대시보드로 되돌리기</option>";
       progressSelect.innerHTML = opts;
       progressSelect.addEventListener("change", function(){
