@@ -1150,6 +1150,13 @@
     if (e.taxClean && co.taxDelinquent) return null;
 
     var reasons = [];
+    // 2026-08-19 추가: "관심 지원 분야"가 매칭 점수(매칭율) 삭제 때 같이 빠져서 체크해도
+    // 대시보드·목록에 아무 영향이 없던 문제 - 정렬 우선순위로 복원합니다("선택 시 매칭
+    // 우선순위 반영" 안내 문구대로).
+    var interestMatch = co.interests.indexOf(policy.category) !== -1;
+    if (interestMatch){
+      reasons.push(CATS[policy.category].label + " 관심분야 일치");
+    }
 
     if (e.industries !== "all"){
       reasons.push(IND_LABEL[co.industry] + " 특화 사업");
@@ -1177,7 +1184,7 @@
     }
     if (typeof e.maxYears === "number"){ reasons.push("업력 " + e.maxYears + "년 이내 대상"); }
 
-    return {reasons:reasons};
+    return {reasons:reasons, interestMatch:interestMatch};
   }
 
   function render(){
@@ -1187,7 +1194,7 @@
     var allMatches = [];
     POLICIES.forEach(function(p){
       var r = evaluate(p, co);
-      if (r) allMatches.push({policy:p, reasons:r.reasons});
+      if (r) allMatches.push({policy:p, reasons:r.reasons, interestMatch:r.interestMatch});
     });
     // 진행중/완료/제외로 표시해둔 사업은 대시보드·그래프·목록에서는 빼고 해당 탭에서만 보여줍니다.
     var matches = allMatches.filter(function(m){ return !appStatus[m.policy.id]; });
@@ -1219,6 +1226,9 @@
 
     var sortBy = els.sort.value;
     view.sort(function(a,b){
+      // 관심 지원 분야에 해당하는 사업을 항상 먼저 보여주고("선택 시 매칭 우선순위 반영"),
+      // 그 안에서 선택한 정렬 기준을 적용합니다.
+      if (a.interestMatch !== b.interestMatch) return a.interestMatch ? -1 : 1;
       if (sortBy === "name") return a.policy.name.localeCompare(b.policy.name,"ko");
       if (sortBy === "agency") return a.policy.agency.localeCompare(b.policy.agency,"ko");
       return 0;
@@ -1423,6 +1433,7 @@
 
     els.dashboardBody.innerHTML = "";
     var view = matches.slice().sort(function(a,b){
+      if (a.interestMatch !== b.interestMatch) return a.interestMatch ? -1 : 1;
       return a.policy.name.localeCompare(b.policy.name,"ko");
     });
     view.forEach(function(m){
