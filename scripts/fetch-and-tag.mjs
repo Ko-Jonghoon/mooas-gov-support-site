@@ -123,13 +123,28 @@ const SOURCES = [
     label: "기업마당",
     envKey: "BIZINFO_API_KEY",
     async fetchRaw() {
-      const url = new URL("https://www.bizinfo.go.kr/uss/rss/bizinfoApi.do");
-      url.searchParams.set("crtfcKey", process.env.BIZINFO_API_KEY);
-      url.searchParams.set("dataType", "json");
-      url.searchParams.set("searchCnt", "100");
-      const data = await fetchJson(url);
-      // TODO: 실제 응답 스키마와 다르면 아래 배열 경로를 조정하세요.
-      return data.jsonArray || data.items || [];
+      // 2026-08-19 수정: searchCnt=100만 요청하고 페이지네이션이 없어서 첫 100건만
+      // 수집되던 문제 발견("중소기업 AI 활용 도입 및 AI 훈련 지원", "AX 원스톱 바우처",
+      // "AI 통합 바우처(AI바우처)" 등 실제 기업마당에 있는 공고가 데이터에 아예 없었음 -
+      // 2026-08-19 사용자 리포트). pageUnit/pageIndex로 페이지를 넘기며 끝까지 수집합니다.
+      const pageUnit = 100;
+      const maxPages = 30; // 안전장치: 3000건 넘게 반복되는 이상 상황 방지
+      const all = [];
+      for (let pageIndex = 1; pageIndex <= maxPages; pageIndex++) {
+        const url = new URL("https://www.bizinfo.go.kr/uss/rss/bizinfoApi.do");
+        url.searchParams.set("crtfcKey", process.env.BIZINFO_API_KEY);
+        url.searchParams.set("dataType", "json");
+        url.searchParams.set("searchCnt", String(pageUnit));
+        url.searchParams.set("pageUnit", String(pageUnit));
+        url.searchParams.set("pageIndex", String(pageIndex));
+        const data = await fetchJson(url);
+        // TODO: 실제 응답 스키마와 다르면 아래 배열 경로를 조정하세요.
+        const items = data.jsonArray || data.items || [];
+        all.push(...items);
+        console.log(`[기업마당] ${pageIndex}페이지 ${items.length}건 수집 (누적 ${all.length}건)`);
+        if (items.length < pageUnit) break; // 마지막 페이지(요청한 개수보다 적게 옴)
+      }
+      return all;
     },
     mapRaw(raw) {
       return {
@@ -607,7 +622,11 @@ const REGION_RULES = [
   { code: "daejeon", keywords: ["대전"] },
   { code: "ulsan", keywords: ["울산"] },
   { code: "sejong", keywords: ["세종"] },
-  { code: "gyeonggi", keywords: ["경기도", "경기 "] },
+  // 2026-08-19 추가: "서울ㆍ경기ㆍ인천ㆍ강원"처럼 가운뎃점(ㆍ)으로 지역을 나열한 제목에서
+  // "경기"가 "경기도"도 "경기 "(뒤에 공백)도 아니라서 빠지던 문제. "경기" 자체는 "경기"(景氣,
+  // 경제상황)라는 뜻으로도 흔히 쓰여서("경기 침체", "경기 부양") 단독으로는 못 넣고,
+  // 가운뎃점과 붙어 있을 때만(목록 표기 관례) 지역으로 인정합니다.
+  { code: "gyeonggi", keywords: ["경기도", "경기 ", "경기ㆍ", "ㆍ경기", "경기·", "·경기"] },
   { code: "gangwon", keywords: ["강원"] },
   { code: "chungbuk", keywords: ["충청북도", "충북"] },
   { code: "chungnam", keywords: ["충청남도", "충남"] },
