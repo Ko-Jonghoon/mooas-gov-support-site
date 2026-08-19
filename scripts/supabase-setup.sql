@@ -24,3 +24,7 @@ alter publication supabase_realtime add table policy_state;
 
 -- 2026-08-19 추가: 진행중/완료 사업에 담당자를 지정하는 기능용 컬럼.
 alter table policy_state add column if not exists assignee text;
+
+-- 2026-08-19 추가: "제외" 탭에 제외한 사람/사유를 기록하는 기능용 컬럼.
+alter table policy_state add column if not exists excluded_by text;
+alter table policy_state add column if not exists excluded_reason text;

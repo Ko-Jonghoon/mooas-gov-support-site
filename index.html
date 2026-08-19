@@ -833,7 +833,8 @@
                 <th>사업명</th>
                 <th>주관부처</th>
                 <th>상태</th>
-                <th>담당자</th>
+                <th>제외한 사람</th>
+                <th>제외 사유</th>
                 <th>진행 관리</th>
               </tr>
             </thead>
@@ -956,6 +957,8 @@
   var starredIds = {};
   var appStatus = {};
   var assignees = {};
+  var excludedBy = {};
+  var excludedReasons = {};
 
   function applySharedRow(row){
     if (row.starred) starredIds[row.policy_id] = true;
@@ -964,11 +967,15 @@
     else delete appStatus[row.policy_id];
     if (row.assignee) assignees[row.policy_id] = row.assignee;
     else delete assignees[row.policy_id];
+    if (row.excluded_by) excludedBy[row.policy_id] = row.excluded_by;
+    else delete excludedBy[row.policy_id];
+    if (row.excluded_reason) excludedReasons[row.policy_id] = row.excluded_reason;
+    else delete excludedReasons[row.policy_id];
   }
 
   function loadSharedState(){
     if (!sb) return Promise.resolve();
-    return sb.from("policy_state").select("policy_id,starred,app_status,assignee").then(function(res){
+    return sb.from("policy_state").select("policy_id,starred,app_status,assignee,excluded_by,excluded_reason").then(function(res){
       if (res.error){ console.error("공유 상태 로드 실패:", res.error.message); return; }
       (res.data || []).forEach(applySharedRow);
     });
@@ -984,6 +991,8 @@
           delete starredIds[row.policy_id];
           delete appStatus[row.policy_id];
           delete assignees[row.policy_id];
+          delete excludedBy[row.policy_id];
+          delete excludedReasons[row.policy_id];
         } else {
           applySharedRow(row);
         }
@@ -1043,6 +1052,18 @@
     if (name){ assignees[id] = name; }
     else { delete assignees[id]; }
     upsertSharedState(id, { assignee: name || null });
+  }
+
+  function setExcludedBy(id, name){
+    if (name){ excludedBy[id] = name; }
+    else { delete excludedBy[id]; }
+    upsertSharedState(id, { excluded_by: name || null });
+  }
+
+  function setExcludedReason(id, reason){
+    if (reason){ excludedReasons[id] = reason; }
+    else { delete excludedReasons[id]; }
+    upsertSharedState(id, { excluded_reason: reason || null });
   }
 
   function parsePeriod(text){
@@ -1578,18 +1599,46 @@
       statusTd.appendChild(statusPill);
       tr.appendChild(statusTd);
 
-      // 2026-08-19 추가: 진행중으로 옮긴 사업에 담당자를 지정할 수 있게 합니다(팀 공유).
-      var assigneeTd = document.createElement("td");
-      var assigneeInput = document.createElement("input");
-      assigneeInput.type = "text";
-      assigneeInput.placeholder = "담당자 이름";
-      assigneeInput.value = assignees[p.id] || "";
-      assigneeInput.className = "assignee-input";
-      assigneeInput.addEventListener("change", function(){
-        setAssignee(p.id, assigneeInput.value.trim());
-      });
-      assigneeTd.appendChild(assigneeInput);
-      tr.appendChild(assigneeTd);
+      if (status === "excluded"){
+        // 2026-08-19 추가: 제외 처리한 사람/사유를 남길 수 있게 합니다(팀 공유 - 사용자 요청).
+        var excludedByTd = document.createElement("td");
+        var excludedByInput = document.createElement("input");
+        excludedByInput.type = "text";
+        excludedByInput.placeholder = "제외한 사람";
+        excludedByInput.value = excludedBy[p.id] || "";
+        excludedByInput.className = "assignee-input";
+        excludedByInput.addEventListener("change", function(){
+          setExcludedBy(p.id, excludedByInput.value.trim());
+        });
+        excludedByTd.appendChild(excludedByInput);
+        tr.appendChild(excludedByTd);
+
+        var excludedReasonTd = document.createElement("td");
+        var excludedReasonInput = document.createElement("input");
+        excludedReasonInput.type = "text";
+        excludedReasonInput.placeholder = "제외 사유";
+        excludedReasonInput.value = excludedReasons[p.id] || "";
+        excludedReasonInput.className = "assignee-input";
+        excludedReasonInput.style.width = "160px";
+        excludedReasonInput.addEventListener("change", function(){
+          setExcludedReason(p.id, excludedReasonInput.value.trim());
+        });
+        excludedReasonTd.appendChild(excludedReasonInput);
+        tr.appendChild(excludedReasonTd);
+      } else {
+        // 2026-08-19 추가: 진행중으로 옮긴 사업에 담당자를 지정할 수 있게 합니다(팀 공유).
+        var assigneeTd = document.createElement("td");
+        var assigneeInput = document.createElement("input");
+        assigneeInput.type = "text";
+        assigneeInput.placeholder = "담당자 이름";
+        assigneeInput.value = assignees[p.id] || "";
+        assigneeInput.className = "assignee-input";
+        assigneeInput.addEventListener("change", function(){
+          setAssignee(p.id, assigneeInput.value.trim());
+        });
+        assigneeTd.appendChild(assigneeInput);
+        tr.appendChild(assigneeTd);
+      }
 
       var progressTd = document.createElement("td");
       var progressSelect = document.createElement("select");
