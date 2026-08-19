@@ -425,26 +425,17 @@
   .gantt-bar .remaining{background:var(--accent);}
   .gantt-bar.upcoming{background:var(--accent-soft);}
   .gantt-bar.past-case{background:repeating-linear-gradient(135deg,var(--ink-faint) 0,var(--ink-faint) 4px,transparent 4px,transparent 8px);opacity:.55;}
+  /* 2026-08-19 수정: "신청기간"이 "상시"·"예산 소진시까지"처럼 날짜 2개로 못 읽히는 사업은
+     숨기거나 별도 목록으로 빼지 않고, 해당 연도 전체(1~12월)를 채우는 막대로 표시하고
+     막대 가운데에 원문 기간 텍스트를 그대로 적어줍니다(사용자 요청). */
+  .gantt-bar.undated{
+    background:var(--tier-mid-bg);align-items:center;justify-content:center;
+  }
+  .gantt-bar-text{
+    font-size:.72rem;font-weight:700;color:var(--tier-mid);white-space:nowrap;
+    overflow:hidden;text-overflow:ellipsis;padding:0 8px;
+  }
   .gantt-empty{padding:24px;text-align:center;color:var(--ink-faint);font-size:.86rem;}
-
-  /* 2026-08-19 추가: "신청기간"이 "상시"·"예산 소진시까지"처럼 날짜 2개로 못 읽히는 사업은
-     막대로 그릴 수가 없어 그래프에서 통째로 안 보이던 문제 - 이런 항목은 막대 없이 아래에
-     목록으로 따로 보여줍니다(누락 방지). */
-  .gantt-undated{
-    margin-top:16px;background:var(--surface);border:1px solid var(--border);border-radius:14px;
-    box-shadow:var(--shadow);padding:14px 18px;
-  }
-  .gantt-undated-title{font-size:.8rem;font-weight:700;color:var(--ink-soft);margin-bottom:8px;}
-  .gantt-undated-row{
-    display:flex;align-items:center;gap:6px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.84rem;
-  }
-  .gantt-undated-row:last-child{border-bottom:none;}
-  .gantt-undated-row a{color:var(--accent);font-weight:700;text-decoration:none;}
-  .gantt-undated-row a:hover{text-decoration:underline;}
-  .gantt-undated-row .remove-btn{
-    border:none;background:var(--surface-alt);color:var(--ink-faint);
-    border-radius:50%;width:16px;height:16px;font-size:.7rem;line-height:1;cursor:pointer;
-  }
 
   .card{
     background:var(--surface);border:1px solid var(--border);border-radius:14px;
@@ -741,6 +732,7 @@
           <span><span class="dot" style="background:var(--tier-ref-bg);border:1px solid var(--border);"></span>이미 지난 기간</span>
           <span><span class="dot" style="background:var(--accent-soft);"></span>접수 예정</span>
           <span><span class="dot" style="background:var(--ink-faint);opacity:.55;"></span>마감된 과거 사례(검색 추가·찜한 항목)</span>
+          <span><span class="dot" style="background:var(--tier-mid-bg);border:1px solid var(--tier-mid);"></span>기간 미확정(상시·예산 소진시까지 등, 연중 표시)</span>
         </div>
         <div id="ganttChart"></div>
       </div>
@@ -1169,6 +1161,12 @@
     if (!policy.benefits) return null;
     var row = policy.benefits.find(function(b){ return b.label === "신청기간" || b.label === "지원기간"; });
     return row ? parsePeriod(row.value) : null;
+  }
+
+  function getPolicyPeriodText(policy){
+    if (!policy.benefits) return null;
+    var row = policy.benefits.find(function(b){ return b.label === "신청기간" || b.label === "지원기간"; });
+    return row ? row.value : null;
   }
 
   function computeStatus(policy){
@@ -1831,40 +1829,41 @@
   function renderGantt(track){
     var bounds = currentYearBounds();
     var shownIds = {};
-    var rows = [];
-    // 2026-08-19 추가: "신청기간"이 "상시"·"예산 소진시까지"처럼 날짜 2개로 파싱이 안 되면
-    // getPolicyPeriod()가 null을 반환해서 막대를 그릴 수 없습니다 - 이런 경우 그냥 빼버리면
-    // 찜/진행중 항목이 그래프에서 조용히 사라지는 문제(사용자 리포트)가 생기므로, 막대 없이
-    // 아래 목록에 따로 모아서 보여줍니다.
-    var undated = [];
+    var datedRows = [];
+    var undatedRows = [];
+
+    function addRow(p, source){
+      shownIds[p.id] = true;
+      var period = getPolicyPeriod(p);
+      if (!period){
+        // 2026-08-19 수정: "신청기간"이 "상시"·"예산 소진시까지"처럼 날짜 2개로 파싱이 안 되는
+        // 사업은 통째로 숨기지 않고, 해당 연도 전체(1~12월)를 채우는 막대로 표시하고 막대
+        // 가운데에 원문 기간 텍스트를 그대로 적어줍니다(사용자 요청 - 놓치지 않게).
+        undatedRows.push({ policy: p, source: source, undated: true, periodText: getPolicyPeriodText(p) || "기간 정보 없음" });
+        return;
+      }
+      if (!periodOverlapsYear(period, bounds)) return;
+      datedRows.push({ policy: p, period: period, source: source });
+    }
 
     // 찜한 사업 + 진행중인 사업은 회사 조건 매칭이나 마감 여부와 무관하게 항상 보여줍니다.
     track.forEach(function(m){
-      var p = m.policy;
-      shownIds[p.id] = true;
-      var source = m.inProgress ? "inProgress" : "starred";
-      var period = getPolicyPeriod(p);
-      if (!period){ undated.push({ policy: p, source: source }); return; }
-      if (!periodOverlapsYear(period, bounds)) return;
-      rows.push({ policy: p, period: period, source: source });
+      addRow(m.policy, m.inProgress ? "inProgress" : "starred");
     });
 
     Object.keys(graphExtraIds).forEach(function(id){
       if (shownIds[id]) return;
       var p = POLICIES.find(function(pp){ return pp.id === id; });
       if (!p) return;
-      shownIds[id] = true;
-      var period = getPolicyPeriod(p);
-      if (!period){ undated.push({ policy: p, source: "graphExtra" }); return; }
-      if (!periodOverlapsYear(period, bounds)) return;
-      rows.push({ policy: p, period: period, source: "graphExtra" });
+      addRow(p, "graphExtra");
     });
 
-    rows.sort(function(a,b){ return new Date(a.period.start) - new Date(b.period.start); });
+    datedRows.sort(function(a,b){ return new Date(a.period.start) - new Date(b.period.start); });
+    var rows = datedRows.concat(undatedRows);
 
     els.ganttChart.innerHTML = "";
 
-    if (!rows.length && !undated.length){
+    if (!rows.length){
       var empty = document.createElement("div");
       empty.className = "gantt-empty";
       empty.textContent = "찜했거나 진행중인 사업이 없습니다. 대시보드에서 사업을 찜하거나 진행중으로 옮겨 보세요.";
@@ -1872,58 +1871,7 @@
       return;
     }
 
-    if (rows.length) renderGanttBars(rows, bounds);
-    if (undated.length) renderGanttUndated(undated);
-  }
-
-  function renderGanttUndated(undated){
-    var wrap = document.createElement("div");
-    wrap.className = "gantt-undated";
-    var title = document.createElement("div");
-    title.className = "gantt-undated-title";
-    title.textContent = "신청기간 정보가 명확하지 않아 막대로 표시할 수 없는 사업 (예: 상시·예산 소진시까지)";
-    wrap.appendChild(title);
-
-    undated.forEach(function(item){
-      var row = document.createElement("div");
-      row.className = "gantt-undated-row";
-
-      var name = document.createElement("span");
-      name.textContent = item.policy.name + " · " + item.policy.agency;
-      row.appendChild(name);
-
-      if (item.source === "inProgress"){
-        var progBadge = document.createElement("span");
-        progBadge.className = "status-pill open";
-        progBadge.textContent = "진행중";
-        row.appendChild(progBadge);
-      }
-
-      if (item.source === "graphExtra" || item.source === "starred"){
-        var rm = document.createElement("button");
-        rm.type = "button";
-        rm.className = "remove-btn";
-        rm.textContent = "×";
-        rm.title = item.source === "starred" ? "찜 해제" : "그래프에서 제거";
-        rm.addEventListener("click", function(){
-          if (item.source === "starred") toggleStarred(item.policy);
-          else delete graphExtraIds[item.policy.id];
-          render();
-        });
-        row.appendChild(rm);
-      }
-
-      var a = document.createElement("a");
-      a.href = item.policy.url;
-      a.target = "_blank";
-      a.rel = "noopener noreferrer";
-      a.textContent = "바로가기 ↗";
-      row.appendChild(a);
-
-      wrap.appendChild(row);
-    });
-
-    els.ganttChart.appendChild(wrap);
+    renderGanttBars(rows, bounds);
   }
 
   function renderGanttBars(rows, bounds){
@@ -2000,34 +1948,45 @@
       var track = document.createElement("div");
       track.className = "gantt-track";
 
-      var s = new Date(row.period.start + "T00:00:00").getTime();
-      var e = new Date(row.period.end + "T23:59:59").getTime();
-      var leftPct = pctInYear(s, bounds);
-      var rightPct = pctInYear(e, bounds);
-      var widthPct = Math.max(rightPct - leftPct, 0.6);
-
       var bar = document.createElement("div");
       bar.className = "gantt-bar";
-      bar.style.left = leftPct + "%";
-      bar.style.width = widthPct + "%";
-      bar.title = row.policy.name + " (" + row.period.start + " ~ " + row.period.end + ")";
 
-      if (row.source === "graphExtra" || (row.source === "starred" && todayTs > e)){
-        bar.classList.add("past-case");
-      } else if (todayTs < s){
-        bar.classList.add("upcoming");
-      } else if (todayTs > e){
-        bar.classList.add("past-case");
+      if (row.undated){
+        bar.classList.add("undated");
+        bar.style.left = "0%";
+        bar.style.width = "100%";
+        bar.title = row.policy.name + " (" + row.periodText + ")";
+        var textSpan = document.createElement("span");
+        textSpan.className = "gantt-bar-text";
+        textSpan.textContent = row.periodText;
+        bar.appendChild(textSpan);
       } else {
-        var elapsedPct = (todayTs - s) / (e - s) * 100;
-        var elapsedDiv = document.createElement("div");
-        elapsedDiv.className = "elapsed";
-        elapsedDiv.style.width = elapsedPct + "%";
-        var remainDiv = document.createElement("div");
-        remainDiv.className = "remaining";
-        remainDiv.style.width = (100 - elapsedPct) + "%";
-        bar.appendChild(elapsedDiv);
-        bar.appendChild(remainDiv);
+        var s = new Date(row.period.start + "T00:00:00").getTime();
+        var e = new Date(row.period.end + "T23:59:59").getTime();
+        var leftPct = pctInYear(s, bounds);
+        var rightPct = pctInYear(e, bounds);
+        var widthPct = Math.max(rightPct - leftPct, 0.6);
+        bar.style.left = leftPct + "%";
+        bar.style.width = widthPct + "%";
+        bar.title = row.policy.name + " (" + row.period.start + " ~ " + row.period.end + ")";
+
+        if (row.source === "graphExtra" || (row.source === "starred" && todayTs > e)){
+          bar.classList.add("past-case");
+        } else if (todayTs < s){
+          bar.classList.add("upcoming");
+        } else if (todayTs > e){
+          bar.classList.add("past-case");
+        } else {
+          var elapsedPct = (todayTs - s) / (e - s) * 100;
+          var elapsedDiv = document.createElement("div");
+          elapsedDiv.className = "elapsed";
+          elapsedDiv.style.width = elapsedPct + "%";
+          var remainDiv = document.createElement("div");
+          remainDiv.className = "remaining";
+          remainDiv.style.width = (100 - elapsedPct) + "%";
+          bar.appendChild(elapsedDiv);
+          bar.appendChild(remainDiv);
+        }
       }
       track.appendChild(bar);
 
