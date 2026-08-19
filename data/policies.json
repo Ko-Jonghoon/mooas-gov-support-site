@@ -330,7 +330,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "gangwon",
+          "district": "양양군"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -494,7 +498,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "gangwon",
+          "district": "횡성군"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -536,7 +544,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "gyeongbuk",
+          "district": "포항시"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -639,7 +651,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "gyeongbuk",
+          "district": "포항시"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -1211,7 +1227,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": false
+        "taxClean": false,
+        "district": {
+          "province": "gyeonggi",
+          "district": "시흥시"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -1297,7 +1317,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "jeonbuk",
+          "district": "전주시"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -1516,7 +1540,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": false
+        "taxClean": false,
+        "district": {
+          "province": "gyeonggi",
+          "district": "안산시"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -1706,7 +1734,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "seoul",
+          "district": "종로구"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -2327,7 +2359,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "seoul",
+          "district": "용산구"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -2428,7 +2464,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": false
+        "taxClean": false,
+        "district": {
+          "province": "daegu",
+          "district": "수성구"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -2595,7 +2635,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "gyeonggi",
+          "district": "화성시"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -2636,7 +2680,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": false
+        "taxClean": false,
+        "district": {
+          "province": "gyeongbuk",
+          "district": "영덕군"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -2979,7 +3027,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "ulsan",
+          "district": "울주군"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -3065,7 +3117,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "gyeonggi",
+          "district": "김포시"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -3110,7 +3166,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "gyeongbuk",
+          "district": "경주시"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -3371,7 +3431,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": false
+        "taxClean": false,
+        "district": {
+          "province": "gyeonggi",
+          "district": "군포시"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -3471,7 +3535,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": false
+        "taxClean": false,
+        "district": {
+          "province": "gyeonggi",
+          "district": "하남시"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -3572,7 +3640,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "gyeonggi",
+          "district": "용인시"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -3657,7 +3729,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "jeonbuk",
+          "district": "남원시"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -3698,7 +3774,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "jeonbuk",
+          "district": "군산시"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -3741,7 +3821,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": false
+        "taxClean": false,
+        "district": {
+          "province": "chungnam",
+          "district": "예산군"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -3782,7 +3866,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "chungnam",
+          "district": "청양군"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -3884,7 +3972,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "jeonbuk",
+          "district": "임실군"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -3928,7 +4020,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "jeonbuk",
+          "district": "김제시"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -4344,7 +4440,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "chungnam",
+          "district": "금산군"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -4529,7 +4629,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": true
+        "taxClean": true,
+        "district": {
+          "province": "chungnam",
+          "district": "아산시"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -4570,7 +4674,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": false
+        "taxClean": false,
+        "district": {
+          "province": "gyeongbuk",
+          "district": "칠곡군"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
@@ -4656,7 +4764,11 @@
         "exportRequired": false,
         "rndRequired": false,
         "insuranceRequired": false,
-        "taxClean": false
+        "taxClean": false,
+        "district": {
+          "province": "gyeongbuk",
+          "district": "김천시"
+        }
       },
       "source": "auto",
       "sourceApi": "bizinfo",
