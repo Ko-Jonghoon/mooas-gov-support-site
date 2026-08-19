@@ -729,6 +729,7 @@
                 <th>과제 건수</th>
                 <th>누적 정부출연금</th>
                 <th>운영 연도</th>
+                <th>상태</th>
               </tr>
             </thead>
             <tbody id="rndProgramBody"></tbody>
@@ -1804,18 +1805,33 @@
       byProgram[key].funds += (p.governmentFunds || 0);
       if (p.projectYear) byProgram[key].years[p.projectYear] = true;
     });
-    var programs = Object.keys(byProgram).map(function(k){ return byProgram[k]; }).sort(function(a,b){ return b.count - a.count; });
+    // 2026-08-19 추가: 예전에는 누적 건수 순으로만 정렬해서, 2020~2021년 이후 실적이 없는(중단
+    // 추정) 프로그램이 단지 과거에 건수가 많았다는 이유로 최근 활발한 프로그램보다 위에 뜨는
+    // 문제가 있었습니다(사용자 리포트). 최근 시행 연도를 우선 기준으로 정렬하고, 최근 2년간
+    // 실적이 없으면 "중단 추정" 배지를 붙입니다.
+    var thisYear = new Date().getFullYear();
+    var programs = Object.keys(byProgram).map(function(k){
+      var prog = byProgram[k];
+      var years = Object.keys(prog.years).map(Number).sort(function(a,b){ return a-b; });
+      prog.maxYear = years.length ? years[years.length-1] : 0;
+      prog.yearsList = years;
+      return prog;
+    }).sort(function(a,b){ return b.maxYear - a.maxYear || b.count - a.count; });
 
     els.rndProgramBody.innerHTML = "";
     programs.slice(0, 30).forEach(function(prog){
       var tr = document.createElement("tr");
-      var years = Object.keys(prog.years).sort();
+      var stale = prog.maxYear > 0 && prog.maxYear <= thisYear - 2;
+      var statusHtml = stale
+        ? "<span class='status-pill closed'>중단 추정</span>"
+        : "<span class='status-pill open'>운영중 추정</span>";
       tr.innerHTML =
         "<td>" + prog.name + "</td>" +
         "<td>" + (prog.ministry || "-") + "</td>" +
         "<td>" + prog.count + "건</td>" +
         "<td>" + formatKRW(prog.funds) + "</td>" +
-        "<td>" + (years.length ? years.join(", ") : "-") + "</td>";
+        "<td>" + (prog.yearsList.length ? prog.yearsList.join(", ") : "-") + "</td>" +
+        "<td>" + statusHtml + "</td>";
       els.rndProgramBody.appendChild(tr);
     });
 
