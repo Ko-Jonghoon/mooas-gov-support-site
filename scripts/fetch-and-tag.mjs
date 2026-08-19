@@ -509,6 +509,7 @@ const CERT_RULES = [
   { code: "mainbiz", keywords: ["메인비즈"] },
   { code: "social", keywords: ["사회적기업"] },
   { code: "root", keywords: ["뿌리기업", "뿌리산업"] },
+  { code: "familyFriendly", keywords: ["가족친화"] },
 ];
 
 const SIZE_RULES = [

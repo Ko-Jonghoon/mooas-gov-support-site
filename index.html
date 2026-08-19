@@ -219,24 +219,37 @@
   .btn-reset:hover{border-color:var(--ink-faint);color:var(--ink);}
 
   /* horizontal basic-info bar */
+  /* details의 summary 이후 내용은 크롬 최신 버전에서 내부적으로 익명 ::details-content
+     박스로 한 번 더 감싸져서, display:flex를 details 자체에 걸면 그 안의 .field들이
+     flex item이 아니라 그 익명 박스 안의 일반 블록 요소로 취급되어 세로로 쌓여버립니다.
+     그래서 flex 레이아웃은 summary와 형제인 별도의 안쪽 div(.basic-info-bar)에 걸고,
+     details에는 패딩/배경 같은 겉모습만 둡니다. */
+  .filter-panel{padding:18px 20px;margin-top:20px;}
+  .filter-panel summary{
+    display:flex;align-items:baseline;gap:8px;cursor:pointer;list-style:none;
+    font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);
+  }
+  .filter-panel summary::-webkit-details-marker{display:none;}
+  .filter-panel summary::after{
+    content:"▾";margin-left:auto;font-size:.9rem;color:var(--ink-faint);transition:transform .15s ease;
+  }
+  .filter-panel[open] summary::after{transform:rotate(180deg);}
+  .filter-panel[open] summary{margin-bottom:12px;}
+  .filter-panel .stage-tag{
+    font-size:.66rem;font-weight:700;letter-spacing:.03em;text-transform:none;
+    background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:2px 9px;
+  }
   .basic-info-bar{
     display:flex;flex-wrap:wrap;gap:14px 18px;align-items:flex-start;
-    padding:18px 20px;margin-top:20px;
   }
   .basic-info-bar .field{margin-bottom:0;flex:1 1 130px;min-width:110px;}
   .basic-info-bar .field:has(.segmented){flex:2 1 340px;min-width:320px;}
   .basic-info-bar .field:has(.chipset){flex:3 1 320px;min-width:280px;}
   .basic-info-bar .field:has(.toggle2){flex:1 1 170px;min-width:150px;}
-  .basic-info-bar legend{
-    flex:0 0 100%;margin:0 0 2px;
-    display:flex;align-items:baseline;gap:8px;
-  }
-  .basic-info-bar .stage-tag{
-    font-size:.66rem;font-weight:700;letter-spacing:.03em;text-transform:none;
-    background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:2px 9px;
-  }
   .basic-info-bar .bar-hint{flex:0 0 100%;margin:-2px 0 6px;font-size:.76rem;color:var(--ink-faint);}
   .basic-info-bar .persist-note{flex:1 1 100%;margin-top:14px;}
+  .interest-bar{margin-top:14px;padding:18px 20px;}
+  .interest-bar .field{flex:1 1 100%;}
 
   /* tabs */
   .tabs{display:flex;gap:8px;border-bottom:2px solid var(--border);margin-bottom:22px;}
@@ -309,7 +322,6 @@
   .results-table tbody tr:last-child td{border-bottom:none;}
   .results-table tbody tr:hover{background:var(--surface-alt);}
   .results-table td.name-cell{white-space:normal;min-width:220px;font-weight:700;}
-  .results-table td.score-cell{font-family:var(--font-mono);font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;}
   .results-table td.star-cell{text-align:center;}
   .results-table td.star-cell input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;}
   .results-table td.link-cell a{color:var(--accent);font-weight:700;text-decoration:none;}
@@ -392,19 +404,6 @@
   }
   .agency{font-size:.8rem;color:var(--ink-faint);}
 
-  .score{
-    flex:0 0 auto;text-align:center;min-width:74px;
-    border-radius:10px;padding:8px 10px;
-  }
-  .score .pct{
-    font-family:var(--font-mono);font-weight:800;font-size:1.3rem;line-height:1;
-    font-variant-numeric:tabular-nums;
-  }
-  .score .lbl{font-size:.66rem;font-weight:700;letter-spacing:.04em;margin-top:3px;text-transform:uppercase;}
-  .score.high{background:var(--tier-high-bg);color:var(--tier-high);}
-  .score.mid{background:var(--tier-mid-bg);color:var(--tier-mid);}
-  .score.ref{background:var(--tier-ref-bg);color:var(--tier-ref);}
-
   .card p.desc{margin:0 0 14px;color:var(--ink-soft);font-size:.89rem;line-height:1.6;
     border-bottom:1px dashed var(--border);padding-bottom:14px;}
 
@@ -470,8 +469,9 @@
     </div>
   </div>
 
-  <section class="panel basic-info-bar">
-    <legend>기본 정보 <span class="stage-tag">1차 필터</span></legend>
+  <details class="panel filter-panel" open>
+    <summary>기본 정보 <span class="stage-tag">1차 필터</span></summary>
+    <div class="basic-info-bar">
     <p class="bar-hint">업종·소재지·기업구분 등 기본 조건으로 먼저 대상 사업을 추립니다.</p>
     <div class="field">
       <label for="f-industry">업종</label>
@@ -537,10 +537,12 @@
       <label for="f-revenue">연매출 (억원)</label>
       <input type="number" id="f-revenue" min="0" step="0.5" placeholder="예: 8">
     </div>
-  </section>
+    </div>
+  </details>
 
-  <section class="panel basic-info-bar">
-    <legend>세부 조건 <span class="stage-tag">2차 필터</span></legend>
+  <details class="panel filter-panel" open>
+    <summary>세부 조건 <span class="stage-tag">2차 필터</span></summary>
+    <div class="basic-info-bar">
     <p class="bar-hint">위 기본 정보로 1차로 추려진 사업 중, 아래 세부 조건으로 한 번 더 좁혀서 보여드립니다.</p>
     <div class="field">
       <label>대표자 특성 <span class="hint" style="display:inline">(해당 항목 모두 선택)</span></label>
@@ -559,6 +561,7 @@
         <label><input type="checkbox" value="mainbiz"><span>메인비즈</span></label>
         <label><input type="checkbox" value="social"><span>사회적기업</span></label>
         <label><input type="checkbox" value="root"><span>뿌리기업확인</span></label>
+        <label><input type="checkbox" value="familyFriendly"><span>가족친화기업</span></label>
       </div>
     </div>
     <div class="field">
@@ -596,6 +599,14 @@
         <label><input type="radio" name="patent" value="no"><span>미보유</span></label>
       </div>
     </div>
+    <div class="persist-note">
+      <p>입력한 정보는 이 브라우저에 자동 저장되어 다음에 다시 열어도 유지됩니다.</p>
+      <button type="button" class="btn-reset" id="btn-reset">입력값 초기화</button>
+    </div>
+    </div>
+  </details>
+
+  <section class="panel basic-info-bar interest-bar">
     <div class="field">
       <label>관심 지원 분야 <span class="hint" style="display:inline">(선택 시 매칭 우선순위 반영)</span></label>
       <div class="chipset" id="f-interest">
@@ -611,10 +622,6 @@
         <label><input type="checkbox" value="smart"><span>스마트공장·디지털전환</span></label>
         <label><input type="checkbox" value="etc"><span>기타</span></label>
       </div>
-    </div>
-    <div class="persist-note">
-      <p>입력한 정보는 이 브라우저에 자동 저장되어 다음에 다시 열어도 유지됩니다.</p>
-      <button type="button" class="btn-reset" id="btn-reset">입력값 초기화</button>
     </div>
   </section>
 
@@ -633,11 +640,17 @@
         <div class="results-head" style="margin-top:18px;">
           <div class="results-count"><b id="count-num">0</b>건의 지원사업이 조건에 맞습니다</div>
           <div class="controls">
-            <label class="hide-closed-toggle"><input type="checkbox" id="f-hide-closed"> 마감 제외</label>
+            <select id="f-status">
+              <option value="">전체 상태</option>
+              <option value="open">접수중</option>
+              <option value="closing">마감임박</option>
+              <option value="upcoming">접수 예정</option>
+              <option value="ongoing">상시</option>
+              <option value="closed">마감</option>
+            </select>
             <label class="hide-closed-toggle"><input type="checkbox" id="f-starred-only"> 찜한 것만</label>
             <input type="text" class="search" id="f-search" placeholder="사업명·기관명 검색">
             <select id="f-sort">
-              <option value="score">매칭도순</option>
               <option value="name">사업명순</option>
               <option value="agency">기관명순</option>
             </select>
@@ -656,7 +669,6 @@
                 <th>사업명</th>
                 <th>기관</th>
                 <th>분야</th>
-                <th>매칭도</th>
                 <th>상태</th>
                 <th>링크</th>
               </tr>
@@ -741,7 +753,6 @@
                 <th>사업명</th>
                 <th>주관부처</th>
                 <th>상태</th>
-                <th>매칭율</th>
                 <th>진행 관리</th>
               </tr>
             </thead>
@@ -831,7 +842,7 @@
     jeju: ["제주시","서귀포시"]
   };
   var FOUNDER_LABEL = {youth:"청년대표",woman:"여성대표",disabled:"장애인대표",senior:"시니어대표"};
-  var CERT_LABEL = {venture:"벤처기업확인",innobiz:"이노비즈",mainbiz:"메인비즈",social:"사회적기업",root:"뿌리기업확인"};
+  var CERT_LABEL = {venture:"벤처기업확인",innobiz:"이노비즈",mainbiz:"메인비즈",social:"사회적기업",root:"뿌리기업확인",familyFriendly:"가족친화기업"};
 
   var STORAGE_KEY = "mooas-gov-support-profile-v2";
   var STARRED_KEY = "mooas-gov-support-starred-v1";
@@ -854,7 +865,7 @@
     catFilters: document.getElementById("catFilters"),
     statStrip: document.getElementById("statStrip"),
     btnReset: document.getElementById("btn-reset"),
-    hideClosed: document.getElementById("f-hide-closed"),
+    statusFilter: document.getElementById("f-status"),
     starredOnlyList: document.getElementById("f-starred-only"),
     starredOnlyGraph: document.getElementById("graph-starred-only"),
     viewToggle: document.getElementById("viewToggle"),
@@ -1050,7 +1061,7 @@
     }catch(e){ return null; }
   }
 
-  // returns null if excluded, else {score, reasons[]}
+  // returns null if excluded, else {reasons[]}
   function evaluate(policy, co){
     var e = policy.elig;
 
@@ -1072,49 +1083,35 @@
     if (e.insuranceRequired && !co.insuranceYn) return null;
     if (e.taxClean && co.taxDelinquent) return null;
 
-    var score = 40;
     var reasons = [];
 
-    if (co.interests.indexOf(policy.category) !== -1){
-      score += 18;
-    }
     if (e.industries !== "all"){
-      score += 10; reasons.push(IND_LABEL[co.industry] + " 특화 사업");
+      reasons.push(IND_LABEL[co.industry] + " 특화 사업");
     }
     if (e.regions !== "all"){
-      score += 10; reasons.push(REG_LABEL[co.region] + " 지역 특화 사업");
+      reasons.push(REG_LABEL[co.region] + " 지역 특화 사업");
     }
     if (e.certs){
       var matchedCert = e.certs.filter(function(c){ return co.certs.indexOf(c) !== -1; });
       if (matchedCert.length){
-        score += 14;
         reasons.push(CERT_LABEL[matchedCert[0]] + " 우대 조건 충족");
       }
     }
     if (e.founderTypes){
       var matchedFt = e.founderTypes.filter(function(f){ return co.founderTypes.indexOf(f) !== -1; });
       if (matchedFt.length){
-        score += 14;
         reasons.push(FOUNDER_LABEL[matchedFt[0]] + " 우대 조건 충족");
       }
     }
-    if (e.exportRequired){ score += 8; reasons.push("수출 실적 요건 충족"); }
-    if (e.rndRequired){ score += 8; reasons.push("연구소·전담부서 요건 충족"); }
+    if (e.exportRequired){ reasons.push("수출 실적 요건 충족"); }
+    if (e.rndRequired){ reasons.push("연구소·전담부서 요건 충족"); }
     if (e.insuranceRequired){ reasons.push("고용보험 가입 요건 충족"); }
     if (co.patentYn && ["rnd","ai","smart","facility"].indexOf(policy.category) !== -1){
-      score += 10; reasons.push("특허·지식재산권 보유 가점");
+      reasons.push("특허·지식재산권 보유 가점");
     }
-    if (e.sizes && e.sizes.length <= 2){ score += 4; }
     if (typeof e.maxYears === "number"){ reasons.push("업력 " + e.maxYears + "년 이내 대상"); }
 
-    score = Math.max(0, Math.min(100, score));
-    return {score:score, reasons:reasons};
-  }
-
-  function tierOf(score){
-    if (score >= 78) return {cls:"high", label:"상"};
-    if (score >= 55) return {cls:"mid", label:"중"};
-    return {cls:"ref", label:"참고"};
+    return {reasons:reasons};
   }
 
   function render(){
@@ -1124,7 +1121,7 @@
     var allMatches = [];
     POLICIES.forEach(function(p){
       var r = evaluate(p, co);
-      if (r) allMatches.push({policy:p, score:r.score, reasons:r.reasons});
+      if (r) allMatches.push({policy:p, reasons:r.reasons});
     });
     // 진행중/완료로 표시해둔 사업은 대시보드·그래프·목록에서는 빼고 해당 탭에서만 보여줍니다.
     var matches = allMatches.filter(function(m){ return !appStatus[m.policy.id]; });
@@ -1145,8 +1142,8 @@
         return m.policy.name.toLowerCase().indexOf(q) !== -1 || m.policy.agency.toLowerCase().indexOf(q) !== -1;
       });
     }
-    if (els.hideClosed.checked){
-      view = view.filter(function(m){ return computeStatus(m.policy).code !== "closed"; });
+    if (els.statusFilter.value){
+      view = view.filter(function(m){ return computeStatus(m.policy).code === els.statusFilter.value; });
     }
     if (starredOnly){
       view = view.filter(function(m){ return !!starredIds[m.policy.id]; });
@@ -1154,7 +1151,6 @@
 
     var sortBy = els.sort.value;
     view.sort(function(a,b){
-      if (sortBy === "score") return b.score - a.score || a.policy.name.localeCompare(b.policy.name,"ko");
       if (sortBy === "name") return a.policy.name.localeCompare(b.policy.name,"ko");
       if (sortBy === "agency") return a.policy.agency.localeCompare(b.policy.agency,"ko");
       return 0;
@@ -1176,14 +1172,14 @@
 
   function renderStatStrip(matches, co){
     var total = matches.length;
-    var top = matches.reduce(function(mx,m){ return Math.max(mx, m.score); }, 0);
-    var highCount = matches.filter(function(m){ return tierOf(m.score).cls === "high"; }).length;
+    var closingCount = matches.filter(function(m){ return computeStatus(m.policy).code === "closing"; }).length;
+    var openCount = matches.filter(function(m){ return computeStatus(m.policy).code === "open"; }).length;
     var interestCount = co.interests.length;
 
     els.statStrip.innerHTML =
       "<div class='stat-cell'><div class='s-label'>매칭 지원사업</div><div class='s-value'>" + total + "<span class='unit'>건</span></div></div>" +
-      "<div class='stat-cell'><div class='s-label'>최고 매칭도</div><div class='s-value'>" + (total? top : 0) + "<span class='unit'>%</span></div></div>" +
-      "<div class='stat-cell'><div class='s-label'>상 등급 매칭</div><div class='s-value'>" + highCount + "<span class='unit'>건</span></div></div>" +
+      "<div class='stat-cell'><div class='s-label'>접수중</div><div class='s-value'>" + openCount + "<span class='unit'>건</span></div></div>" +
+      "<div class='stat-cell'><div class='s-label'>마감임박</div><div class='s-value'>" + closingCount + "<span class='unit'>건</span></div></div>" +
       "<div class='stat-cell'><div class='s-label'>선택한 관심분야</div><div class='s-value'>" + interestCount + "<span class='unit'>개</span></div></div>";
   }
 
@@ -1210,7 +1206,6 @@
 
   function renderCard(m){
     var p = m.policy;
-    var tier = tierOf(m.score);
 
     var card = document.createElement("article");
     card.className = "card";
@@ -1250,11 +1245,6 @@
     left.appendChild(agency);
 
     top.appendChild(left);
-
-    var score = document.createElement("div");
-    score.className = "score " + tier.cls;
-    score.innerHTML = "<div class='pct'>" + m.score + "%</div><div class='lbl'>" + tier.label + " 매칭</div>";
-    top.appendChild(score);
 
     card.appendChild(top);
 
@@ -1330,11 +1320,6 @@
       catTd.textContent = CATS[p.category].label;
       tr.appendChild(catTd);
 
-      var scoreTd = document.createElement("td");
-      scoreTd.className = "score-cell";
-      scoreTd.textContent = m.score + "%";
-      tr.appendChild(scoreTd);
-
       var statusTd = document.createElement("td");
       var statusPill = document.createElement("span");
       statusPill.className = "status-pill " + status.code;
@@ -1358,18 +1343,18 @@
 
   function renderDashboard(matches){
     var total = matches.length;
-    var highCount = matches.filter(function(m){ return tierOf(m.score).cls === "high"; }).length;
-    var midCount = matches.filter(function(m){ return tierOf(m.score).cls === "mid"; }).length;
-    var refCount = matches.filter(function(m){ return tierOf(m.score).cls === "ref"; }).length;
+    var openCount = matches.filter(function(m){ return computeStatus(m.policy).code === "open"; }).length;
+    var closingCount = matches.filter(function(m){ return computeStatus(m.policy).code === "closing"; }).length;
+    var starredCount = matches.filter(function(m){ return !!starredIds[m.policy.id]; }).length;
     els.dashboardStatStrip.innerHTML =
       "<div class='stat-cell'><div class='s-label'>총 매칭</div><div class='s-value'>" + total + "<span class='unit'>건</span></div></div>" +
-      "<div class='stat-cell'><div class='s-label'>상 매칭</div><div class='s-value'>" + highCount + "<span class='unit'>건</span></div></div>" +
-      "<div class='stat-cell'><div class='s-label'>중 매칭</div><div class='s-value'>" + midCount + "<span class='unit'>건</span></div></div>" +
-      "<div class='stat-cell'><div class='s-label'>참고 매칭</div><div class='s-value'>" + refCount + "<span class='unit'>건</span></div></div>";
+      "<div class='stat-cell'><div class='s-label'>접수중</div><div class='s-value'>" + openCount + "<span class='unit'>건</span></div></div>" +
+      "<div class='stat-cell'><div class='s-label'>마감임박</div><div class='s-value'>" + closingCount + "<span class='unit'>건</span></div></div>" +
+      "<div class='stat-cell'><div class='s-label'>찜한 사업</div><div class='s-value'>" + starredCount + "<span class='unit'>건</span></div></div>";
 
     els.dashboardBody.innerHTML = "";
     var view = matches.slice().sort(function(a,b){
-      return b.score - a.score || a.policy.name.localeCompare(b.policy.name,"ko");
+      return a.policy.name.localeCompare(b.policy.name,"ko");
     });
     view.forEach(function(m){
       var p = m.policy;
@@ -1410,11 +1395,6 @@
       statusPill.textContent = dashStatus.label;
       statusTd.appendChild(statusPill);
       tr.appendChild(statusTd);
-
-      var scoreTd = document.createElement("td");
-      scoreTd.className = "score-cell";
-      scoreTd.textContent = m.score + "%";
-      tr.appendChild(scoreTd);
 
       var progressTd = document.createElement("td");
       var progressSelect = document.createElement("select");
@@ -1808,7 +1788,7 @@
   });
   els.search.addEventListener("input", render);
   els.sort.addEventListener("change", render);
-  els.hideClosed.addEventListener("change", render);
+  els.statusFilter.addEventListener("change", render);
   els.starredOnlyList.addEventListener("change", function(){ setStarredOnly(els.starredOnlyList.checked); });
   els.starredOnlyGraph.addEventListener("change", function(){ setStarredOnly(els.starredOnlyGraph.checked); });
   els.viewToggle.querySelectorAll("button").forEach(function(btn){
