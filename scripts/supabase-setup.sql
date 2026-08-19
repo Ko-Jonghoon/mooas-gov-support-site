@@ -21,3 +21,6 @@ create policy "public update" on policy_state
 
 -- 한 사람이 바꾼 내용이 다른 사람 화면에도 실시간으로 반영되게 합니다.
 alter publication supabase_realtime add table policy_state;
+
+-- 2026-08-19 추가: 진행중/완료 사업에 담당자를 지정하는 기능용 컬럼.
+alter table policy_state add column if not exists assignee text;

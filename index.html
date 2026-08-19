@@ -167,6 +167,10 @@
     font-family:var(--font-body);
   }
   select:focus, input:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .assignee-input{
+    width:100px;background:var(--bg);border:1px solid var(--border);color:var(--ink);
+    border-radius:8px;padding:6px 8px;font-size:.82rem;font-family:var(--font-body);
+  }
 
   .segmented{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
   .segmented label{
@@ -648,7 +652,7 @@
   <main>
       <div class="tabs" id="mainTabs" role="tablist">
         <button type="button" data-tab="dashboard" class="active">대시보드</button>
-        <button type="button" data-tab="graph">그래프</button>
+        <button type="button" data-tab="graph">일정보기</button>
         <button type="button" data-tab="list">목록</button>
         <button type="button" data-tab="rndhistory">R&D 이력</button>
         <button type="button" data-tab="progress">진행중</button>
@@ -785,6 +789,7 @@
                 <th>사업명</th>
                 <th>주관부처</th>
                 <th>상태</th>
+                <th>담당자</th>
                 <th>진행 관리</th>
               </tr>
             </thead>
@@ -806,6 +811,7 @@
                 <th>사업명</th>
                 <th>주관부처</th>
                 <th>상태</th>
+                <th>담당자</th>
                 <th>진행 관리</th>
               </tr>
             </thead>
@@ -827,6 +833,7 @@
                 <th>사업명</th>
                 <th>주관부처</th>
                 <th>상태</th>
+                <th>담당자</th>
                 <th>진행 관리</th>
               </tr>
             </thead>
@@ -948,17 +955,20 @@
   // sb가 없으면(스크립트 로드 실패 등) 이번 세션 안에서만 유지되는 메모리 저장으로 대체합니다.
   var starredIds = {};
   var appStatus = {};
+  var assignees = {};
 
   function applySharedRow(row){
     if (row.starred) starredIds[row.policy_id] = true;
     else delete starredIds[row.policy_id];
     if (row.app_status) appStatus[row.policy_id] = row.app_status;
     else delete appStatus[row.policy_id];
+    if (row.assignee) assignees[row.policy_id] = row.assignee;
+    else delete assignees[row.policy_id];
   }
 
   function loadSharedState(){
     if (!sb) return Promise.resolve();
-    return sb.from("policy_state").select("policy_id,starred,app_status").then(function(res){
+    return sb.from("policy_state").select("policy_id,starred,app_status,assignee").then(function(res){
       if (res.error){ console.error("공유 상태 로드 실패:", res.error.message); return; }
       (res.data || []).forEach(applySharedRow);
     });
@@ -973,6 +983,7 @@
         if (payload.eventType === "DELETE"){
           delete starredIds[row.policy_id];
           delete appStatus[row.policy_id];
+          delete assignees[row.policy_id];
         } else {
           applySharedRow(row);
         }
@@ -1026,6 +1037,12 @@
     else { delete appStatus[id]; }
     upsertSharedState(id, { app_status: status || null });
     render();
+  }
+
+  function setAssignee(id, name){
+    if (name){ assignees[id] = name; }
+    else { delete assignees[id]; }
+    upsertSharedState(id, { assignee: name || null });
   }
 
   function parsePeriod(text){
@@ -1270,7 +1287,9 @@
       return 0;
     });
 
-    els.countNum.textContent = matches.length;
+    // 2026-08-19 수정: 항상 matches.length(카테고리·검색·찜만보기 적용 전 전체 건수)를 보여줘서
+    // "찜한 것만" 체크해도 숫자가 안 바뀌던 문제 - 실제 화면에 보이는 view.length로 바꿉니다.
+    els.countNum.textContent = view.length;
     els.emptyState.hidden = view.length > 0;
 
     els.resultsList.innerHTML = "";
@@ -1559,6 +1578,19 @@
       statusTd.appendChild(statusPill);
       tr.appendChild(statusTd);
 
+      // 2026-08-19 추가: 진행중으로 옮긴 사업에 담당자를 지정할 수 있게 합니다(팀 공유).
+      var assigneeTd = document.createElement("td");
+      var assigneeInput = document.createElement("input");
+      assigneeInput.type = "text";
+      assigneeInput.placeholder = "담당자 이름";
+      assigneeInput.value = assignees[p.id] || "";
+      assigneeInput.className = "assignee-input";
+      assigneeInput.addEventListener("change", function(){
+        setAssignee(p.id, assigneeInput.value.trim());
+      });
+      assigneeTd.appendChild(assigneeInput);
+      tr.appendChild(assigneeTd);
+
       var progressTd = document.createElement("td");
       var progressSelect = document.createElement("select");
       var opts = "<option value=''>진행 관리</option>";
@@ -1645,6 +1677,7 @@
         if (!starredIds[p.id]) return;
         var period = getPolicyPeriod(p);
         if (!period || !periodOverlapsYear(period, bounds)) return;
+        shownIds[p.id] = true;
         rows.push({ policy: p, period: period, source: "starred" });
       });
     } else {
@@ -1662,9 +1695,23 @@
         if (!p) return;
         var period = getPolicyPeriod(p);
         if (!period || !periodOverlapsYear(period, bounds)) return;
+        shownIds[id] = true;
         rows.push({ policy: p, period: period, source: "graphExtra" });
       });
     }
+
+    // 2026-08-19 추가: 찜한 사업을 대시보드에서 "진행중"으로 옮기면 회사 조건 매칭(matches)
+    // 에서는 빠지지만(이미 신청 절차를 진행 중이라서), 이 화면에서 일정 추적은 계속 필요하므로
+    // "진행중" 표시로 계속 보여줍니다(사용자 요청 - 이전엔 매칭에서 빠지는 순간 여기서도
+    // 그냥 사라졌음).
+    POLICIES.forEach(function(p){
+      if (shownIds[p.id]) return;
+      if (!starredIds[p.id] || appStatus[p.id] !== "in_progress") return;
+      var period = getPolicyPeriod(p);
+      if (!period || !periodOverlapsYear(period, bounds)) return;
+      shownIds[p.id] = true;
+      rows.push({ policy: p, period: period, source: "inProgress" });
+    });
 
     rows.sort(function(a,b){ return new Date(a.period.start) - new Date(b.period.start); });
 
@@ -1728,6 +1775,13 @@
       titleSpan.style.textOverflow = "ellipsis";
       titleSpan.textContent = row.policy.name;
       label.appendChild(titleSpan);
+      if (row.source === "inProgress"){
+        var progBadge = document.createElement("span");
+        progBadge.className = "status-pill open";
+        progBadge.style.marginLeft = "6px";
+        progBadge.textContent = "진행중";
+        label.appendChild(progBadge);
+      }
       if (row.source === "graphExtra" || row.source === "starred"){
         var rm = document.createElement("button");
         rm.type = "button";
