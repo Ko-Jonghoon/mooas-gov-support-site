@@ -321,7 +321,11 @@ const SOURCES = [
       // "전주MBC_5일장 3분레시피")도 다른 회사가 신청할 수 있는 공모가 아니라 이미 정해진 수행사에게
       // 준 제작비입니다. "_" 앞부분에 방송사명이 있는 경우만 좁게 잡아서, "동반성장문화조성_..."처럼
       // 그냥 항목 구분에 "_"를 쓴 일반 지원사업까지 걸러내지 않도록 합니다.
-      const BROADCASTER_COMMISSION_RE = /^.{0,15}(MBC|KBS|SBS|KNN|방송공사|문화방송)/;
+      // 2026-08-19 추가(전수 재검토): "KBC광주방송_육씨내고향", "티비씨_싱싱고향별곡",
+      // "주식회사 엠비씨강원영동_AI로 되살린 강원의 시간", "CBS_로컬 도파민", "경인방송_훈맹정음",
+      // "JTV_전북의 발견"처럼 콜사인이 한글 표기이거나 목록에 없던 지역 방송사가 걸러지지
+      // 않던 문제(총 2360건 재검토 중 발견).
+      const BROADCASTER_COMMISSION_RE = /^.{0,15}(MBC|KBS|SBS|KNN|방송공사|문화방송|KBC|티비씨|광주방송|엠비씨|CBS|경인방송|JTV)/;
       // 2026-08-19 추가: "지원대상" 필드가 이미 "이 사업은 회사가 신청하는 게 아니다"를 말해주는
       // 경우가 있는데 지금까지 안 쓰고 있었습니다("전 국민"/"대한민국 전국민" = 공공 서비스·시스템
       // 운영, "한국 청년 인재"/"대학생,일반인" = 개인 대상 프로그램, "OO군민"/"OO시민" = 특정
@@ -492,6 +496,19 @@ function pickField(raw, candidateFields) {
 
 function buildTextBlob(normalized) {
   return [normalized.title, normalized.desc, normalized.target, normalized.tags].join(" \n ");
+}
+
+// 2026-08-19 추가(전수 재검토 중 발견): 기업마당 hashtags 필드는 검색 노출용으로 "서울,부산,
+// 대구,인천,광주,대전,울산,세종,강원,충북,충남,전북,전남,경북,경남,제주"처럼 관련 없는 지역명
+// 17개를 통째로 나열하거나, "콘텐츠제작"처럼 교육과정 커리큘럼 키워드를 나열하는 경우가 많아서
+// 이 필드를 업종/지역 등 "자격 요건(하드 필터)" 판정에 그대로 쓰면 안 됩니다. 실측 결과 hashtags
+// 포함 여부에 따라 지역 판정이 46%(706/1532건), 업종 판정이 7.6%(117/1532건) 달라졌고, 대부분
+// "강원 영동권 관광 지원사업"이 전국 대상으로 잘못 넓어지는 식의 오탐이었습니다. 그래서 자격
+// 요건(업종/지역/구군/기업규모/업력/수출실적 등 필수조건)은 hashtags를 뺀 제목+본문+지원대상
+// 텍스트로만 판정하고, hashtags를 포함한 전체 텍스트는 분야 분류(카테고리)·보유인증·대표자특성처럼
+// "맞으면 가점, 틀려도 제외 안 함"인 경우에만 씁니다.
+function buildFilterTextBlob(normalized) {
+  return [normalized.title, normalized.desc, normalized.target].join(" \n ");
 }
 
 function includesAny(text, keywords) {
@@ -767,13 +784,14 @@ function matchMaxYears(text) {
 
 function tagAndBuildPolicy(normalized, source) {
   const text = buildTextBlob(normalized);
+  const filterText = buildFilterTextBlob(normalized);
   const category = matchCategory(text);
   // "중소기업특별지원지역"은 위기지역 지정 명칭일 뿐인데 "중소기업"이라는 글자가 우연히 들어있어서
   // 소상공인 전용 사업까지 sizes:["sole","sme"]로 잘못 넓히는 문제가 있었습니다(2026-08-18 발견:
   // "(서울강원 한지회) 2026년 재기사업화 지원" - 실제로는 "경영위기 소상공인" 전용인데 지원대상
   // 문구에 있는 "중소기업특별지원지역"(위기지역 유형명) 때문에 중소기업도 대상인 것처럼 보임).
   // 기업 규모(sizes) 판정에서만 이 문구를 제거하고 판단합니다.
-  const sizeText = text.replace(/중소기업특별지원지역/g, "");
+  const sizeText = filterText.replace(/중소기업특별지원지역/g, "");
   let sizes = matchMany(sizeText, SIZE_RULES) || ["sole", "sme"]; // 명시 안 되면 가장 흔한 대상으로 넓게 잡음
   if (KNOWN_PROGRAM_SIZE_HINTS[normalized.title]) {
     sizes = KNOWN_PROGRAM_SIZE_HINTS[normalized.title];
@@ -782,20 +800,20 @@ function tagAndBuildPolicy(normalized, source) {
   }
   const founderTypes = matchMany(text, FOUNDER_TYPE_RULES);
   const certs = matchMany(text, CERT_RULES);
-  let industries = matchAllOr(text, INDUSTRY_RULES);
+  let industries = matchAllOr(filterText, INDUSTRY_RULES);
   if (industries === "all" && AGENCY_INDUSTRY_HINTS[normalized.agency]) {
     industries = AGENCY_INDUSTRY_HINTS[normalized.agency];
   }
-  let regions = matchAllOr(text, REGION_RULES);
+  let regions = matchAllOr(filterText, REGION_RULES);
   const agencyRegion = inferRegionFromAgency(normalized.agency);
   if (agencyRegion) {
     regions = agencyRegion.regions;
   }
-  const district = agencyRegion && agencyRegion.district ? agencyRegion.district : matchDistrict(text, regions);
-  const maxYears = matchMaxYears(text);
-  const exportRequired = includesAny(text, ["수출실적 보유", "수출 실적이 있는"]);
-  const rndRequired = includesAny(text, ["부설연구소 보유", "연구전담부서 보유"]);
-  const insuranceRequired = includesAny(text, ["고용보험 가입 사업장"]);
+  const district = agencyRegion && agencyRegion.district ? agencyRegion.district : matchDistrict(filterText, regions);
+  const maxYears = matchMaxYears(filterText);
+  const exportRequired = includesAny(filterText, ["수출실적 보유", "수출 실적이 있는"]);
+  const rndRequired = includesAny(filterText, ["부설연구소 보유", "연구전담부서 보유"]);
+  const insuranceRequired = includesAny(filterText, ["고용보험 가입 사업장"]);
   const taxClean = !["consulting", "etc"].includes(category);
 
   const name = normalized.title || "이름 미확인 공고";
@@ -907,3 +925,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+
