@@ -1749,13 +1749,13 @@
       });
     }
 
-    // 2026-08-19 추가: 찜한 사업을 대시보드에서 "진행중"으로 옮기면 회사 조건 매칭(matches)
-    // 에서는 빠지지만(이미 신청 절차를 진행 중이라서), 이 화면에서 일정 추적은 계속 필요하므로
-    // "진행중" 표시로 계속 보여줍니다(사용자 요청 - 이전엔 매칭에서 빠지는 순간 여기서도
-    // 그냥 사라졌음).
+    // 2026-08-19 추가: 사업을 대시보드에서 "진행중"으로 옮기면 회사 조건 매칭(matches)에서는
+    // 빠지지만(이미 신청 절차를 진행 중이라서), 이 화면에서 일정 추적은 계속 필요하므로 찜
+    // 여부와 무관하게 "진행중" 표시로 계속 보여줍니다(사용자 요청 - 이전엔 매칭에서 빠지는
+    // 순간 여기서도 그냥 사라졌고, 1차 수정에서는 찜한 것만 남게 해서 여전히 안 보였음).
     POLICIES.forEach(function(p){
       if (shownIds[p.id]) return;
-      if (!starredIds[p.id] || appStatus[p.id] !== "in_progress") return;
+      if (appStatus[p.id] !== "in_progress") return;
       var period = getPolicyPeriod(p);
       if (!period || !periodOverlapsYear(period, bounds)) return;
       shownIds[p.id] = true;
