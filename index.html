@@ -843,9 +843,19 @@
   </footer>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
   "use strict";
+
+  // 2026-08-19 추가: 찜/진행 관리(진행중·완료·제외) 상태를 팀원들과 공유하기 위한 저장소.
+  // 로그인이 없는 완전 공개 사이트라 이 키는 "공개돼도 되는" publishable key입니다 - 실제
+  // 접근 제어는 Supabase 쪽 RLS 정책(scripts/supabase-setup.sql)이 담당합니다.
+  var SUPABASE_URL = "https://glpjvfyirxioayhtmyqk.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_elioRO1yX6iUOfWXiIkvpQ_DsrMjkUq";
+  var sb = (window.supabase && window.supabase.createClient)
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+    : null;
 
   var CATS = {
     fund:{label:"사업화자금"}, rnd:{label:"R&D 기술개발"}, ai:{label:"AI"}, hr:{label:"인력채용·교육"},
@@ -879,8 +889,6 @@
   var CERT_LABEL = {venture:"벤처기업확인",innobiz:"이노비즈",mainbiz:"메인비즈",social:"사회적기업",root:"뿌리기업확인",familyFriendly:"가족친화기업"};
 
   var STORAGE_KEY = "mooas-gov-support-profile-v2";
-  var STARRED_KEY = "mooas-gov-support-starred-v1";
-  var APPSTATUS_KEY = "mooas-gov-support-appstatus-v1";
 
   var POLICIES = [];
 
@@ -932,24 +940,57 @@
   var graphExtraIds = {};
   var starredOnly = false;
 
-  function loadStarredIds(){
-    try{
-      var raw = localStorage.getItem(STARRED_KEY);
-      var arr = raw ? JSON.parse(raw) : [];
-      var out = {};
-      arr.forEach(function(id){ out[id] = true; });
-      return out;
-    }catch(e){ return {}; }
+  // 2026-08-19 추가: 찜/진행 관리 상태는 팀원 전체가 공유해서 봐야 하므로(사용자 요청)
+  // 브라우저 로컬 저장이 아니라 Supabase의 policy_state 테이블에 저장합니다. 로그인이 없어
+  // 누가 바꿨는지는 구분하지 않고, 마지막으로 바꾼 내용이 전원에게 그대로 보입니다.
+  // sb가 없으면(스크립트 로드 실패 등) 이번 세션 안에서만 유지되는 메모리 저장으로 대체합니다.
+  var starredIds = {};
+  var appStatus = {};
+
+  function applySharedRow(row){
+    if (row.starred) starredIds[row.policy_id] = true;
+    else delete starredIds[row.policy_id];
+    if (row.app_status) appStatus[row.policy_id] = row.app_status;
+    else delete appStatus[row.policy_id];
   }
-  function saveStarredIds(){
-    try{ localStorage.setItem(STARRED_KEY, JSON.stringify(Object.keys(starredIds))); }catch(e){}
+
+  function loadSharedState(){
+    if (!sb) return Promise.resolve();
+    return sb.from("policy_state").select("policy_id,starred,app_status").then(function(res){
+      if (res.error){ console.error("공유 상태 로드 실패:", res.error.message); return; }
+      (res.data || []).forEach(applySharedRow);
+    });
   }
-  var starredIds = loadStarredIds();
+
+  function subscribeSharedState(){
+    if (!sb) return;
+    sb.channel("policy_state_changes")
+      .on("postgres_changes", { event: "*", schema: "public", table: "policy_state" }, function(payload){
+        var row = payload.new && Object.keys(payload.new).length ? payload.new : payload.old;
+        if (!row) return;
+        if (payload.eventType === "DELETE"){
+          delete starredIds[row.policy_id];
+          delete appStatus[row.policy_id];
+        } else {
+          applySharedRow(row);
+        }
+        render();
+      })
+      .subscribe();
+  }
+
+  function upsertSharedState(policyId, fields){
+    if (!sb) return;
+    var row = Object.assign({ policy_id: policyId, updated_at: new Date().toISOString() }, fields);
+    sb.from("policy_state").upsert(row, { onConflict: "policy_id" }).then(function(res){
+      if (res.error) console.error("공유 상태 저장 실패:", res.error.message);
+    });
+  }
 
   function toggleStarred(policy){
-    if (starredIds[policy.id]) delete starredIds[policy.id];
-    else starredIds[policy.id] = true;
-    saveStarredIds();
+    if (starredIds[policy.id]){ delete starredIds[policy.id]; }
+    else { starredIds[policy.id] = true; }
+    upsertSharedState(policy.id, { starred: !!starredIds[policy.id] });
   }
 
   function setStarredOnly(value){
@@ -960,23 +1001,12 @@
   }
 
   // 진행 상태 관리: 신청기간(접수중/마감) 같은 공고 자체 상태와는 별개로, "우리 회사가 이미
-  // 신청했거나(진행중) 끝낸(완료) 사업"을 사용자가 직접 표시해두는 개인 트래킹 용도입니다.
-  // 표시하면 대시보드/그래프/목록에서는 빠지고 진행중/완료 탭에서만 보입니다.
-  function loadAppStatus(){
-    try{
-      var raw = localStorage.getItem(APPSTATUS_KEY);
-      return raw ? JSON.parse(raw) : {};
-    }catch(e){ return {}; }
-  }
-  function saveAppStatus(){
-    try{ localStorage.setItem(APPSTATUS_KEY, JSON.stringify(appStatus)); }catch(e){}
-  }
-  var appStatus = loadAppStatus();
-
+  // 신청했거나(진행중) 끝낸(완료) 사업"을 팀원들이 함께 표시해두는 공유 트래킹 용도입니다.
+  // 표시하면 대시보드/그래프/목록에서는 빠지고 진행중/완료/제외 탭에서만 보입니다.
   function setAppStatus(id, status){
     if (status){ appStatus[id] = status; }
     else { delete appStatus[id]; }
-    saveAppStatus();
+    upsertSharedState(id, { app_status: status || null });
     render();
   }
 
@@ -1864,17 +1894,21 @@
     }
   }
 
-  fetch("./data/policies.json")
-    .then(function(res){
+  Promise.all([
+    fetch("./data/policies.json").then(function(res){
       if (!res.ok) throw new Error("HTTP " + res.status);
       return res.json();
-    })
-    .then(function(data){
+    }),
+    loadSharedState()
+  ])
+    .then(function(results){
+      var data = results[0];
       POLICIES = Array.isArray(data) ? data : (data.policies || []);
       renderUpdatedBadge(Array.isArray(data) ? null : data);
       var saved = loadCompany();
       applyCompany(saved || defaultCompany());
       render();
+      subscribeSharedState();
     })
     .catch(function(err){
       console.error("정책 데이터 로드 실패:", err);
