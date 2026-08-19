@@ -730,6 +730,7 @@
                 <th>누적 정부출연금</th>
                 <th>운영 연도</th>
                 <th>상태</th>
+                <th>찜</th>
               </tr>
             </thead>
             <tbody id="rndProgramBody"></tbody>
@@ -994,6 +995,22 @@
     upsertSharedState(policy.id, { starred: !!starredIds[policy.id] });
   }
 
+  // 2026-08-19 추가: R&D 이력 탭의 "반복 운영 프로그램"도 일반 지원사업과 같은 찜 저장소를
+  // 재사용합니다("rnd::" 접두어로 구분되는 별도 id 네임스페이스라서 실제 지원사업 id와 겹치지
+  // 않습니다). 찜해두면 같은 이름의 신규 공고가 올라왔을 때 자동으로 표시해줍니다.
+  var RND_STAR_PREFIX = "rnd::";
+  function rndProgramStarId(name, ministry){
+    return RND_STAR_PREFIX + name + "||" + (ministry || "");
+  }
+  function getStarredRndProgramNames(){
+    return Object.keys(starredIds)
+      .filter(function(id){ return id.indexOf(RND_STAR_PREFIX) === 0; })
+      .map(function(id){ return id.slice(RND_STAR_PREFIX.length).split("||")[0]; });
+  }
+  function normalizeForMatch(s){
+    return (s || "").replace(/\s+/g, "").toLowerCase();
+  }
+
   function setStarredOnly(value){
     starredOnly = value;
     els.starredOnlyList.checked = value;
@@ -1192,10 +1209,25 @@
     var co = readCompany();
     saveCompany(co);
 
+    // 2026-08-19 추가: R&D 이력 탭에서 찜해둔 반복 운영 프로그램명이 공고 제목/요약에
+    // (띄어쓰기 무시하고) 포함되어 있으면 "이 공고, 찜한 R&D 프로그램과 관련 있을 수 있음"을
+    // 알려줍니다. 프로그램명 표기와 공고 제목 표기가 완전히 같지 않을 수 있어 느슨하게
+    // 매칭합니다(정확도보다 누락 방지 우선 - 사용자 확인 필요).
+    var starredRndNames = getStarredRndProgramNames();
+
     var allMatches = [];
     POLICIES.forEach(function(p){
       var r = evaluate(p, co);
-      if (r) allMatches.push({policy:p, reasons:r.reasons, interestMatch:r.interestMatch});
+      if (!r) return;
+      var reasons = r.reasons;
+      if (starredRndNames.length){
+        var haystack = normalizeForMatch(p.name + " " + p.summary);
+        var matchedRnd = starredRndNames.filter(function(name){ return haystack.indexOf(normalizeForMatch(name)) !== -1; });
+        if (matchedRnd.length){
+          reasons = reasons.concat(["⭐ 찜한 R&D 프로그램(" + matchedRnd[0] + ")과 관련 가능"]);
+        }
+      }
+      allMatches.push({policy:p, reasons:reasons, interestMatch:r.interestMatch});
     });
     // 진행중/완료/제외로 표시해둔 사업은 대시보드·그래프·목록에서는 빼고 해당 탭에서만 보여줍니다.
     var matches = allMatches.filter(function(m){ return !appStatus[m.policy.id]; });
@@ -1832,6 +1864,22 @@
         "<td>" + formatKRW(prog.funds) + "</td>" +
         "<td>" + (prog.yearsList.length ? prog.yearsList.join(", ") : "-") + "</td>" +
         "<td>" + statusHtml + "</td>";
+
+      // 2026-08-19 추가: 반복 운영 R&D 프로그램을 찜해두면, 같은 이름의 신규 공고가
+      // 일반 지원사업 목록에 올라왔을 때 자동으로 표시되게 합니다(사용자 요청).
+      var starTd = document.createElement("td");
+      var starCb = document.createElement("input");
+      starCb.type = "checkbox";
+      starCb.title = "이 R&D 프로그램 찜하기(신규 공고 뜨면 표시)";
+      var rndId = rndProgramStarId(prog.name, prog.ministry);
+      starCb.checked = !!starredIds[rndId];
+      starCb.addEventListener("change", function(){
+        toggleStarred({ id: rndId });
+        render();
+      });
+      starTd.appendChild(starCb);
+      tr.appendChild(starTd);
+
       els.rndProgramBody.appendChild(tr);
     });
 
