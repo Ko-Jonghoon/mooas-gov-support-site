@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-19T01:28:30.515Z",
+  "generatedAt": "2026-08-19T02:14:13.541Z",
   "note": "기업마당 Open API 자동 수집 + 키워드 규칙 기반 자동 태깅 결과. 모든 항목은 사람이 검수(reviewed:true로 변경)하기 전까지 화면에 자동수집 · 검수대기 표시가 붙습니다. 규칙 기반 태깅은 LLM보다 정확도가 낮을 수 있으니 반드시 검수 후 반영하세요.",
   "policies": [
     {
@@ -712,7 +712,9 @@
         "sizes": [
           "sme"
         ],
-        "industries": "all",
+        "industries": [
+          "mfg"
+        ],
         "regions": [
           "seoul",
           "busan",
@@ -5084,46 +5086,6 @@
           "province": "seoul",
           "district": "도봉구"
         }
-      },
-      "source": "auto",
-      "sourceApi": "kstartup",
-      "reviewed": false
-    },
-    {
-      "id": "auto-YvojsMS5VfXgf_Gf",
-      "name": "모두의 창업 글로벌 프로젝트",
-      "agency": "중소벤처기업부",
-      "url": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do?schM=view&pbancSn=178896",
-      "category": "etc",
-      "summary": "해외 AC 등과 연계하여 유학생 등 재외국민의 창업준비와 성장을 지원하는 모두의 창업 글로벌 재외국민 프로그램에 참여할 참여자를 다음과 같이 모집 공고 합니다.",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "해외 AC 등과 연계하여 유학생 등 재외국민의 창업준비와 성장을 지원하는 모두의 창업 글로벌 재외국민 프로그램에 참여할 참여자를 다음과 같이 모집 공고 합니다."
-        },
-        {
-          "label": "지원대상",
-          "value": "청소년,대학생,일반인,대학,연구기관,일반기업,1인 창조기업"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-08-12 ~ 2026-09-14"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
       },
       "source": "auto",
       "sourceApi": "kstartup",
@@ -15276,49 +15238,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-prFYR5bw2ccL0GyN",
-      "name": "전통시장 주차환경개선",
-      "agency": "중소벤처기업부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260226000003744548&bsnsyear=2026&dtlbzId=202310241540301A0001&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "부평문화의거리(전통시장)에 대한 주차환경개선사업(사설주차장이용보조) 추진으로 전통시장의 주차난을 해소함으로써 상권활성화에 이바지 하고자 함.",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "부평문화의거리(전통시장)에 대한 주차환경개선사업(사설주차장이용보조) 추진으로 전통시장의 주차난을 해소함으로써 상권활성화에 이바지 하고자 함."
-        },
-        {
-          "label": "지원대상",
-          "value": "전통시장법에 따른 전통시장 상인회"
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-01-21 ~ 2025-02-07"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "retail",
-          "energy"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-cNd3JMVcqu1c9ie8",
       "name": "울산 수소도시 조성사업",
       "agency": "국토교통부",
@@ -15642,46 +15561,6 @@
         "rndRequired": false,
         "insuranceRequired": false,
         "taxClean": true
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-PpV-KZmqCLKLJ2bb",
-      "name": "중국 경제연구 및 전문가 간담회 운영",
-      "agency": "산업통상부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260624000003846871&bsnsyear=2026&dtlbzId=201309419310301A0006&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "etc",
-      "summary": "중국전문가 간담회, 한중 산업협력 포럼 등의 개최를 통해 한·중 경제협력 및 산업분야의 새로운 협력방안 모색",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "중국전문가 간담회, 한중 산업협력 포럼 등의 개최를 통해 한·중 경제협력 및 산업분야의 새로운 협력방안 모색"
-        },
-        {
-          "label": "지원대상",
-          "value": "해당 없음."
-        },
-        {
-          "label": "신청기간",
-          "value": "2025-12-08 ~ 2026-01-05"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": "all",
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": false
       },
       "source": "auto",
       "sourceApi": "mpb",
@@ -24272,8 +24151,7 @@
           "sme"
         ],
         "industries": [
-          "agri",
-          "retail"
+          "agri"
         ],
         "regions": "all",
         "maxYears": null,
@@ -29219,8 +29097,7 @@
       ],
       "elig": {
         "sizes": [
-          "sole",
-          "sme"
+          "sole"
         ],
         "industries": [
           "energy"
@@ -29261,8 +29138,7 @@
       ],
       "elig": {
         "sizes": [
-          "sole",
-          "sme"
+          "sole"
         ],
         "industries": "all",
         "regions": "all",
@@ -30858,8 +30734,7 @@
       ],
       "elig": {
         "sizes": [
-          "sole",
-          "sme"
+          "sole"
         ],
         "industries": [
           "retail"
@@ -31447,8 +31322,7 @@
       ],
       "elig": {
         "sizes": [
-          "sole",
-          "sme"
+          "sole"
         ],
         "industries": [
           "service"
@@ -36646,91 +36520,6 @@
       "reviewed": false
     },
     {
-      "id": "auto-fVubyp3lJ9NnNLGK",
-      "name": "2026년 수산물 소비촉진 지원사업",
-      "agency": "해양수산부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260325000003777055&bsnsyear=2026&dtlbzId=202609630440311A0001&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "market",
-      "summary": "ㅇ 영유아 대상 체험 중심 교육을 통해 수산물에 대한 긍정적 인식 형성 및 건강한 식습관 기반 마련 ㅇ 간편식 및 가공식품 중심의 식품 소비 트렌드를 반영한 수산…",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "ㅇ 영유아 대상 체험 중심 교육을 통해 수산물에 대한 긍정적 인식 형성 및 건강한 식습관 기반 마련 ㅇ 간편식 및 가공식품 중심의 식품 소비 트렌드를 반영한 수산물 밀키트 개발·홍보를 통해 신규 소비층 확대 ㅇ 이달의 수산물 및 어식백세 캠페인에 대한 대국민 인지도 제고를 통해 수산물의 가치 인식 확산 및 일상적 소비 유도 ㅇ 지역사회 연계 체험·시식 프로…(원문 확인 필요)"
-        },
-        {
-          "label": "지원대상",
-          "value": "일반국민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-03-06 ~ 2026-03-20"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": true
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
-      "id": "auto-nKq3QPG_HUUJe60n",
-      "name": "수산물상생할인지원(민간경상)",
-      "agency": "해양수산부",
-      "url": "https://www.bojo.go.kr/bojo.do?popShareUrl=/ia/getIA002100Popup.do?ddtlbzId=20260122000003681848&bsnsyear=2026&dtlbzId=202609630440311A0003&pid=POPUP&title=%EB%B3%B4%EC%A1%B0%EC%82%AC%EC%97%85%EC%A0%95%EB%B3%B4",
-      "category": "market",
-      "summary": "[‘수산물 소비 활성화와 체감물가 안정 도모’] ㅇ (소비 활성화) 수산물 주요 유통채널을 통한 대규모의 할인지원 행사와 수산물 접근에 어려움이 있는 지역 대상 …",
-      "benefits": [
-        {
-          "label": "지원내용",
-          "value": "[‘수산물 소비 활성화와 체감물가 안정 도모’] ㅇ (소비 활성화) 수산물 주요 유통채널을 통한 대규모의 할인지원 행사와 수산물 접근에 어려움이 있는 지역 대상 직거래 장터 추진으로 전국 단위의 국산 수산물 소비 활성화 도모 ㅇ (물가안정) 수산물 주요 유통채널(온‧오프라인) 및 전통시장과의 연계를 통한 전국단위 할인지원 사업 추진으로 수산물 민생물가 안정…(원문 확인 필요)"
-        },
-        {
-          "label": "지원대상",
-          "value": "일반국민"
-        },
-        {
-          "label": "신청기간",
-          "value": "2026-01-22 ~ 2026-02-05"
-        }
-      ],
-      "elig": {
-        "sizes": [
-          "sole",
-          "sme"
-        ],
-        "industries": [
-          "agri",
-          "retail"
-        ],
-        "regions": "all",
-        "maxYears": null,
-        "founderTypes": null,
-        "certs": null,
-        "exportRequired": false,
-        "rndRequired": false,
-        "insuranceRequired": false,
-        "taxClean": true
-      },
-      "source": "auto",
-      "sourceApi": "mpb",
-      "reviewed": false
-    },
-    {
       "id": "auto-dNJ6g1OINTTngzDD",
       "name": "2026년 수산대전 모바일상품권(제로페이) 운영 사업",
       "agency": "해양수산부",
@@ -39003,7 +38792,7 @@
         ],
         "industries": "all",
         "regions": "all",
-        "maxYears": null,
+        "maxYears": 7,
         "founderTypes": null,
         "certs": null,
         "exportRequired": false,
