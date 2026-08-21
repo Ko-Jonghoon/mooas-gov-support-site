@@ -370,10 +370,12 @@
      다른 탭보다 더 좁아져서 주관부처·진행관리 글자가 잘렸습니다. 이 탭만 전체 글자 크기를 줄이고
      주관부처·진행관리 칸을 넓혀 다 보이게 합니다. */
   .excluded-table{font-size:.78rem;}
-  .excluded-table th, .excluded-table td{padding:9px 10px;}
-  .excluded-table .dash-agency{max-width:180px;}
-  .excluded-table select.progress-select{min-width:150px;font-size:.72rem;padding:6px 6px;}
-  .excluded-table .assignee-input{font-size:.76rem;}
+  .excluded-table th, .excluded-table td{padding:7px 8px;}
+  .excluded-table .dash-agency{max-width:150px;}
+  /* 2026-08-21 수정: 제외 사유/진행 관리 칸이 각각 160px/150px 고정폭이라 6개 칸 합이
+     박스 폭을 넘어서 표가 잘리던 문제 - 두 칸을 좁혀서 박스 안에 다 들어오게 합니다. */
+  .excluded-table select.progress-select{min-width:100px;font-size:.7rem;padding:5px 5px;}
+  .excluded-table .assignee-input{font-size:.74rem;width:82px;}
 
   /* gantt chart */
   .graph-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px;}
@@ -905,7 +907,7 @@
               <tr>
                 <td>중소벤처24</td>
                 <td>공고·행사 정보</td>
-                <td>미연동 · API 엔드포인트 미설정</td>
+                <td>연동됨 · 매일 자동 수집(2026-08-21 연동)</td>
               </tr>
             </tbody>
           </table>
@@ -1729,7 +1731,7 @@
         excludedReasonInput.placeholder = "제외 사유";
         excludedReasonInput.value = excludedReasons[p.id] || "";
         excludedReasonInput.className = "assignee-input";
-        excludedReasonInput.style.width = "160px";
+        excludedReasonInput.style.width = "100px";
         excludedReasonInput.addEventListener("change", function(){
           setExcludedReason(p.id, excludedReasonInput.value.trim());
         });

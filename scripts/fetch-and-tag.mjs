@@ -225,7 +225,31 @@ const SOURCES = [
       if (data?.result?.resultCd !== "0") {
         throw new Error(`resultCd=${data?.result?.resultCd} ${data?.result?.resultMsg || ""}`);
       }
-      return data.result.data || [];
+      const items = data.result.data || [];
+      // 2026-08-21 사용자 리포트로 발견: 이 API에는 "중소기업 재직 근로자"가 청약 자격으로
+      // 신청하는 아파트 특별공급/우선공급 안내문이 다수(2026-08-21 기준 252건) 섞여 있습니다.
+      // 이건 회사가 신청하는 지원사업이 아니라 개인 근로자 대상 주택 공급이라 이 사이트의
+      // 매칭 대상이 아닙니다. 게다가 모든 이런 공고가 "수도권(서울특별시, 경기도, 인천광역시)
+      // 거주자" 같은 신청자 거주지 요건 문구를 공통으로 담고 있어서, 회사 소재지 기준 지역
+      // 필터(REGION_RULES)가 그 문구를 공고 자체의 지역으로 잘못 인식해 실제로는 특정 지역
+      // 아파트인데도 여러 지역에 걸쳐 노출되는 부작용까지 있었습니다(예: 경기도 아파트인데
+      // 서울로 필터링해도 노출됨). 카테고리+지역 필터를 고치는 대신, 애초에 매칭 대상이
+      // 아닌 이 유형 자체를 걸러내는 게 근본적인 해결책이라 여기서 제외합니다.
+      // 처음에는 "장기근속자"라는 단어로만 걸렀는데("장긱근속자"처럼 원문 오타가 있는 공고,
+      // "국민임대 우선공급대상자", "중소기업 근로자 주택우선공급"처럼 그 단어 자체가 없는
+      // 변형까지는 못 잡아서(2026-08-21, 실데이터 9309건 중 3건 발견) "주택/임대"와
+      // "특별공급/우선공급"이 제목에 같이 있으면 제외하는 더 넓은 조건으로 바꿨습니다.
+      const HOUSING_RE = /주택|임대/;
+      const ALLOCATION_RE = /특별공급|우선공급/;
+      const before = items.length;
+      const filtered = items.filter((item) => {
+        const title = pickField(item, ["pblancNm"]);
+        return !(HOUSING_RE.test(title) && ALLOCATION_RE.test(title));
+      });
+      if (filtered.length !== before) {
+        console.log(`[중소벤처24 공고정보] 개인 대상 장기근속자 주택공급 안내 ${before - filtered.length}건 제외.`);
+      }
+      return filtered;
     },
     mapRaw(raw) {
       // 2026-08-21 실제 응답으로 확인된 필드명(중소벤처24 공고정보 API 명세 참고).
