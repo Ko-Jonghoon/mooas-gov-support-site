@@ -83,6 +83,21 @@ async function postJson(url, body, timeoutMs = 20000) {
   return JSON.parse(bodyText);
 }
 
+// 중소벤처24 게이트웨이(portal.smes.go.kr/ione-gw)는 공고정보뿐 아니라 행사정보 쪽도 가끔
+// 타임아웃/500을 냅니다(2026-08-21 실측). GET용 fetchJsonWithRetry와 같은 이유로 POST에도
+// 재시도를 붙입니다.
+async function postJsonWithRetry(url, body, attempts = 3, timeoutMs) {
+  let lastErr;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await postJson(url, body, timeoutMs);
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw lastErr;
+}
+
 async function fetchJsonWithRetry(url, attempts = 2, timeoutMs) {
   let lastErr;
   for (let i = 0; i < attempts; i++) {
@@ -245,10 +260,23 @@ const SOURCES = [
       // 명시적으로 요청한 부분이기도 합니다. 이 목록에 걸리면 무조건 제외합니다(다른 소스에는
       // 이런 부동산 콘텐츠가 없는 것을 확인함 - 이 API에서만 나타나는 유형).
       const REAL_ESTATE_RE = /특별공급|우선공급|입주자모집|청약|행복주택|국민임대|장기전세주택|임대주택|공공주택|부동산/;
+      // 2026-08-21 사용자 리포트로 발견: "글로벌IP스타기업(2024~2026년 선정 기업)"처럼, 지원대상이
+      // "이미 다른 특정 프로그램에 선정/지정된 기업만" 신청 가능한 후속지원 사업이 있습니다. 이런
+      // "OOO(...선정 기업)" 식 자격은 우리 스키마(founderTypes/certs - 청년/여성/장애인/이노비즈/
+      // 벤처기업/사회적기업 등 정해진 목록)에 없는 임의의 명칭이라 필터로 표현할 수 없고, 사실상
+      // 그 특정 선정자 외에는 아무도 신청할 수 없으므로 industries/sizes를 아무리 넓게 잡아도
+      // 사실상 전 사용자에게 무관한 결과입니다. "(...선정 기업)"/"(...지정 기업)" 패턴이 지원대상에
+      // 있으면 제외합니다(2026-08-21 기준 3건 확인, 다른 소스·표현으로도 나올 수 있어 특정
+      // 프로그램명이 아니라 이 구조적 패턴으로 잡습니다).
+      const PRIOR_SELECTEE_ONLY_RE = /\([^()]{0,20}(선정|지정)\s*기업\)/;
       const before = items.length;
-      const filtered = items.filter((item) => !REAL_ESTATE_RE.test(pickField(item, ["pblancNm"])));
+      const filtered = items.filter((item) => {
+        if (REAL_ESTATE_RE.test(pickField(item, ["pblancNm"]))) return false;
+        if (PRIOR_SELECTEE_ONLY_RE.test(pickField(item, ["sportTrget"]))) return false;
+        return true;
+      });
       if (filtered.length !== before) {
-        console.log(`[중소벤처24 공고정보] 부동산·개인주택공급 관련 안내 ${before - filtered.length}건 제외.`);
+        console.log(`[중소벤처24 공고정보] 부동산/개인주택공급·특정 선정기업 전용 안내 ${before - filtered.length}건 제외.`);
       }
       return filtered;
     },
@@ -285,7 +313,7 @@ const SOURCES = [
       // 318건, 350KB) 돌아와서 별도 날짜 범위 지정이 필요 없습니다 - 공고정보(20MB, 1년치를
       // 직접 계산해서 요청)와는 다른 특성이니 나중에 건수가 갑자기 늘어나면 재확인하세요.
       const url = withToken(endpoint, process.env.SME24_EVENT_API_KEY);
-      const data = await postJson(url, {}, 30000);
+      const data = await postJsonWithRetry(url, {}, 3, 30000);
       const result = data?.result?.result;
       if (!result || result.RESULT?.RES_CD !== "0") {
         throw new Error(`RES_CD=${result?.RESULT?.RES_CD} ${result?.RESULT?.RES_MSG || ""}`);
@@ -687,7 +715,12 @@ const INDUSTRY_RULES = [
   // 거의 모든 공고가 섬유업으로 오탐됩니다(2026-08-19 발견: 963건 중 115건이 걸림).
   // 2026-08-19 추가: "GP Switzerland AI 부품 산업자동화 파트너십"처럼 "산업자동화"라는
   // 표현만 쓰고 "자동화 설비"라는 정확한 문구는 없는 사업.
-  { code: "mfg", keywords: ["제조업", "스마트공장", "제조혁신", "제조DX", "제조데이터", "자동화 설비", "산업자동화", "로봇", "유해화학물질", "화학물질관리", "섬유", "조선", "선박기자재", "봉제", "염색가공"] },
+  // 2026-08-21 추가: "반도체 소부장기업 실증", "이차전지"/"배터리", "자동차"(부품·전장 포함),
+  // "항공"/"우주"(방산·우주산업), "드론", "패션"/"의류"(섬유는 이미 있었지만 완제품 쪽 표현이
+  // 없었음) - 업종이 제목에 명시적으로 나와 있는데도 industries:"all"로 잘못 넓어지던 사업들
+  // (2026-08-21 사용자 리포트: "반도체 소부장기업" 사업이 안 걸러짐). 실측 결과 sme24-announce의
+  // industries:"all" 항목 중 이 표현들을 포함한 것만 최소 270여 건.
+  { code: "mfg", keywords: ["제조업", "스마트공장", "제조혁신", "제조DX", "제조데이터", "자동화 설비", "산업자동화", "로봇", "유해화학물질", "화학물질관리", "섬유", "조선", "선박기자재", "봉제", "염색가공", "반도체", "자동차", "이차전지", "배터리", "항공", "우주", "드론", "패션", "의류"] },
   // 2026-08-18 추가: "5G 기반 통신망 서비스" 등 통신 인프라 특화 사업.
   // 2026-08-19 추가: "비면허 주파수 활용 유망기술 실증" 등 주파수 특화 사업.
   // 주의: "전파"는 넣지 마세요 - "질병 전파" 등 일반적인 "퍼진다"는 뜻으로도 흔히 쓰여
@@ -696,7 +729,9 @@ const INDUSTRY_RULES = [
   // 2026-08-18 추가: "AI 응용제품 신속 상용화(보건분야, 만성질환관리)" 등 "보건" 표현만 쓰는
   // 사업이 걸러지지 않던 문제. 2026-08-19 추가: "의료기기 사업화 촉진"처럼 "의료기기"만 쓰고
   // "바이오/헬스케어" 표현은 없는 사업.
-  { code: "bio", keywords: ["바이오", "헬스케어", "제약", "보건", "의료기기"] },
+  // 2026-08-21 추가: "화장품"/"뷰티"(K-뷰티 수출지원 등)가 명시적으로 나오는 사업이
+  // industries:"all"로 빠지던 문제(2026-08-21 발견).
+  { code: "bio", keywords: ["바이오", "헬스케어", "제약", "보건", "의료기기", "화장품", "뷰티"] },
   // 2026-08-18 추가: 방송·미디어·OTT 관련 사업이 "콘텐츠" 키워드가 본문에 없어서
   // industries:"all"로 잘못 넓어지던 문제(예: "지역 방송 제작역량 강화", "OTT산업 경쟁력 강화",
   // "AI 더빙 특화 K-FAST 확산") - 방송/미디어 특화 표현들을 추가했습니다.
@@ -768,7 +803,12 @@ const REGION_RULES = [
   // "경기"가 "경기도"도 "경기 "(뒤에 공백)도 아니라서 빠지던 문제. "경기" 자체는 "경기"(景氣,
   // 경제상황)라는 뜻으로도 흔히 쓰여서("경기 침체", "경기 부양") 단독으로는 못 넣고,
   // 가운뎃점과 붙어 있을 때만(목록 표기 관례) 지역으로 인정합니다.
-  { code: "gyeonggi", keywords: ["경기도", "경기 ", "경기ㆍ", "ㆍ경기", "경기·", "·경기"] },
+  // 2026-08-21 추가: 중소벤처24는 제목을 "[경기] 2026년 ..."처럼 대괄호로 지역을 표기하는데,
+  // "경기]"는 위 키워드 어디에도 안 걸려서 제목이 "[경기]"로 시작하는 공고 827건 중 514건이
+  // regions:"all"로 잘못 넓어져 있었습니다(2026-08-21 사용자 리포트로 발견 - "화성산업진흥원
+  // MD 상담회"처럼 관내 기업 전용 공고가 지역 필터 없이 노출됨). "경기]"는 대괄호 지역 표기
+  // 관례에서만 나오므로 "경기"(景氣) 오탐 위험 없이 안전하게 추가할 수 있습니다.
+  { code: "gyeonggi", keywords: ["경기도", "경기 ", "경기ㆍ", "ㆍ경기", "경기·", "·경기", "경기]", "경기북부", "경기남부"] },
   { code: "gangwon", keywords: ["강원"] },
   { code: "chungbuk", keywords: ["충청북도", "충북"] },
   { code: "chungnam", keywords: ["충청남도", "충남"] },
