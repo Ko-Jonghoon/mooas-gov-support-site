@@ -69,11 +69,25 @@ async function fetchText(url, timeoutMs = 20000) {
 
 // 페이지네이션처럼 같은 요청을 수십~수백 번 반복할 때, 그중 한두 개가 일시적으로
 // 타임아웃/오류가 나도 전체를 포기하지 않도록 몇 번 재시도합니다.
-async function fetchJsonWithRetry(url, attempts = 2) {
+async function postJson(url, body, timeoutMs = 20000) {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body || {}),
+    signal: AbortSignal.timeout(timeoutMs),
+  });
+  const bodyText = await res.text();
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status} (${String(url).split("?")[0]}) - ${bodyText.slice(0, 300)}`);
+  }
+  return JSON.parse(bodyText);
+}
+
+async function fetchJsonWithRetry(url, attempts = 2, timeoutMs) {
   let lastErr;
   for (let i = 0; i < attempts; i++) {
     try {
-      return await fetchJson(url);
+      return await fetchJson(url, timeoutMs);
     } catch (err) {
       lastErr = err;
     }
@@ -115,6 +129,26 @@ function withServiceKey(endpoint, encodedServiceKey, extraParams) {
   }
   const sep = url.search ? "&" : "?";
   return url.toString() + sep + "serviceKey=" + encodedServiceKey;
+}
+
+// 중소벤처24(portal.smes.go.kr/ione-gw)는 data.go.kr과 인증 방식이 다릅니다:
+// 파라미터명이 "serviceKey"가 아니라 "token"이고, 키 값 자체가 미리 인코딩되어
+// 있지도 않으므로(2026-08-21 실측: URLSearchParams로 정상 인코딩해야 통과함,
+// withServiceKey처럼 인코딩을 건너뛰면 오히려 실패) 일반적인 방식으로 붙입니다.
+function withToken(endpoint, token, extraParams) {
+  const url = new URL(endpoint);
+  if (extraParams) {
+    for (const [k, v] of Object.entries(extraParams)) url.searchParams.set(k, v);
+  }
+  url.searchParams.set("token", token);
+  return url.toString();
+}
+
+function ymdCompact(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}${m}${d}`;
 }
 
 const SOURCES = [
@@ -170,22 +204,43 @@ const SOURCES = [
         console.log("[중소벤처24 공고정보] SME24_ANNOUNCE_ENDPOINT가 없어 건너뜁니다. .env.local.example 참고.");
         return [];
       }
-      const url = withServiceKey(endpoint, process.env.SME24_ANNOUNCE_API_KEY);
-      const data = await fetchJson(url);
-      // TODO: 실제 응답의 배열 경로로 조정하세요(예: data.response.body.items).
-      return data.items || data.response?.body?.items || [];
+      // 2026-08-21 실측: strDt/endDt는 공고의 신청기간이 아니라 등록/갱신일 기준
+      // 필터로 보입니다(이 범위 이전의 pblancBgnDt를 가진 항목도 섞여 나옴). 이
+      // API는 pageNo/numOfRows 같은 페이지네이션 파라미터가 없고 범위 내 전체를
+      // 한 번에 돌려주므로(1년치 약 20MB), 아직 신청기간이 안 끝났을 수 있는
+      // 공고를 놓치지 않도록 최근 1년을 통째로 가져온 뒤, 실제 마감 여부는
+      // index.html의 status 로직이 화면에서 걸러줍니다.
+      const end = new Date();
+      const start = new Date(end);
+      start.setFullYear(start.getFullYear() - 1);
+      const url = withToken(endpoint, process.env.SME24_ANNOUNCE_API_KEY, {
+        strDt: ymdCompact(start),
+        endDt: ymdCompact(end),
+        html: "no",
+      });
+      // 2026-08-21 실측: 이 요청(1년치, ~24MB)은 게이트웨이가 가끔 타임아웃/500을 내는
+      // 불안정한 응답을 보입니다(같은 요청을 반복하면 대부분 8~9초 안에 정상 응답). 그래서
+      // 다른 소스처럼 재시도를 붙였습니다.
+      const data = await fetchJsonWithRetry(url, 3, 45000);
+      if (data?.result?.resultCd !== "0") {
+        throw new Error(`resultCd=${data?.result?.resultCd} ${data?.result?.resultMsg || ""}`);
+      }
+      return data.result.data || [];
     },
     mapRaw(raw) {
-      // TODO: 실제 필드명 확인 후 후보 배열을 채워 넣으세요. 아래는 공공데이터포털에서
-      // 흔히 쓰이는 필드명을 추정해 넣은 임시값입니다.
+      // 2026-08-21 실제 응답으로 확인된 필드명(중소벤처24 공고정보 API 명세 참고).
+      // areaNm/bizType/sportType/cmpScale/induty는 이미 구조화된 값이라, 자유
+      // 텍스트가 아니라 tags에 그대로 실어 보내면 기존 키워드 규칙(CATEGORY_RULES 등)이
+      // title/desc/target과 동일하게 스캔해서 인식합니다.
+      const tagsParts = [raw.induty, raw.areaNm, raw.bizType, raw.sportType, raw.cmpScale].filter(Boolean);
       return {
-        title: pickField(raw, ["title", "bsnsTitl", "pblancNm"]),
-        desc: pickField(raw, ["content", "description", "bsnsSumryCn"]),
-        target: pickField(raw, ["target", "trgetNm"]),
-        tags: pickField(raw, ["hashtags"]),
-        period: pickField(raw, ["period", "aplyPd", "reqstBeginEndDe"]),
-        agency: pickField(raw, ["agency", "instNm"]) || "중소벤처24",
-        url: pickField(raw, ["url", "pageUrl"]) || "https://www.smes.go.kr",
+        title: pickField(raw, ["pblancNm"]),
+        desc: pickField(raw, ["policyCnts"]),
+        target: pickField(raw, ["sportTrget"]),
+        tags: tagsParts.join(","),
+        period: raw.pblancBgnDt && raw.pblancEndDt ? `${raw.pblancBgnDt} ~ ${raw.pblancEndDt}` : "",
+        agency: pickField(raw, ["sportInsttNm"]) || "중소벤처24",
+        url: pickField(raw, ["pblancDtlUrl", "reqstLinkInfo"]) || "https://www.smes.go.kr",
       };
     },
   },
@@ -199,21 +254,40 @@ const SOURCES = [
         console.log("[중소벤처24 행사정보] SME24_EVENT_ENDPOINT가 없어 건너뜁니다. .env.local.example 참고.");
         return [];
       }
-      const url = withServiceKey(endpoint, process.env.SME24_EVENT_API_KEY);
-      const data = await fetchJson(url);
-      // TODO: 실제 응답의 배열 경로로 조정하세요.
-      return data.items || data.response?.body?.items || [];
+      // 공고정보와 달리 이 API는 POST + JSON 바디이고, 인증은 token 쿼리스트링으로
+      // 전달합니다(2026-08-21 실측: 헤더 방식도 되지만 쿼리스트링이 더 단순해서 이걸 씀).
+      // searchCnt/mdfcnYmd 없이 호출해도 자동으로 최근 것만(실측 시점 기준 최근 약 3개월,
+      // 318건, 350KB) 돌아와서 별도 날짜 범위 지정이 필요 없습니다 - 공고정보(20MB, 1년치를
+      // 직접 계산해서 요청)와는 다른 특성이니 나중에 건수가 갑자기 늘어나면 재확인하세요.
+      const url = withToken(endpoint, process.env.SME24_EVENT_API_KEY);
+      const data = await postJson(url, {}, 30000);
+      const result = data?.result?.result;
+      if (!result || result.RESULT?.RES_CD !== "0") {
+        throw new Error(`RES_CD=${result?.RESULT?.RES_CD} ${result?.RESULT?.RES_MSG || ""}`);
+      }
+      return result.RECORD || [];
     },
     mapRaw(raw) {
-      // TODO: 실제 필드명 확인 후 채워 넣으세요.
+      // 2026-08-21 실제 응답으로 확인된 필드명. evntPrdCn(행사기간)은 "yyyyMMdd ~ yyyyMMdd"
+      // 형식이라 파싱해서 다른 소스와 같은 "yyyy-MM-dd ~ yyyy-MM-dd" 형식으로 맞춥니다.
+      // rcptPrdCn(접수기간)은 "~2026-07-15"나 "과목별 상이"처럼 형식이 제각각이라 그대로 못
+      // 쓰고, 파싱 가능한 evntPrdCn을 기본으로 쓰되 없으면 원문을 그대로 보여줍니다.
+      const m = String(raw.evntPrdCn || "").match(/^(\d{8})\s*~\s*(\d{8})$/);
+      const period = m ? `${ymdToIso(m[1])} ~ ${ymdToIso(m[2])}` : raw.rcptPrdCn || raw.evntPrdCn || "";
+      const tagsParts = [
+        raw.evntInfoFldNm,
+        raw.evntInfoTypeNm,
+        raw.evntInfoRgnNm,
+        ...(Array.isArray(raw.hstgCn) ? raw.hstgCn : []),
+      ].filter(Boolean);
       return {
-        title: pickField(raw, ["title", "eventNm"]),
-        desc: pickField(raw, ["content", "description"]),
-        target: pickField(raw, ["target"]),
-        tags: pickField(raw, ["hashtags"]),
-        period: pickField(raw, ["period", "eventPd"]),
-        agency: pickField(raw, ["agency", "instNm"]) || "중소벤처24",
-        url: pickField(raw, ["url"]) || "https://www.smes.go.kr",
+        title: pickField(raw, ["evntInfoTtlNm"]),
+        desc: pickField(raw, ["evntOtlnCn"]),
+        target: "",
+        tags: tagsParts.join(","),
+        period,
+        agency: pickField(raw, ["evntInfoFlfmtInstNm"]) || "중소벤처24",
+        url: pickField(raw, ["srcUrlAddr"]) || "https://www.smes.go.kr",
       };
     },
   },
@@ -405,22 +479,8 @@ const SOURCES = [
 
       // 이 데이터는 같은 사업이 수행기관/지역별로 쪼개진 세부 항목이 통째로 들어있어서
       // "제목+소관명"이 같은 항목이 수백 번씩 반복됩니다. 사용자에게는 사실상 같은 사업으로
-      // 보이므로 대표 1건만 남기고 합칩니다.
-      // 같은 사업인데도 표기만 다른 경우(예: "Jump-Up" vs "JUMP-UP" vs "Jump-up", 괄호 안팎
-      // 띄어쓰기 차이)가 있어서 원문 그대로 비교하면 중복 제거가 안 됩니다(2026-08-18 발견:
-      // "2026년 도약(Jump-Up) 프로그램"이 표기 차이로 5건 넘게 남아있던 문제). 대소문자·공백·
-      // 괄호를 무시하고 비교하되, 실제로 저장/표시하는 제목은 원문 그대로 둡니다.
-      function normalizeForDedup(text) {
-        // 제목 맨 앞의 연도 표기("2026년" vs "2026년도" vs "2026")만 표기 차이로 보고 통일합니다.
-        // 문장 중간의 "OO년 선발기업" 같은 회차 표기는 건드리지 않습니다 - 이건 실제로 다른
-        // 회차(예: 25년/26년 선발기업)를 가리킬 수 있어서 지워버리면 서로 다른 예산 항목이
-        // 하나로 합쳐지는 부작용이 생깁니다.
-        // "년도"는 두 글자가 붙어있을 때만 하나로 취급해야 합니다 - "\s*도?"처럼 느슨하게 쓰면
-        // "2026년 도약" 같은 제목에서 "도약"의 "도"를 "년도"의 "도"로 착각해 "2026 약"으로
-        // 잘못 잘라먹는 문제가 있었습니다(2026-08-18 발견).
-        const withNormalizedYear = text.trim().replace(/^(\d{4})\s*(?:년도|년)\s*/, "$1 ");
-        return withNormalizedYear.toLowerCase().replace(/[\s()（）\-_.]/g, "");
-      }
+      // 보이므로 대표 1건만 남기고 합칩니다. (normalizeForDedup는 이제 모듈 최상단의
+      // 공용 함수 - 소스 간 전역 중복 제거에서도 같이 씁니다.)
       // 2026-08-18 시도했다가 되돌림: 정부 예산코드(DTLBZ_ID)를 중복 제거 키로 써봤으나,
       // 이 코드는 실제로는 "세부사업"보다 더 상위(단위사업 등) 수준의 공통 코드라 서로 다른
       // 여러 사업(예: "소상공인협업아카데미"의 수도권/영남권/중부권판, "도약(Jump-Up)"의
@@ -492,6 +552,23 @@ function pickField(raw, candidateFields) {
     if (raw[key]) return stripHtml(String(raw[key]));
   }
   return "";
+}
+
+// 같은 사업이 표기만 다르게(대소문자·공백·괄호·연도 표기 차이) 여러 번 나오는 걸
+// 하나로 합치기 위한 정규화. 원래 기획재정부(MPB) 소스 내부 중복 제거용으로 만들었다가
+// (2026-08-18, "2026년 도약(Jump-Up) 프로그램"이 표기 차이로 5건 넘게 남던 문제),
+// 2026-08-21 소스 간 중복(기업마당 vs 중소벤처24 공고정보 등, 같은 공고가 여러 API에
+// 동시에 올라오는 경우)까지 걸러내도록 전역 유틸로 옮겼습니다.
+function normalizeForDedup(text) {
+  // 제목 맨 앞의 연도 표기("2026년" vs "2026년도" vs "2026")만 표기 차이로 보고 통일합니다.
+  // 문장 중간의 "OO년 선발기업" 같은 회차 표기는 건드리지 않습니다 - 이건 실제로 다른
+  // 회차(예: 25년/26년 선발기업)를 가리킬 수 있어서 지워버리면 서로 다른 예산 항목이
+  // 하나로 합쳐지는 부작용이 생깁니다.
+  // "년도"는 두 글자가 붙어있을 때만 하나로 취급해야 합니다 - "\s*도?"처럼 느슨하게 쓰면
+  // "2026년 도약" 같은 제목에서 "도약"의 "도"를 "년도"의 "도"로 착각해 "2026 약"으로
+  // 잘못 잘라먹는 문제가 있었습니다(2026-08-18 발견).
+  const withNormalizedYear = text.trim().replace(/^(\d{4})\s*(?:년도|년)\s*/, "$1 ");
+  return withNormalizedYear.toLowerCase().replace(/[\s()（）\-_.]/g, "");
 }
 
 function buildTextBlob(normalized) {
@@ -887,10 +964,27 @@ async function collectFromSource(source) {
 }
 
 async function main() {
-  const autoPolicies = [];
+  const rawAutoPolicies = [];
   for (const source of SOURCES) {
-    autoPolicies.push(...(await collectFromSource(source)));
+    rawAutoPolicies.push(...(await collectFromSource(source)));
   }
+
+  // 2026-08-21 추가: 소스가 늘어나면서(중소벤처24 공고정보 등) 같은 공고가 여러 API에
+  // 동시에 올라와 중복 등록되는 사례가 확인됨(예: 중소벤처24 공고정보 응답 중 상세URL이
+  // bizinfo.go.kr을 가리키는 항목 존재 - 기업마당 공고를 그대로 재노출). 기존에는 기획재정부
+  // (MPB) 소스 "내부" 중복만 제거했고 소스 "간" 중복은 전혀 걸러지지 않았습니다. SOURCES
+  // 배열 순서(기업마당이 맨 앞)를 그대로 우선순위로 써서, "제목+기관"이 같으면 먼저 나온
+  // 소스의 항목만 남깁니다.
+  const seenAcrossSources = new Map();
+  for (const policy of rawAutoPolicies) {
+    const key = normalizeForDedup(policy.name) + "||" + normalizeForDedup(policy.agency);
+    if (!seenAcrossSources.has(key)) seenAcrossSources.set(key, policy);
+  }
+  const autoPolicies = [...seenAcrossSources.values()];
+  console.log(
+    `소스 간 중복 제거: 전체 ${rawAutoPolicies.length}건 중 ` +
+    `제목+기관 중복 ${rawAutoPolicies.length - autoPolicies.length}건 제거 → ${autoPolicies.length}건 사용.`
+  );
 
   // 2026-08-19 추가: API 장애/키 만료 등으로 이번 실행에서 가져온 공고가 기존 데이터보다
   // 크게 줄어들면(절반 미만), 원인 파악 전까지는 파일을 덮어쓰지 않고 기존 데이터를 그대로
